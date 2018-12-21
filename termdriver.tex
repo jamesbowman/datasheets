@@ -1,21 +1,52 @@
 \documentclass{article}
 
 \usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{fullpage}
 \usepackage{graphicx}
 \usepackage{helvet}
 \usepackage{hyperref}
 \usepackage{longtable}
+\usepackage{textcomp}
+\usepackage{xcolor}
 
+% Use helvetica (sans) by default
 \renewcommand{\familydefault}{\sfdefault}
 
+% Greenish links
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!red,
+  urlcolor=green!70!black
+}
+
+\setlength{\headheight}{40pt}
+\setlength{\headsep}{0.2in}
+
+\pagestyle{fancy}
+\lhead{\includegraphics[width=0.2\textwidth]{img/logo}}
+\chead{Termdriver Datasheet}
+\rhead{\thepage}
+\cfoot{\textcopyright \the\year \ \ Excamera Labs}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
 \begin{document}
+
+\listoffigures
+\listoftables
+\tableofcontents
+
+\section{Introduction\label{introduction}}
 
 \leavevmode\hypertarget{termdriver}{}%
 TermDriver is available in the
 \href{http://excamera.com/sphinx/gameduino/store.html}{Excamera Store}.
 
-\begin{figure}[h!]
+\begin{figure}[H]
   \centering
+  \caption{this is an image}
   \includegraphics[width=0.75\textwidth]{img/img1}
 \end{figure}
 
@@ -23,8 +54,9 @@ TermDriver listens on a serial line and emulates a terminal on a
 standard VGA connector. It gives embedded microcontrollers a real
 console.
 
-\begin{figure}[h!]
+\begin{figure}[H]
   \centering
+  \caption{this is an image}
   \includegraphics[width=0.75\textwidth]{img/img2}
 \end{figure}
 
@@ -39,8 +71,9 @@ for (;;)
 
 You get this output on the VGA:
 
-\begin{figure}[h!]
+\begin{figure}[H]
   \centering
+  \caption{this is an image}
   \includegraphics[width=0.75\textwidth]{img/img3}
 \end{figure}
 
@@ -56,8 +89,9 @@ higher density 128x48 mode, and a portrait orientation 96x64 mode. Both
 are very \href{http://excamera.com/files/DSC_8931.jpg}{readable} because
 they match TermDriver's native 1024x768 @ 60 Hz VGA output.
 
-\begin{figure}[h!]
+\begin{figure}[H]
   \centering
+  \caption{this is an image}
   \includegraphics[width=0.75\textwidth]{img/img4}
 \end{figure}
 
@@ -66,8 +100,9 @@ The terminal emulation is fully compatible with the DOS
 \href{http://artscene.textfiles.com/ansi/}{ASCII and ANSI art} draws
 correctly.
 
-\begin{figure}[h!]
+\begin{figure}[H]
   \centering
+  \caption{this is an image}
   \includegraphics[width=0.75\textwidth]{img/img5}
 \end{figure}
 
@@ -144,6 +179,7 @@ ESC {[} u\strut
 Restore cursor position\strut
 \end{minipage}\tabularnewline
 \bottomrule
+\caption{this is a table}
 \end{longtable}
 
 In addition the following sequences are specific to TermDriver:
@@ -172,6 +208,7 @@ Screen-saver.
 0 stops video output, 1 restarts video output\strut
 \end{minipage}\tabularnewline
 \bottomrule
+\caption{this is a table}
 \end{longtable}
 
 \end{document}
