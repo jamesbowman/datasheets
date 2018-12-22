@@ -8,6 +8,7 @@
 \usepackage{helvet}
 \usepackage{hyperref}
 \usepackage{longtable}
+\usepackage{tabularx}
 \usepackage{textcomp}
 \usepackage{xcolor}
 
@@ -34,9 +35,9 @@
 
 \begin{document}
 
+\tableofcontents
 \listoffigures
 \listoftables
-\tableofcontents
 
 \section{Introduction\label{introduction}}
 
@@ -108,7 +109,26 @@ correctly.
 
 \hypertarget{technical-specifications}{}
 \hypertarget{technical-specifications}{%
-\section{Technical Specifications}\label{technical-specifications}}
+\section{Electrical characteristics}\label{electrical-characteristics}}
+
+\vspace{10 pt}
+\newcommand{\heavyline}{\specialrule{1pt}{1pt}{1pt}}
+\setlength{\tabcolsep}{20pt}
+{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+
+\begin{tabularx}{\linewidth}{Xcccc}
+\heavyline
+& min & typ & max & units \\ \heavyline
+
+Current & & & & \\
+\hspace{10pt} operating & & 25 & & mA \\
+\hspace{10pt} screen saver & & 10 & & mA \\ \hline
+
+Serial line speed & & 115200 & & bps \\ \hline
+RX low voltage & & & 0.6 & V \\ \hline
+RX high voltage & 2.7 &   & 5.8 & V \\ \hline
+\end{tabularx}}
+\vspace{10 pt}
 
 The serial line is 115200 baud, 8 bits no parity. The signal level is
 3.3 V, and is 5 V tolerant.
