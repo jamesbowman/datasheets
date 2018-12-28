@@ -46,6 +46,7 @@ sources = """
 termdriver-helloworld
 termdriver-counter1
 termdriver-counter2
+termdriver-color1
 """
 
 for fn in sources.split():

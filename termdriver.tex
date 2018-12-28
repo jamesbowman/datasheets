@@ -84,7 +84,7 @@ standard VGA connector. It gives embedded microcontrollers a real console.
 \begin{enumerate}
 \item Disconnect power from the Arduino
 \item Attach the TermDriver to the Arduino
-\item Attach a VGA cable to the Arduino, turn on the VGA monitor
+\item Connect the VGA plug to the TermDriver and turn on the monitor
 \item Apply power to the Arduino. You should see a blank screen with a blinking cursor at top-left
 \item Load a sketch on the Arduino that prints text at 115200 baud, like the one below
 \end{enumerate}
@@ -127,59 +127,58 @@ codes} are supported:
 \begin{longtable}[]{@{}ll@{}}
 \toprule
 \begin{minipage}[b]{0.34\columnwidth}\raggedright
-Code\strut
+Code
 \end{minipage} & \begin{minipage}[b]{0.60\columnwidth}\raggedright
-Effect\strut
+Effect
 \end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} A\strut
+ESC {[} \emph{n} A
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Cursor up\strut
+Cursor up
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} B\strut
+ESC {[} \emph{n} B
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Cursor down\strut
+Cursor down
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} C\strut
+ESC {[} \emph{n} C
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Cursor forward\strut
+Cursor forward
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} D\strut
+ESC {[} \emph{n} D
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Cursor back\strut
+Cursor back
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{r;c} H\strut
+ESC {[} \emph{r;c} H
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Cursor position\strut
+Cursor position
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} J\strut
+ESC {[} \emph{n} J
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Erase display\strut
+Erase display
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} m\strut
+ESC {[} \emph{n} m
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Select graphic rendition\strut
+Select graphic rendition
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} s\strut
+ESC {[} s
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Save cursor position\strut
+Save cursor position
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} u\strut
+ESC {[} u
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Restore cursor position\strut
+Restore cursor position
 \end{minipage}\tabularnewline
 \bottomrule
-\caption{this is a table}
 \end{longtable}
 
 In addition the following sequences are specific to TermDriver:
@@ -187,29 +186,33 @@ In addition the following sequences are specific to TermDriver:
 \begin{longtable}[]{@{}ll@{}}
 \toprule
 \begin{minipage}[b]{0.34\columnwidth}\raggedright
-Code\strut
+Code
 \end{minipage} & \begin{minipage}[b]{0.60\columnwidth}\raggedright
-Effect\strut
+Effect
 \end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} h\strut
+ESC {[} \emph{n} h
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
 Set display mode.
 
-0 is 80x25, 1 is 128x48, 2 is 96x64 (rotated)\strut
+0 is 80x25, 1 is 128x48, 2 is 96x64 (rotated)
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} S\strut
+ESC {[} \emph{n} S
 \end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
 Screen-saver.
 
-0 stops video output, 1 restarts video output\strut
+0 stops video output, 1 restarts video output
 \end{minipage}\tabularnewline
 \bottomrule
-\caption{this is a table}
 \end{longtable}
+
+\noindent
+For example this C program displays all available foreground and background colors.
+
+\eg{termdriver-color1}
 
 \subsection{High-resolution modes}
 
@@ -219,8 +222,8 @@ and a portrait orientation 96x64 mode.
 Both are very readable because
 they match TermDriver's native 1024x768 @ 60 Hz VGA output.
 
-\png{img/moby1}{mode 1: 128x48}
-\png{img/moby2}{mode 2: 96x64}
+\png{img/moby1}{mode 1 (128x48)}
+\png{img/moby2}{mode 2 (96x64)}
 
 \newpage
 \section{Hardware}
