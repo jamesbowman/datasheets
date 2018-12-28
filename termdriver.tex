@@ -12,6 +12,10 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 
+\usepackage{framed}     % These needed for the code formatter
+\usepackage{color}
+\usepackage{fancyvrb}
+
 % Use helvetica (sans) by default
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -27,118 +31,94 @@
 
 \pagestyle{fancy}
 \lhead{\includegraphics[width=0.2\textwidth]{img/logo}}
-\chead{Termdriver Datasheet}
+\chead{TermDriver Datasheet}
 \rhead{\thepage}
 \cfoot{\textcopyright \the\year \ \ Excamera Labs}
 \renewcommand{\headrulewidth}{0.5pt}
 \renewcommand{\footrulewidth}{0.5pt}
 
-\begin{document}
-
-\tableofcontents
-\listoffigures
-\listoftables
-
-\section{Introduction\label{introduction}}
-
-\leavevmode\hypertarget{termdriver}{}%
-TermDriver is available in the
-\href{http://excamera.com/sphinx/gameduino/store.html}{Excamera Store}.
-
-\begin{figure}[H]
-  \centering
-  \caption{this is an image}
-  \includegraphics[width=0.75\textwidth]{img/img1}
-\end{figure}
-
-TermDriver listens on a serial line and emulates a terminal on a
-standard VGA connector. It gives embedded microcontrollers a real
-console.
-
-\begin{figure}[H]
-  \centering
-  \caption{this is an image}
-  \includegraphics[width=0.75\textwidth]{img/img2}
-\end{figure}
-
-TermDriver monitors the serial line at 115200 baud, and any serial
-output from the CPU also appears on the VGA. There's nothing to set up
-or load. When your microcontroller executes:
-
-\begin{verbatim}
-for (;;)
-  printf("Counter is %d\n", counter++);
-\end{verbatim}
-
-You get this output on the VGA:
-
-\begin{figure}[H]
-  \centering
-  \caption{this is an image}
-  \includegraphics[width=0.75\textwidth]{img/img3}
-\end{figure}
-
-It's available in two versions. One has Arduino headers so it's
-stackable with any Arduino. The other has no headers, and is meant for
-system builders, not necessarily Arduino users.
-
-Hookup is four lines (ground, power, reset, serial) so it's easily
-connected to any CPU.
-
-As well as the "classic" 80x25 text mode, the emulation also offers a
-higher density 128x48 mode, and a portrait orientation 96x64 mode. Both
-are very \href{http://excamera.com/files/DSC_8931.jpg}{readable} because
-they match TermDriver's native 1024x768 @ 60 Hz VGA output.
-
-\begin{figure}[H]
-  \centering
-  \caption{this is an image}
-  \includegraphics[width=0.75\textwidth]{img/img4}
-\end{figure}
-
-The terminal emulation is fully compatible with the DOS
-\texttt{ANSI.SYS}, so classic
-\href{http://artscene.textfiles.com/ansi/}{ASCII and ANSI art} draws
-correctly.
-
-\begin{figure}[H]
-  \centering
-  \caption{this is an image}
-  \includegraphics[width=0.75\textwidth]{img/img5}
-\end{figure}
-
-\hypertarget{technical-specifications}{}
-\hypertarget{technical-specifications}{%
-\section{Electrical characteristics}\label{electrical-characteristics}}
-
-\vspace{10 pt}
 \newcommand{\heavyline}{\specialrule{1pt}{1pt}{1pt}}
 \setlength{\tabcolsep}{20pt}
-{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+\newcommand{\png}[2]{
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.75\textwidth]{#1.png}
+\caption{#2}
+\end{center}
+\end{figure}
+}
 
-\begin{tabularx}{\linewidth}{Xcccc}
-\heavyline
-& min & typ & max & units \\ \heavyline
+\newcommand{\mach}[1]{\texttt{\textbf{#1}}}
 
-Current & & & & \\
-\hspace{10pt} operating & & 25 & & mA \\
-\hspace{10pt} screen saver & & 10 & & mA \\ \hline
+\input{pyg.tex}
 
-Serial line speed & & 115200 & & bps \\ \hline
-RX low voltage & & & 0.6 & V \\ \hline
-RX high voltage & 2.7 &   & 5.8 & V \\ \hline
-\end{tabularx}}
-\vspace{10 pt}
+\begin{document}
 
-The serial line is 115200 baud, 8 bits no parity. The signal level is
-3.3 V, and is 5 V tolerant.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img/img1}
+  \caption{The TermDriver PCB}
+\end{figure}
 
-Power is 5V. TermDriver has an onboard 3.3 V regulator.
+TermDriver listens on a serial line and emulates a text terminal on a
+standard VGA connector. It gives embedded microcontrollers a real console.
 
-Current consumption is 25 mA when running, 10 mA when in screen saver
-mode. The reset signal is active low.
+\begin{itemize}
+\item serial input at 115200 bps
+\item connects to the Arduino serial output pin, no libraries required
+\item supports standard ANSI terminal control codes
+\item VGA 16-color output at 1024x768 
+\item standard 80x25 and high-resolution 128x48 modes
+\item rotated-screen 96x64 mode
+\item screen-saver under CPU control
+\item input signals 3.3V and 5V compatible
+\end{itemize}
 
-Video output is standard VGA 1024x768 at 60 Hz.
+\newpage
+\tableofcontents
+\listoffigures
+
+\newpage
+\section{Installation with Arduino}
+
+\begin{enumerate}
+\item Disconnect power from the Arduino
+\item Attach the TermDriver to the Arduino
+\item Attach a VGA cable to the Arduino, turn on the VGA monitor
+\item Apply power to the Arduino. You should see a blank screen with a blinking cursor at top-left
+\item Load a sketch on the Arduino that prints text at 115200 baud, like the one below
+\end{enumerate}
+
+\newcommand{\eg}[1]{
+\begin{framed}
+\input{code/#1.inc}
+\end{framed}
+}
+
+\eg{termdriver-helloworld}
+
+\section{Operation}
+
+\png{img/page1}{sample output at 80x25}
+
+TermDriver monitors the serial line at 115200 baud, and draws any
+text on the VGA.
+There's nothing to set up or load.
+For example this Arduino sketch
+
+\eg{termdriver-counter1}
+
+\noindent
+Or this code in plain C
+
+\eg{termdriver-counter2}
+
+\noindent
+Gives this output on the VGA:
+
+\png{img/page2}{Counter output}
+
+\subsection{ANSI escape codes}
 
 The following standard
 \href{https://en.wikipedia.org/wiki/ANSI_escape_code\#CSI_sequences}{CSI
@@ -230,5 +210,81 @@ Screen-saver.
 \bottomrule
 \caption{this is a table}
 \end{longtable}
+
+\subsection{High-resolution modes}
+
+As well as the "classic" 80x25 text mode,
+TermDriver also supports a higher density 128x48 mode,
+and a portrait orientation 96x64 mode.
+Both are very readable because
+they match TermDriver's native 1024x768 @ 60 Hz VGA output.
+
+\png{img/moby1}{mode 1: 128x48}
+\png{img/moby2}{mode 2: 96x64}
+
+\newpage
+\section{Hardware}
+
+\png{img/arduino}{Arduino Uno}
+
+TermDriver connects directly to any Arduino or Arduino-compatible.
+It uses four connections:
+
+\begin{itemize}
+\item \mach{GND}
+\item \mach{5V}
+\item \mach{RESET}
+\item \mach{TX}
+\end{itemize}
+
+\noindent
+To use any other MCU, make the above four connections. Note that RESET is active-high.
+The serial protocol on \mach{TX} is 115200 bps, 8 bits, no parity, 1 stop bit.
+This is frequently described as \mach{115200-8N1}.
+
+\newpage
+\hypertarget{technical-specifications}{}
+\hypertarget{technical-specifications}{%
+\section{Electrical characteristics}\label{electrical-characteristics}}
+
+\subsection{DC characteristics}
+\vspace{10 pt}
+{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+
+\begin{tabularx}{\linewidth}{Xcccc}
+\heavyline
+& min & typ & max & units \\ \heavyline
+
+Supply voltage & 4.0 & 5.0 & 9.0 & V \\ \hline
+
+Supply current & & & & \\
+\hspace{10pt} operating & & 25 & & mA \\
+\hspace{10pt} screen saver & & 10 & & mA \\ \hline
+
+RESET,RX low voltage & & & 0.6 & V \\ \hline
+RESET,RX high voltage & 2.7 &   & 5.8 & V \\ \hline
+\end{tabularx}}
+\vspace{10 pt}
+
+\subsection{AC characteristics}
+\vspace{10 pt}
+
+{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+\begin{tabularx}{\linewidth}{Xcccc}
+\heavyline
+& min & typ & max & units \\ \heavyline
+
+Serial input line speed & & 115200 & & bps \\ \hline
+
+VGA & & & & \\
+\hspace{10pt} resolution & & 1024x768 & & pixels \\
+\hspace{10pt} vertical sync & & 60.004 & & Hz \\
+\hspace{10pt} horizontal sync & & 48.363 & & kHz \\
+\hspace{10pt} pixel clock & & 65.000 & & MHz \\ \hline
+
+Cursor blink rate & & 1.875 & & Hz \\ \hline
+\end{tabularx}}
+\vspace{10 pt}
+
 
 \end{document}
