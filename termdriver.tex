@@ -49,6 +49,7 @@
 }
 
 \newcommand{\mach}[1]{\texttt{\textbf{#1}}}
+\newcommand{\gap}{\vspace{10pt}}
 
 \input{pyg.tex}
 
@@ -124,90 +125,47 @@ The following standard
 \href{https://en.wikipedia.org/wiki/ANSI_escape_code\#CSI_sequences}{CSI
 codes} are supported:
 
-\begin{longtable}[]{@{}ll@{}}
-\toprule
-\begin{minipage}[b]{0.34\columnwidth}\raggedright
-Code
-\end{minipage} & \begin{minipage}[b]{0.60\columnwidth}\raggedright
-Effect
-\end{minipage}\tabularnewline
-\midrule
-\endhead
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} A
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Cursor up
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} B
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Cursor down
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} C
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Cursor forward
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} D
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Cursor back
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{r;c} H
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Cursor position
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} J
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Erase display
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} m
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Select graphic rendition
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} s
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Save cursor position
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} u
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Restore cursor position
-\end{minipage}\tabularnewline
-\bottomrule
-\end{longtable}
+\gap\noindent
+\begin{tabularx}{\linewidth}{lX}
+\heavyline
+Code & Effect \\ \heavyline
+
+ESC {[} \emph{n} A & Cursor up \\
+
+ESC {[} \emph{n} B & Cursor down \\
+
+ESC {[} \emph{n} C & Cursor forward \\
+
+ESC {[} \emph{n} D & Cursor back \\
+
+ESC {[} \emph{r;c} H & Cursor position \\
+
+ESC {[} \emph{n} J & Erase display \\
+
+ESC {[} \emph{n} m & Select graphic rendition \\
+
+ESC {[} s & Save cursor position \\
+
+ESC {[} u & Restore cursor position \\ \heavyline
+\end{tabularx}
+\gap
 
 In addition the following sequences are specific to TermDriver:
 
-\begin{longtable}[]{@{}ll@{}}
-\toprule
-\begin{minipage}[b]{0.34\columnwidth}\raggedright
-Code
-\end{minipage} & \begin{minipage}[b]{0.60\columnwidth}\raggedright
-Effect
-\end{minipage}\tabularnewline
-\midrule
-\endhead
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} h
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Set display mode.
+\gap
+\noindent
+\begin{tabularx}{\linewidth}{lX}
+\heavyline
+Code & Effect \\ \heavyline
 
-0 is 80x25, 1 is 128x48, 2 is 96x64 (rotated)
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.34\columnwidth}\raggedright
-ESC {[} \emph{n} S
-\end{minipage} & \begin{minipage}[t]{0.60\columnwidth}\raggedright
-Screen-saver.
+ESC {[} \emph{n} h & 
+Set display mode.  0 is 80x25, 1 is 128x48, 2 is 96x64 (rotated)
+\\
 
-0 stops video output, 1 restarts video output
-\end{minipage}\tabularnewline
-\bottomrule
-\end{longtable}
+ESC {[} \emph{n} S & Screen-saver.  0 stops video output, 1 restarts video output
+\\ \heavyline
+\end{tabularx}
+\gap
 
 \noindent
 For example this C program displays all available foreground and background colors.
@@ -231,7 +189,7 @@ they match TermDriver's native 1024x768 @ 60 Hz VGA output.
 \png{img/arduino}{Arduino Uno}
 
 TermDriver connects directly to any Arduino or Arduino-compatible.
-It uses four connections:
+It requires four connections:
 
 \begin{itemize}
 \item \mach{GND}
@@ -241,9 +199,10 @@ It uses four connections:
 \end{itemize}
 
 \noindent
-To use any other MCU, make the above four connections. Note that RESET is active-high.
+To use another MCU, make the above four connections. Note that RESET is active-low.
 The serial protocol on \mach{TX} is 115200 bps, 8 bits, no parity, 1 stop bit.
 This is frequently described as \mach{115200-8N1}.
+All signaling is 3.3V, but 5V tolerant.
 
 \newpage
 \hypertarget{technical-specifications}{}
