@@ -1,0 +1,4 @@
+#!/bin/sh -e
+
+python mkcode.py
+pdflatex -interaction=nonstopmode termdriver.tex
