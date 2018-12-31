@@ -58,20 +58,20 @@
 
 \newpage
 \begin{center}
-\includegraphics[width=0.75\textwidth]{img/img1}
+\includegraphics[width=0.75\textwidth]{img/termdriver/img1}
 \end{center}
 \tableofcontents
 \listoffigures
 
 \section{Overview}
 
-\begin{center}
-\includegraphics[width=0.75\textwidth]{img/block}
-\end{center}
-
 TermDriver listens on a serial line and emulates a text terminal,
 producing output on a standard VGA connector.
 It gives embedded microcontrollers a real console.
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{img/termdriver/block}
+\end{center}
 
 \section{Features}
 \begin{itemize}
@@ -106,7 +106,7 @@ It gives embedded microcontrollers a real console.
 
 \section{Operation}
 
-\png{img/page1}{sample output at 80x25}
+\png{img/termdriver/page1}{sample output at 80x25}
 
 TermDriver monitors the serial line at 115200 baud, and draws any
 text on the VGA.
@@ -123,7 +123,7 @@ Or this code in plain C
 \noindent
 Gives this output on the VGA:
 
-\png{img/page2}{Counter output}
+\png{img/termdriver/page2}{Counter example output}
 
 \subsection{ANSI escape codes}
 
@@ -186,8 +186,8 @@ and a portrait orientation 96x64 mode.
 Both are very readable because
 they match TermDriver's native 1024x768 @ 60 Hz VGA output.
 
-\png{img/moby1}{mode 1 (128x48)}
-\png{img/moby2}{mode 2 (96x64)}
+\png{img/termdriver/moby1}{mode 1 (128x48)}
+\png{img/termdriver/moby2}{mode 2 (96x64)}
 
 \newpage
 \section{Hardware}
