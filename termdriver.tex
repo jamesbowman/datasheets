@@ -39,7 +39,7 @@
 \newcommand{\png}[2]{
 \begin{figure}[H]
 \begin{center}
-\includegraphics[width=0.75\textwidth]{#1.png}
+\includegraphics[width=0.75\textwidth]{#1}
 \caption{#2}
 \end{center}
 \end{figure}
@@ -52,15 +52,24 @@
 
 \begin{document}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.75\textwidth]{img/img1}
-  \caption{The TermDriver PCB}
-\end{figure}
+\newpage
+\begin{center}
+\includegraphics[width=0.75\textwidth]{img/img1}
+\end{center}
+\tableofcontents
+\listoffigures
 
-TermDriver listens on a serial line and emulates a text terminal on a
-standard VGA connector. It gives embedded microcontrollers a real console.
+\section{Overview}
 
+\begin{center}
+\includegraphics[width=0.75\textwidth]{img/block}
+\end{center}
+
+TermDriver listens on a serial line and emulates a text terminal,
+producing output on a standard VGA connector.
+It gives embedded microcontrollers a real console.
+
+\section{Features}
 \begin{itemize}
 \item serial input at 115200 bps
 \item connects to the Arduino serial output pin, no libraries required
@@ -71,10 +80,6 @@ standard VGA connector. It gives embedded microcontrollers a real console.
 \item screen-saver under CPU control
 \item input signals 3.3V and 5V compatible
 \end{itemize}
-
-\newpage
-\tableofcontents
-\listoffigures
 
 \newpage
 \section{Installation with Arduino}
