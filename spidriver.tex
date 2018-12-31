@@ -1,0 +1,323 @@
+\documentclass{article}
+
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{helvet}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{xcolor}
+
+\usepackage{framed}     % These needed for the code formatter
+\usepackage{color}
+\usepackage{fancyvrb}
+
+% Use helvetica (sans) by default
+\renewcommand{\familydefault}{\sfdefault}
+
+% Greenish links
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!red,
+  urlcolor=green!70!black
+}
+
+\setlength{\headheight}{40pt}
+\setlength{\headsep}{0.2in}
+
+\pagestyle{fancy}
+\lhead{\includegraphics[width=0.2\textwidth]{img/logo}}
+\chead{SPIDriver Datasheet}
+\rhead{\thepage}
+\cfoot{\textcopyright \the\year \ \ Excamera Labs}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\newcommand{\heavyline}{\specialrule{1pt}{1pt}{1pt}}
+\newcommand{\png}[2]{
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.75\textwidth]{#1}
+\caption{#2}
+\end{center}
+\end{figure}
+}
+
+\newcommand{\mach}[1]{\texttt{\textbf{#1}}}
+\newcommand{\gap}{\vspace{10pt}}
+
+\input{pyg.tex}
+
+\begin{document}
+
+\newpage
+\begin{center}
+\includegraphics[width=0.75\textwidth]{img/spidriver/main}
+\end{center}
+\tableofcontents
+\listoffigures
+
+\section{Overview}
+
+SPIDriver is an easy-to-use tool for controlling SPI devices. It works with Windows, Mac, and Linux, and has a built-in color screen that shows a live logic-analyzer display of all SPI traffic.
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{img/termdriver/block}
+\end{center}
+
+\section{Features}
+\begin{itemize}
+\item live display shows you exactly what it’s doing all the time
+\item sustained SPI transfers at 500 Kbps
+\item USB line voltage monitor to detect supply problems, to 0.01 V
+\item target device high-side current measurement, to 5 mA
+\item two auxiliary output signals, A and B
+\item dedicated power out lines. two each of GND, 3.3 V and 5 V
+\item all signals color coded to match jumper colors
+\item all signals are 3.3 V, and are 5 V tolerant
+\item uses an FTDI USB serial adapter, and Silicon Labs automotive-grade EFM8 controller
+\item also reports uptime, temperature, and running CRC of all traffic
+\item all sensors and signals controlled using a simple serial protocol
+\item GUI, command-line, C/C++, and Python 2/3 host software provided for Windows, Mac, and Linux
+\end{itemize}
+
+\newpage
+\section{Installation with Arduino}
+
+\begin{enumerate}
+\item Disconnect power from the Arduino
+\item Attach the SPIDriver to the Arduino
+\item Connect the VGA plug to the SPIDriver and turn on the monitor
+\item Apply power to the Arduino. You should see a blank screen with a blinking cursor at top-left
+\item Load a sketch on the Arduino that prints text at 115200 baud, like the one below
+\end{enumerate}
+
+\newcommand{\eg}[1]{
+\begin{framed}
+\input{code/#1.inc}
+\end{framed}
+}
+
+\eg{termdriver-helloworld}
+
+\section{Operation}
+
+\png{img/termdriver/page1}{sample output at 80x25}
+
+SPIDriver monitors the serial line at 115200 baud, and draws any
+text on the VGA.
+There's nothing to set up or load.
+For example this Arduino sketch
+
+\eg{termdriver-counter1}
+
+\noindent
+Or this code in plain C
+
+\eg{termdriver-counter2}
+
+\noindent
+Gives this output on the VGA:
+
+\png{img/termdriver/page2}{Counter example output}
+
+\subsection{ANSI escape codes}
+
+The following standard
+\href{https://en.wikipedia.org/wiki/ANSI_escape_code\#CSI_sequences}{CSI codes}
+are supported:
+
+\gap\noindent
+\begin{tabularx}{\linewidth}{lX}
+\heavyline
+Code & Effect \\ \heavyline
+
+ESC {[} \emph{n} A & Cursor up \\
+
+ESC {[} \emph{n} B & Cursor down \\
+
+ESC {[} \emph{n} C & Cursor forward \\
+
+ESC {[} \emph{n} D & Cursor back \\
+
+ESC {[} \emph{r;c} H & Cursor position \\
+
+ESC {[} \emph{n} J & Erase display \\
+
+ESC {[} \emph{n} m & Select graphic rendition \\
+
+ESC {[} s & Save cursor position \\
+
+ESC {[} u & Restore cursor position \\ \heavyline
+\end{tabularx}
+\gap
+
+In addition the following sequences are specific to SPIDriver:
+
+\gap
+\noindent
+\begin{tabularx}{\linewidth}{lX}
+\heavyline
+Code & Effect \\ \heavyline
+
+ESC {[} \emph{n} h & 
+Set display mode.  0 is 80x25, 1 is 128x48, 2 is 96x64 (rotated)
+\\
+
+ESC {[} \emph{n} S & Screen-saver.  0 stops video output, 1 restarts video output
+\\ \heavyline
+\end{tabularx}
+\gap
+
+\noindent
+For example this C program displays all available foreground and background colors.
+
+\eg{termdriver-color1}
+
+\subsection{High-resolution modes}
+
+In addition to standard 80x25 text mode,
+SPIDriver supports a higher density 128x48 mode,
+and a portrait orientation 96x64 mode.
+Both are very readable because
+they match SPIDriver's native 1024x768 @ 60 Hz VGA output.
+
+\png{img/termdriver/moby1}{mode 1 (128x48)}
+\png{img/termdriver/moby2}{mode 2 (96x64)}
+
+\newpage
+\section{Hardware}
+
+\png{img/arduino}{Arduino Uno}
+
+SPIDriver connects directly to any Arduino or Arduino-compatible.
+It requires four connections:
+
+\begin{itemize}
+\item \mach{GND}
+\item \mach{5V}
+\item \mach{RESET}
+\item \mach{TX}
+\end{itemize}
+
+\noindent
+To use another MCU, make the above four connections. Note that RESET is active-low.
+The serial protocol on \mach{TX} is 115200 bps, 8 bits, no parity, 1 stop bit.
+This is frequently described as \mach{115200-8N1}.
+All signaling is 3.3V, but 5V tolerant.
+
+\newpage
+\section{Raw protocol}
+
+SPIDriver uses a serial protocol to send and receive SPI commands.
+Connect to the SPIDriver at 460800 baud, 8 bits, no parity, 1 stop bit (460800 8N1).
+Many SPIDriver commands are ASCII, you can control it
+interactively from any terminal application that can connect at 460800
+baud. For example typing u and s toggles the CS line and ? displays the
+status info.
+Commands are:
+
+\gap\begin{tabular}{ll}
+\hline
+\mach{?}        & transmit status information (see below)        \\
+\mach{e} $byte$ & echo $byte$       \\
+\mach{s}        & select        \\
+\mach{u}        & unselect        \\
+\mach{a} $byte$ & set A output to 0/1       \\
+\mach{b} $byte$ & set B output to 0/1       \\
+\mach{x}        & disconnect from SPI bus       \\
+\mach{0x80-bf}  & write and read 1-64 bytes       \\
+\mach{0xc0-ff}  & write 1-64 bytes        \\ \hline
+\end{tabular}\gap
+
+So for example to select, then transfer two bytes 0x12, and unselect, the host sends 5 bytes:
+
+\begin{framed}\begin{Verbatim}
+s
+0x81
+0x12
+0x34
+u
+\end{Verbatim}
+\end{framed}
+
+The command \mach{0x81} is a two byte send/receive, so two bytes are returned to the PC.
+The status information is always 80 characters, space padded. For example:
+
+{\scriptsize
+\begin{framed}\begin{Verbatim}
+[spidriver1 DO00QS8D 000007219 4.807 045 25.4 1 1 1 49c1                       ]
+\end{Verbatim}
+\end{framed}}
+
+The fields are space-delimited:
+
+\gap\begin{tabular}{ll}
+\hline
+spidriver1      & fixed identifier \\
+serial          & serial code identifier \\
+uptime          & SPIDriver uptime 0-999999999, in seconds \\
+voltage         & USB bus voltage, in volts \\
+current         & attached device current, in mA \\
+temperature     & junction temperature, in C \\
+CS              & CS line state \\
+A               & A line state \\
+B               & B line state \\
+crc             & 16-bit CRC of all input and output bytes (CRC-16-CCITT) \\
+\hline
+\end{tabular}\gap
+
+\newpage
+\hypertarget{technical-specifications}{}
+\hypertarget{technical-specifications}{%
+\section{Specifications}\label{electrical-characteristics}}
+
+\subsection{DC characteristics}
+\vspace{10 pt}
+{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+
+\begin{tabularx}{\linewidth}{XC{40pt}C{40pt}C{40pt}C{40pt}}
+\heavyline
+& min & typ & max & units \\ \heavyline
+
+Voltage accuracy              && 0.01 && V            \\ \hline
+Current accuracy              && 5 && mA              \\ \hline
+Temperature accuracy          && $\pm$ 2 && C            \\ \hline
+MISO & & & & \\
+\hspace{10pt}low voltage & & & 0.6 & V \\
+\hspace{10pt}high voltage & 2.7 &   & 5.8 & V \\ \hline
+Output signal current (SCK, MOSI, CS, A, B)  &&& 8 & mA \\ \hline
+Output current        & & & 470 & mA                  \\ \hline
+Current consumption   & & 25 & & mA                   \\ \hline
+
+\end{tabularx}}
+\vspace{10 pt}
+
+\subsection{AC characteristics}
+\vspace{10 pt}
+
+{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+\begin{tabularx}{\linewidth}{XC{40pt}C{40pt}C{40pt}C{40pt}}
+\heavyline
+& min & typ & max & units \\ \heavyline
+
+SPI speed                     &495& 500 &505& Kbps   \\ \hline
+Uptime accuracy               && 150 && ppm           \\ \hline
+Uptime wrap                   && 31.7 && years        \\ \hline
+Startup time & & & 200 & ms \\ \hline
+\end{tabularx}}
+\vspace{10 pt}
+
+\section{Support information}
+
+Technical and product support is available at
+\href{mailto:support@excamera.com}{support@excamera.com}
+
+
+\end{document}
