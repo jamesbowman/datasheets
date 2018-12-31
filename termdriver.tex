@@ -34,8 +34,12 @@
 \renewcommand{\headrulewidth}{0.5pt}
 \renewcommand{\footrulewidth}{0.5pt}
 
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
 \newcommand{\heavyline}{\specialrule{1pt}{1pt}{1pt}}
-\setlength{\tabcolsep}{20pt}
 \newcommand{\png}[2]{
 \begin{figure}[H]
 \begin{center}
@@ -124,8 +128,8 @@ Gives this output on the VGA:
 \subsection{ANSI escape codes}
 
 The following standard
-\href{https://en.wikipedia.org/wiki/ANSI_escape_code\#CSI_sequences}{CSI
-codes} are supported:
+\href{https://en.wikipedia.org/wiki/ANSI_escape_code\#CSI_sequences}{CSI codes}
+are supported:
 
 \gap\noindent
 \begin{tabularx}{\linewidth}{lX}
@@ -176,8 +180,8 @@ For example this C program displays all available foreground and background colo
 
 \subsection{High-resolution modes}
 
-As well as the "classic" 80x25 text mode,
-TermDriver also supports a higher density 128x48 mode,
+In addition to standard 80x25 text mode,
+TermDriver supports a higher density 128x48 mode,
 and a portrait orientation 96x64 mode.
 Both are very readable because
 they match TermDriver's native 1024x768 @ 60 Hz VGA output.
@@ -209,20 +213,20 @@ All signaling is 3.3V, but 5V tolerant.
 \newpage
 \hypertarget{technical-specifications}{}
 \hypertarget{technical-specifications}{%
-\section{Electrical characteristics}\label{electrical-characteristics}}
+\section{Specifications}\label{electrical-characteristics}}
 
 \subsection{DC characteristics}
 \vspace{10 pt}
 {\renewcommand{\arraystretch}{1.2}% for the vertical padding
 
-\begin{tabularx}{\linewidth}{Xcccc}
+\begin{tabularx}{\linewidth}{XC{40pt}C{40pt}C{40pt}C{40pt}}
 \heavyline
 & min & typ & max & units \\ \heavyline
 
 Supply voltage & 4.0 & 5.0 & 9.0 & V \\ \hline
 
 Supply current & & & & \\
-\hspace{10pt} operating & & 25 & & mA \\
+\hspace{10pt} operation & & 25 & & mA \\
 \hspace{10pt} screen saver & & 10 & & mA \\ \hline
 
 RESET,RX low voltage & & & 0.6 & V \\ \hline
@@ -234,7 +238,7 @@ RESET,RX high voltage & 2.7 &   & 5.8 & V \\ \hline
 \vspace{10 pt}
 
 {\renewcommand{\arraystretch}{1.2}% for the vertical padding
-\begin{tabularx}{\linewidth}{Xcccc}
+\begin{tabularx}{\linewidth}{XC{40pt}C{40pt}C{40pt}C{40pt}}
 \heavyline
 & min & typ & max & units \\ \heavyline
 
@@ -247,8 +251,14 @@ VGA & & & & \\
 \hspace{10pt} pixel clock & & 65.000 & & MHz \\ \hline
 
 Cursor blink rate & & 1.875 & & Hz \\ \hline
+Startup time & & & 300 & ms \\ \hline
 \end{tabularx}}
 \vspace{10 pt}
+
+\section{Support information}
+
+Technical and product support is available at
+\href{mailto:support@excamera.com}{support@excamera.com}
 
 
 \end{document}
