@@ -1,0 +1,1 @@
+time rsync -av spidriver.pdf termdriver.pdf excamera.com:files/
