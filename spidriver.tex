@@ -9,6 +9,25 @@
 \usepackage{tabularx}
 \usepackage{xcolor}
 
+\usepackage{listings}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  % numberstyle=\tiny\color{gray},
+  % keywordstyle=\color{blue},
+  % commentstyle=\color{dkgreen},
+  % stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
 \usepackage{framed}     % These needed for the code formatter
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -87,130 +106,176 @@ SPIDriver is an easy-to-use tool for controlling SPI devices. It works with Wind
 \item GUI, command-line, C/C++, and Python 2/3 host software provided for Windows, Mac, and Linux
 \end{itemize}
 
-\newpage
-\section{Installation with Arduino}
+\section{Software installation}
 
-\begin{enumerate}
-\item Disconnect power from the Arduino
-\item Attach the SPIDriver to the Arduino
-\item Connect the VGA plug to the SPIDriver and turn on the monitor
-\item Apply power to the Arduino. You should see a blank screen with a blinking cursor at top-left
-\item Load a sketch on the Arduino that prints text at 115200 baud, like the one below
-\end{enumerate}
-
-\newcommand{\eg}[1]{
-\begin{framed}
-\input{code/#1.inc}
-\end{framed}
-}
-
-\eg{termdriver-helloworld}
-
-\section{Operation}
-
-\png{img/termdriver/page1}{sample output at 80x25}
-
-SPIDriver monitors the serial line at 115200 baud, and draws any
-text on the VGA.
-There's nothing to set up or load.
-For example this Arduino sketch
-
-\eg{termdriver-counter1}
-
-\noindent
-Or this code in plain C
-
-\eg{termdriver-counter2}
-
-\noindent
-Gives this output on the VGA:
-
-\png{img/termdriver/page2}{Counter example output}
-
-\subsection{ANSI escape codes}
-
-The following standard
-\href{https://en.wikipedia.org/wiki/ANSI_escape_code\#CSI_sequences}{CSI codes}
-are supported:
-
-\gap\noindent
-\begin{tabularx}{\linewidth}{lX}
-\heavyline
-Code & Effect \\ \heavyline
-
-ESC {[} \emph{n} A & Cursor up \\
-
-ESC {[} \emph{n} B & Cursor down \\
-
-ESC {[} \emph{n} C & Cursor forward \\
-
-ESC {[} \emph{n} D & Cursor back \\
-
-ESC {[} \emph{r;c} H & Cursor position \\
-
-ESC {[} \emph{n} J & Erase display \\
-
-ESC {[} \emph{n} m & Select graphic rendition \\
-
-ESC {[} s & Save cursor position \\
-
-ESC {[} u & Restore cursor position \\ \heavyline
-\end{tabularx}
-\gap
-
-In addition the following sequences are specific to SPIDriver:
-
-\gap
-\noindent
-\begin{tabularx}{\linewidth}{lX}
-\heavyline
-Code & Effect \\ \heavyline
-
-ESC {[} \emph{n} h & 
-Set display mode.  0 is 80x25, 1 is 128x48, 2 is 96x64 (rotated)
-\\
-
-ESC {[} \emph{n} S & Screen-saver.  0 stops video output, 1 restarts video output
-\\ \heavyline
-\end{tabularx}
-\gap
-
-\noindent
-For example this C program displays all available foreground and background colors.
-
-\eg{termdriver-color1}
-
-\subsection{High-resolution modes}
-
-In addition to standard 80x25 text mode,
-SPIDriver supports a higher density 128x48 mode,
-and a portrait orientation 96x64 mode.
-Both are very readable because
-they match SPIDriver's native 1024x768 @ 60 Hz VGA output.
-
-\png{img/termdriver/moby1}{mode 1 (128x48)}
-\png{img/termdriver/moby2}{mode 2 (96x64)}
-
-\newpage
-\section{Hardware}
-
-\png{img/arduino}{Arduino Uno}
-
-SPIDriver connects directly to any Arduino or Arduino-compatible.
-It requires four connections:
+The source for all the SPIDriver software is the
+\href{https://github.com/jamesbowman/spidriver}{repository}.
+Available are:
 
 \begin{itemize}
-\item \mach{GND}
-\item \mach{5V}
-\item \mach{RESET}
-\item \mach{TX}
+\item a Windows/Mac/Linux GUI
+\item a Windows/Mac/Linux command-line
+\item Python 2 and 3 bindings
+\item Windows/Mac/Linux C/C++ bindings
 \end{itemize}
 
-\noindent
-To use another MCU, make the above four connections. Note that RESET is active-low.
-The serial protocol on \mach{TX} is 115200 bps, 8 bits, no parity, 1 stop bit.
-This is frequently described as \mach{115200-8N1}.
-All signaling is 3.3V, but 5V tolerant.
+Installation of the GUI and command-line utilities varies by platform.
+
+\subsection{Windows}
+
+This
+\href{https://github.com/jamesbowman/spidriver/releases/download/v0.1.1/spidriver-installer.exe}{installer}
+contains the GUI and command-line utilities.
+The GUI shortcut is installed on the desktop:
+
+\png{img/spidriver/spidriver-win-1}{Desktop shortcut icon}
+
+launching it brings up the control window:
+
+\png{img/spidriver/spidriver-win-2}{Windows GUI utility}
+
+If there is only one serial device, 
+the SPIDriver device should be automatically selected.
+If there is more than one device, select its COM port from the pulldown menu at the top.
+Once connected, you can control the signal lines and transmit hex values.
+
+The command line utility \mach{spicl} is also installed. For example to display status information:
+
+\begin{lstlisting}
+  C:\>"c:\Program Files\Excamera Labs\SPIDriver\spicl.exe" COM3 i
+  uptime 1625  4.810 V  45 mA  23.3 C
+\end{lstlisting}
+
+See below for more information on the command-line syntax.
+
+\subsection{Linux}
+
+The Linux GUI is available for download as
+\href{https://github.com/jamesbowman/spidriver/releases/download/v0.1.0/spigui-linux64}{spigui-linux64}.
+Or you can run the native Python GUI directly as shown below.
+
+For the command-line tool, clone the
+\href{https://github.com/jamesbowman/spidriver}{repository}, then do:
+\begin{lstlisting}
+    $ cd spidriver/c
+    $ make -f linux/Makefile
+    $ ./build/spicl /dev/ttyUSB0 i
+\end{lstlisting}
+and you should see something like:
+
+\begin{lstlisting}
+    uptime 2285  4.812 V  45 mA  23.6 C
+\end{lstlisting}
+
+\subsection{MacOS}
+
+The MacOS GUI is available for download as
+\href{https://github.com/jamesbowman/spidriver/releases/download/v0.1.0/spigui-macos}{spigui-macos}.
+This is a Mac executable, so after downloading it do:
+\begin{lstlisting}
+    $ cd Downloads
+    $ chmod a+x spigui-macos
+    $ ./spigui-macos
+\end{lstlisting}
+
+Or you can run the native Python GUI directly as shown below.
+
+For the command-line tool, clone the
+\href{https://github.com/jamesbowman/spidriver}{repository}, then do:
+
+\begin{lstlisting}
+    cd spidriver/c
+    make -f linux/Makefile
+    ./build/spicl /dev/cu.usbserial-DO00QS8D i
+\end{lstlisting}
+
+(substituting your actual SPIDriver's ID for \mach{DO00QS8D})
+and you should see something like:
+
+\begin{lstlisting}
+    uptime 2285  4.812 V  45 mA  23.6 C
+\end{lstlisting}
+
+Note that the port to use is \mach{/dev/cu.usbserial-XXXXXXXX}, as explained
+\href{https://pbxbook.com/other/mac-tty.html}{here}.
+
+\subsection{Python 2 and 3}
+
+The SPIDriver bindings can be installed with \mach{pip} like this:
+
+\begin{lstlisting}
+    pip install spidriver
+\end{lstlisting}
+
+then from Python you can do:
+
+\begin{lstlisting}
+    >>> from spidriver import SPIDriver
+    >>> s = SPIDriver("/dev/ttyUSB0") # or something like COM16 for Windows
+    >>> s.sel()                       # start command
+    >>> s.write([0x9f])               # command 9F is READ JEDEC ID 
+    >>> list(s.read(3))               # read next 3 bytes
+    [239, 64, 24]
+    >>> s.unsel()                     # end command
+    >>>
+\end{lstlisting}
+
+and you should see something like:
+
+\png{img/spidriver/spidriver-flash}{}
+
+under \mach{python/samples}.
+The GUI (which uses wxPython) can be run with:
+
+\begin{lstlisting}
+    python spigui.py
+\end{lstlisting}
+
+which depending on your distribution looks something like this:
+
+\png{img/spidriver/spidriver-gui-linux}{}
+
+There are more examples in the 
+\href{https://github.com/jamesbowman/spidriver/tree/master/python/samples}{samples folder in the repository}.
+
+% C/C++
+% -----
+% 
+% SPIDriver is contained in a single source file with a single header.
+% Both are in `this subdirectory <https://github.com/jamesbowman/spidriver/tree/master/c/common>`_.
+% Usage follows the Python API and is fairly self-explanatory.
+% 
+% The command-line tool ``spicl``
+% -------------------------------
+% 
+% ``spicl`` is the same on all platforms.
+% 
+% The first parameter to the command is the serial port, which depends on your operating system.
+% All following parameters are control commands. These are:
+% 
+% =========== ==================================================================
+%   ``i``     display status information (uptime, voltage, current, temperature)
+%   ``s``     SPI select
+%   ``u``     SPI unselect
+%   ``w``     write bytes to SPI
+%   ``r N``   read N bytes from SPI
+%   ``a 0/1`` Set A line
+%   ``b 0/1`` Set B line
+% =========== ==================================================================
+% 
+% For example the command:
+% 
+%   spicl /dev/ttyUSB0 s w 0x9f r 3 u
+% 
+% does the following:
+% 
+% ============ ===================
+%  ``s``       SPI select
+%  ``w 0x9f``  Write byte 0x9f
+%  ``r 3``     Read 3 bytes from slave
+%  ``u``       SPI unselect
+% ============ ===================
+% 
 
 \newpage
 \section{Raw protocol}
