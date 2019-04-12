@@ -12,7 +12,7 @@
 \usepackage{listings}
 
 \lstset{frame=tblr,
-  rulecolor=\color{blue},
+  rulecolor=\color{lightgray},
   language=Java,
   aboveskip=5mm,
   belowskip=5mm,
@@ -59,12 +59,20 @@
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
+\usepackage{setspace}
+
 \newcommand{\heavyline}{\specialrule{1pt}{1pt}{1pt}}
-\newcommand{\png}[2]{
+\newcommand{\png}[1]{
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.75\textwidth]{#1}
-\caption{#2}
+\end{center}
+\end{figure}
+}
+\newcommand{\pngw}[2]{
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=#2\textwidth]{#1}
 \end{center}
 \end{figure}
 }
@@ -81,15 +89,17 @@
 \includegraphics[width=1.00\textwidth]{img/spidriver/main}
 \end{center}
 \tableofcontents
-\listoffigures
+
+\newpage
+
+\setlength{\parindent}{0mm}
+\setlength{\parskip}{1mm}
+\setstretch{1.4}
 
 \section{Overview}
 
-SPIDriver is an easy-to-use tool for controlling SPI devices. It works with Windows, Mac, and Linux, and has a built-in color screen that shows a live logic-analyzer display of all SPI traffic.
-
-\begin{center}
-\includegraphics[width=0.75\textwidth]{img/termdriver/block}
-\end{center}
+SPIDriver is an easy-to-use tool for controlling SPI devices over USB.
+It works with Windows, Mac, and Linux, and has a built-in color screen that shows a live logic-analyzer display of all SPI traffic.
 
 \section{Features}
 \begin{itemize}
@@ -129,11 +139,11 @@ This
 contains the GUI and command-line utilities.
 The GUI shortcut is installed on the desktop:
 
-\png{img/spidriver/icon}{Desktop shortcut icon}
+\png{img/spidriver/icon}
 
 launching it brings up the control window:
 
-\png{img/spidriver/gui}{Windows GUI utility}
+\png{img/spidriver/gui}
 
 If there is only one serial device, 
 the SPIDriver device should be automatically selected.
@@ -153,15 +163,15 @@ See below for more information on the command-line syntax.
 
 The Linux GUI is available for download as
 \href{https://github.com/jamesbowman/spidriver/releases/download/v0.1.0/spigui-linux64}{spigui-linux64}.
-Or you can run the native Python GUI directly as shown below.
+Alternatively you can run the native Python GUI directly as shown below.
 
-For the command-line tool, clone the
+To build the command-line tool, clone the
 \href{https://github.com/jamesbowman/spidriver}{repository}, then do:
-% \begin{lstlisting}
-%     $ cd spidriver/c
-%     $ make -f linux/Makefile
-%     $ ./build/spicl /dev/ttyUSB0 i
-% \end{lstlisting}
+\begin{lstlisting}
+    $ cd spidriver/c
+    $ make -f linux/Makefile
+    $ ./build/spicl /dev/ttyUSB0 i
+\end{lstlisting}
 and you should see something like:
 
 \begin{lstlisting}
@@ -179,9 +189,9 @@ This is a Mac executable, so after downloading it do:
     $ ./spigui-macos
 \end{lstlisting}
 
-Or you can run the native Python GUI directly as shown below.
+Alternatively you can run the native Python GUI directly as shown below.
 
-For the command-line tool, clone the
+To  build the command-line tool, clone the
 \href{https://github.com/jamesbowman/spidriver}{repository}, then do:
 
 \begin{lstlisting}
@@ -211,7 +221,7 @@ then from Python you can do:
 
 \begin{lstlisting}
     >>> from spidriver import SPIDriver
-    >>> s = SPIDriver("/dev/ttyUSB0") # or something like COM16 for Windows
+    >>> s = SPIDriver("/dev/ttyUSB0") # change for your port
     >>> s.sel()                       # start command
     >>> s.write([0x9f])               # command 9F is READ JEDEC ID 
     >>> list(s.read(3))               # read next 3 bytes
@@ -222,9 +232,8 @@ then from Python you can do:
 
 and you should see something like:
 
-\png{img/spidriver/spidriver-flash}{}
+\png{img/spidriver/spidriver-flash}
 
-under \mach{python/samples}.
 The GUI (which uses wxPython) can be run with:
 
 \begin{lstlisting}
@@ -233,49 +242,207 @@ The GUI (which uses wxPython) can be run with:
 
 which depending on your distribution looks something like this:
 
-\png{img/spidriver/spidriver-gui-linux}{}
+\png{img/spidriver/spidriver-gui-linux}
 
 There are more examples in the 
-\href{https://github.com/jamesbowman/spidriver/tree/master/python/samples}{samples folder in the repository}.
+\href{https://github.com/jamesbowman/spidriver/tree/master/python/samples}{\mach{python/samples}} folder in the repository.
 
-% C/C++
-% -----
+\subsection{C/C++}
+
+SPIDriver is contained in a single source file with a single header.
+Both are in the
+\href{https://github.com/jamesbowman/spidriver/tree/master/c/common}{\mach{c/common}} folder in the repository.
+Usage follows the Python API and is fairly self-explanatory.
+
+\subsection{The command-line tool \mach{spicl}}
+
+\mach{spicl} is the same on all platforms.
+
+The first parameter to the command is the serial port, which depends on your operating system.
+All following parameters are control commands. These are:
+
+\gap\begin{tabular}{ll}
+\hline \\
+  \mach{i}     & print status information (uptime, voltage, current, temperature) \\
+  \mach{s}     & SPI select \\
+  \mach{u}     & SPI unselect \\
+  \mach{w} $byte$\mach{,}...     & write bytes to SPI \\
+  \mach{r N}   & read N bytes from SPI \\
+  \mach{a 0/1} & Set A line \\
+  \mach{b 0/1} & Set B line \\
+\hline \\
+\end{tabular}
+\gap
+
+For example the command:
+
+\begin{lstlisting}
+  spicl /dev/ttyUSB0 s w 0x9f r 3 u
+\end{lstlisting}
+
+does the following:
+
+\gap\begin{tabular}{ll}
+\hline \\
+ \mach{s}       & SPI select \\
+ \mach{w 0x9f}  & Write byte \mach{0x9f} \\
+ \mach{r 3}     & Read 3 bytes from slave \\
+ \mach{u}       & SPI unselect \\
+\hline \\
+\end{tabular}
+
+Byte values are decimal by default, or hex if prefixed with \mach{0x}.
+To send multiple bytes, separate them with a comma.
+
+\newpage
+\section{Use}
+
+\subsection{ST7735R 1.8" LCD}
+
+The ST7735R is a small color LCD controller,
+with a panel resolution of 160x128.
+It has an SPI-like interface. It does not use MISO, and needs an
+extra control line to distinguish between command bytes and data bytes.
+It requires an external reset for reliable start-up.
+
+Connect the LCD panel like this:
+
+\pngw{img/spidriver/spidriver-lcd-1}{0.5}
+
+\begin{center}
+\gap\begin{tabular}{ccc}
+\hline
+SPIDriver&        & LCD     \\
+\hline
+3.3V     & brown  & LED     \\
+SCK      & orange & SCK     \\
+MOSI     & green  & SDA     \\
+A        & purple & A0      \\
+B        & gray   & RESET   \\
+CS       & blue   & CS      \\
+GND      & black  & GND     \\
+3.3V     & red    & VCC     \\
+\hline \\
+\end{tabular}
+\end{center}
+
+
+There is a Python demonstration program for loading images onto the display.
+It requires pillow for image loading, so you may need to install its prerequisites:
+
+\begin{lstlisting}
+    pip install pillow
+\end{lstlisting}
+
+Then in the SPIDriver repository do:
+
+\begin{lstlisting}
+    cd python/samples
+    python st7735s.py -h /dev/ttyUSB0 grace.png
+\end{lstlisting}
+
+You can supply any image files as the last argument,
+and the script will resize and display them in order.
+
+\subsection{SPI Flash}
+
+First confirm the flash pinout on its datasheet. Modern SPI flash chips have a pinout like this one:
+
+\png{img/spidriver/spidriver-flash-0}
+
+Connect the clip to the flash, oriented with the red cable on pin 1.
+For example this is the clip connected to the flash on a ESP8266 board:
+
+\png{img/spidriver/spidriver-esp1}
+
+ 
+ For the ESP8266, the CPU needs to be kept in reset so there is no contention while SPIDriver is driving to the flash.
+ Connect SPIDriver's A signal (purple) to the ESP8266 reset:
+ 
+\png{img/spidriver/spidriver-esp2}
+
+\png{img/spidriver/spidriver-flash-2}
+
+and connect the clip cable pins to the SPIDriver like this:
+ 
+% +--------------+--------+---------+
+% | SPIDriver    |        | flash   |
+% +==============+========+=========+
+% | CS           | blue   | 1       |
+% +--------------+--------+---------+
+% | MISO         | yellow | 2       |
+% +--------------+--------+---------+
+% |              |        | 3       |
+% +--------------+--------+---------+
+% | GND          | black  | 4       |
+% +--------------+--------+---------+
+% | MOSI         | green  | 5       |
+% +--------------+--------+---------+
+% | SCK          | orange | 6       |
+% +--------------+--------+---------+
+% |              |        | 7       |
+% +--------------+--------+---------+
+% | 3.3V         | red    | 8       |
+% +--------------+--------+---------+
 % 
-% SPIDriver is contained in a single source file with a single header.
-% Both are in `this subdirectory <https://github.com/jamesbowman/spidriver/tree/master/c/common>`_.
-% Usage follows the Python API and is fairly self-explanatory.
+% You should be able to use the command-line utility to confirm the flash 3-byte JEDEC ID.
+% For example:
 % 
-% The command-line tool ``spicl``
-% -------------------------------
+%     $ spicl /dev/ttyUSB0 a 0 u s w 0x9f r 3 u
+%     0xc8,0x40,0x13
 % 
-% ``spicl`` is the same on all platforms.
+% The specific ID codes vary by manufacturer, and are listed in the datasheet for each flash part.
+% The third byte is the flash size in bits, so the flash above is
+% :math:`2^{19} = 524288` bytes, or 512K bytes.
+% If you don't see a valid ID, and you've checked the pinout,
+% make sure that the clip is properly making contact with all of the flash pins.
 % 
-% The first parameter to the command is the serial port, which depends on your operating system.
-% All following parameters are control commands. These are:
+% There is a Python example
+% `flash.py <https://github.com/jamesbowman/spidriver/blob/master/python/samples/flash.py>`_
+% that can read and write flash contents using standard
+% SPI flash commands.
+% With no options, it prints out JEDEC ID as confirmation:
 % 
-% =========== ==================================================================
-%   ``i``     display status information (uptime, voltage, current, temperature)
-%   ``s``     SPI select
-%   ``u``     SPI unselect
-%   ``w``     write bytes to SPI
-%   ``r N``   read N bytes from SPI
-%   ``a 0/1`` Set A line
-%   ``b 0/1`` Set B line
-% =========== ==================================================================
+%     $ python flash.py -h /dev/ttyUSB0
+%     Got JEDEC ID: c8 40 13
+%     Flash size is 524288 bytes
 % 
-% For example the command:
+% You can read all of flash into a file with the ``-r`` option:
 % 
-%   spicl /dev/ttyUSB0 s w 0x9f r 3 u
+%     $ python flash.py -h /dev/ttyUSB0 -r flashfile
+%     Got JEDEC ID: c8 40 13
+%     Flash size is 524288 bytes
+%     0/512 KBytes
+%     8/512 KBytes
+%     ...
+%     504/512 KBytes
 % 
-% does the following:
+% Similarly the ``-w`` option erases the flash and writes a file to it:
 % 
-% ============ ===================
-%  ``s``       SPI select
-%  ``w 0x9f``  Write byte 0x9f
-%  ``r 3``     Read 3 bytes from slave
-%  ``u``       SPI unselect
-% ============ ===================
+%     $ python flash.py -h /dev/ttyUSB0 -w flashfile
+%     Got JEDEC ID: c8 40 13
+%     Flash size is 524288 bytes
+%     0/512 KBytes
+%     ...
+%     504/512 KBytes
 % 
+% The Shield Adapter
+% ------------------
+% 
+% The shield adapter connects the SPIDriver signals to the Arduino's standard SPI locations,
+% so you can use Arduino shields with the SPIDriver.
+% In addition to power (GND, 3.3 V and 5 V) it connects:
+% 
+% ========= ===========
+% SPIDriver Arduino Pin
+% ========= ===========
+% SCK       13
+% MISO      12
+% MOSI      11
+% CS        8
+% A         9
+% B         10
+% ========= ===========
 
 \newpage
 \section{Raw protocol}
@@ -301,7 +468,10 @@ Commands are:
 \mach{0xc0-ff}  & write 1-64 bytes        \\ \hline
 \end{tabular}\gap
 
-So for example to select, then transfer two bytes 0x12, and unselect, the host sends 5 bytes:
+So for example to select, transfer two bytes
+\mach{0x12,0x34},
+unselect, the host sends 5 bytes.
+The command \mach{0x81} is a two byte send/receive, so two bytes are returned to the PC.
 
 \begin{lstlisting}
 s
@@ -311,7 +481,7 @@ s
 u
 \end{lstlisting}
 
-The command \mach{0x81} is a two byte send/receive, so two bytes are returned to the PC.
+
 The status information is always 80 characters, space padded. For example:
 
 {\scriptsize
@@ -384,7 +554,7 @@ Technical and product support is available at
 \href{mailto:support@spidriver.com}{support@spidriver.com}
 
 SPIDriver is built and maintained by
-\href{Excamera Labs}{https://excamera.com}.
+\href{https://excamera.com}{Excamera Labs}.
 
 
 
