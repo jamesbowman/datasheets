@@ -11,10 +11,11 @@
 
 \usepackage{listings}
 
-\lstset{frame=tb,
+\lstset{frame=tblr,
+  rulecolor=\color{blue},
   language=Java,
-  aboveskip=3mm,
-  belowskip=3mm,
+  aboveskip=5mm,
+  belowskip=5mm,
   showstringspaces=false,
   columns=flexible,
   basicstyle={\small\ttfamily},
@@ -39,7 +40,7 @@
 \hypersetup{
   colorlinks=true,
   linkcolor=blue!50!red,
-  urlcolor=green!70!black
+  urlcolor=blue!50!red
 }
 
 \setlength{\headheight}{40pt}
@@ -47,7 +48,7 @@
 
 \pagestyle{fancy}
 \lhead{\includegraphics[width=0.2\textwidth]{img/logo}}
-\chead{SPIDriver Datasheet}
+\chead{SPIDriver User Guide}
 \rhead{\thepage}
 \cfoot{\textcopyright \the\year \ \ Excamera Labs}
 \renewcommand{\headrulewidth}{0.5pt}
@@ -77,7 +78,7 @@
 
 \newpage
 \begin{center}
-\includegraphics[width=0.75\textwidth]{img/spidriver/main}
+\includegraphics[width=1.00\textwidth]{img/spidriver/main}
 \end{center}
 \tableofcontents
 \listoffigures
@@ -128,11 +129,11 @@ This
 contains the GUI and command-line utilities.
 The GUI shortcut is installed on the desktop:
 
-\png{img/spidriver/spidriver-win-1}{Desktop shortcut icon}
+\png{img/spidriver/icon}{Desktop shortcut icon}
 
 launching it brings up the control window:
 
-\png{img/spidriver/spidriver-win-2}{Windows GUI utility}
+\png{img/spidriver/gui}{Windows GUI utility}
 
 If there is only one serial device, 
 the SPIDriver device should be automatically selected.
@@ -156,11 +157,11 @@ Or you can run the native Python GUI directly as shown below.
 
 For the command-line tool, clone the
 \href{https://github.com/jamesbowman/spidriver}{repository}, then do:
-\begin{lstlisting}
-    $ cd spidriver/c
-    $ make -f linux/Makefile
-    $ ./build/spicl /dev/ttyUSB0 i
-\end{lstlisting}
+% \begin{lstlisting}
+%     $ cd spidriver/c
+%     $ make -f linux/Makefile
+%     $ ./build/spicl /dev/ttyUSB0 i
+% \end{lstlisting}
 and you should see something like:
 
 \begin{lstlisting}
@@ -191,7 +192,6 @@ For the command-line tool, clone the
 
 (substituting your actual SPIDriver's ID for \mach{DO00QS8D})
 and you should see something like:
-
 \begin{lstlisting}
     uptime 2285  4.812 V  45 mA  23.6 C
 \end{lstlisting}
@@ -303,14 +303,13 @@ Commands are:
 
 So for example to select, then transfer two bytes 0x12, and unselect, the host sends 5 bytes:
 
-\begin{framed}\begin{Verbatim}
+\begin{lstlisting}
 s
 0x81
 0x12
 0x34
 u
-\end{Verbatim}
-\end{framed}
+\end{lstlisting}
 
 The command \mach{0x81} is a two byte send/receive, so two bytes are returned to the PC.
 The status information is always 80 characters, space padded. For example:
@@ -382,7 +381,11 @@ Startup time & & & 200 & ms \\ \hline
 \section{Support information}
 
 Technical and product support is available at
-\href{mailto:support@excamera.com}{support@excamera.com}
+\href{mailto:support@spidriver.com}{support@spidriver.com}
+
+SPIDriver is built and maintained by
+\href{Excamera Labs}{https://excamera.com}.
+
 
 
 \end{document}
