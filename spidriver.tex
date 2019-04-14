@@ -101,7 +101,7 @@
 SPIDriver is an easy-to-use tool for controlling SPI devices over USB.
 It works with Windows, Mac, and Linux, and has a built-in color screen that shows a live logic-analyzer display of all SPI traffic.
 
-\section{Features}
+\subsection{Features}
 \begin{itemize}
 \item live display shows you exactly what it’s doing all the time
 \item sustained SPI transfers at 500 Kbps
@@ -117,6 +117,37 @@ It works with Windows, Mac, and Linux, and has a built-in color screen that show
 \item GUI, command-line, C/C++, and Python 2/3 host software provided for Windows, Mac, and Linux
 \end{itemize}
 
+\newpage
+\section{Getting Started}
+
+When you first connect it to the USB port, the display blinks white for a moment then shows something like this:
+
+\png{img/spidriver/spidriver-close}
+
+Connect the six colored hookup jumpers as shown,
+following the same sequence as on the screen
+
+\gap
+\begin{center}
+\begin{tabular}{ll}
+\hline
+\mach{SCK}  & orange \\
+\mach{MISO} & yellow \\
+\mach{MOSI} & green  \\
+\mach{CS}   & blue   \\
+\mach{A}    & purple \\
+\mach{B}    & gray   \\
+\hline
+\end{tabular}
+\end{center}
+\gap
+
+The top six signals carry power. There are two each of GND, 3.3 V and 5 V.
+
+Across the top of the display SPIDriver continuously measures the USB input voltage,
+and the current output.
+
+\newpage
 \section{Software installation}
 
 The source for all the SPIDriver software is the
@@ -135,7 +166,7 @@ Installation of the GUI and command-line utilities varies by platform.
 \subsection{Windows}
 
 This
-\href{https://github.com/jamesbowman/spidriver/releases/download/v0.1.1/spidriver-installer.exe}{installer}
+\href{https://spidriver.com/windows}{installer}
 contains the GUI and command-line utilities.
 The GUI shortcut is installed on the desktop:
 
@@ -162,7 +193,7 @@ See below for more information on the command-line syntax.
 \subsection{Linux}
 
 The Linux GUI is available for download as
-\href{https://github.com/jamesbowman/spidriver/releases/download/v0.1.0/spigui-linux64}{spigui-linux64}.
+\href{https://spidriver.com/linux}{spigui-linux64}.
 Alternatively you can run the native Python GUI directly as shown below.
 
 To build the command-line tool, clone the
@@ -181,7 +212,7 @@ and you should see something like:
 \subsection{MacOS}
 
 The MacOS GUI is available for download as
-\href{https://github.com/jamesbowman/spidriver/releases/download/v0.1.0/spigui-macos}{spigui-macos}.
+\href{https://spidriver.com/mac}{spigui-macos}.
 This is a Mac executable, so after downloading it do:
 \begin{lstlisting}
     $ cd Downloads
@@ -295,7 +326,7 @@ Byte values are decimal by default, or hex if prefixed with \mach{0x}.
 To send multiple bytes, separate them with a comma.
 
 \newpage
-\section{Use}
+\section{Using SPIDriver}
 
 \subsection{ST7735R 1.8" LCD}
 
@@ -363,68 +394,73 @@ Connect SPIDriver's A signal (purple) to the ESP8266 reset:
 \png{img/spidriver/spidriver-flash-2}
 
 and connect the clip cable pins to the SPIDriver like this:
- 
-% +--------------+--------+---------+
-% | SPIDriver    |        | flash   |
-% +==============+========+=========+
-% | CS           | blue   | 1       |
-% +--------------+--------+---------+
-% | MISO         | yellow | 2       |
-% +--------------+--------+---------+
-% |              |        | 3       |
-% +--------------+--------+---------+
-% | GND          | black  | 4       |
-% +--------------+--------+---------+
-% | MOSI         | green  | 5       |
-% +--------------+--------+---------+
-% | SCK          | orange | 6       |
-% +--------------+--------+---------+
-% |              |        | 7       |
-% +--------------+--------+---------+
-% | 3.3V         | red    | 8       |
-% +--------------+--------+---------+
-% 
-% You should be able to use the command-line utility to confirm the flash 3-byte JEDEC ID.
-% For example:
-% 
-%     $ spicl /dev/ttyUSB0 a 0 u s w 0x9f r 3 u
-%     0xc8,0x40,0x13
-% 
-% The specific ID codes vary by manufacturer, and are listed in the datasheet for each flash part.
-% The third byte is the flash size in bits, so the flash above is
-% :math:`2^{19} = 524288` bytes, or 512K bytes.
-% If you don't see a valid ID, and you've checked the pinout,
-% make sure that the clip is properly making contact with all of the flash pins.
-% 
-% There is a Python example
-% `flash.py <https://github.com/jamesbowman/spidriver/blob/master/python/samples/flash.py>`_
-% that can read and write flash contents using standard
-% SPI flash commands.
-% With no options, it prints out JEDEC ID as confirmation:
-% 
-%     $ python flash.py -h /dev/ttyUSB0
-%     Got JEDEC ID: c8 40 13
-%     Flash size is 524288 bytes
-% 
-% You can read all of flash into a file with the ``-r`` option:
-% 
-%     $ python flash.py -h /dev/ttyUSB0 -r flashfile
-%     Got JEDEC ID: c8 40 13
-%     Flash size is 524288 bytes
-%     0/512 KBytes
-%     8/512 KBytes
-%     ...
-%     504/512 KBytes
-% 
-% Similarly the ``-w`` option erases the flash and writes a file to it:
-% 
-%     $ python flash.py -h /dev/ttyUSB0 -w flashfile
-%     Got JEDEC ID: c8 40 13
-%     Flash size is 524288 bytes
-%     0/512 KBytes
-%     ...
-%     504/512 KBytes
-% 
+
+\begin{center}
+\gap\begin{tabular}{ccc}
+\hline
+SPIDriver&        & flash   \\
+\hline
+\mach{CS}         & blue   & 1 \\
+\mach{MISO}       & yellow & 2 \\
+                  &        & 3 \\
+\mach{GND}        & black  & 4 \\
+\mach{MOSI}       & green  & 5 \\
+\mach{SCK}        & orange & 6 \\
+                  &        & 7 \\
+\mach{3.3V}       & red    & 8 \\
+\hline \\
+\end{tabular}
+\end{center}
+
+You should be able to use the command-line utility to confirm the flash 3-byte JEDEC ID.
+For example:
+
+\begin{lstlisting}
+    $ spicl /dev/ttyUSB0 a 0 u s w 0x9f r 3 u
+    0xc8,0x40,0x13
+\end{lstlisting}
+
+The specific ID codes vary by manufacturer, and are listed in the datasheet for each flash part.
+The third byte is the flash size in bits, so the flash above is
+$2^{19} = 524288$ bytes, or 512K bytes.
+If you don't see a valid ID, and you've checked the pinout,
+make sure that the clip is properly making contact with all of the flash pins.
+
+There is a Python example
+\href{https://github.com/jamesbowman/spidriver/blob/master/python/samples/flash.py>}{flash.py}
+that can read and write flash contents using standard
+SPI flash commands.
+With no options, it prints out JEDEC ID as confirmation:
+
+\begin{lstlisting}
+    $ python flash.py -h /dev/ttyUSB0
+    Got JEDEC ID: c8 40 13
+    Flash size is 524288 bytes
+\end{lstlisting}
+
+You can read all of flash into a file with the \mach{-r} option:
+
+\begin{lstlisting}
+    $ python flash.py -h /dev/ttyUSB0 -r flashfile
+    Got JEDEC ID: c8 40 13
+    Flash size is 524288 bytes
+    0/512 KBytes
+    8/512 KBytes
+    ...
+    504/512 KBytes
+\end{lstlisting}
+
+Similarly the \mach{-w} option erases the flash and writes a file to it:
+
+\begin{lstlisting}
+    $ python flash.py -h /dev/ttyUSB0 -w flashfile
+    Got JEDEC ID: c8 40 13
+    Flash size is 524288 bytes
+    0/512 KBytes
+    ...
+    504/512 KBytes
+\end{lstlisting}
+
 % The Shield Adapter
 % ------------------
 % 
@@ -444,7 +480,49 @@ and connect the clip cable pins to the SPIDriver like this:
 % ========= ===========
 
 \newpage
-\section{Raw protocol}
+\section{Technical notes}
+
+\subsection{Port names}
+
+The serial port that SPIDriver appears at depends on your operating system.
+
+On \textbf{Windows}, it appears as COM1, COM2, COM3 etc.
+You can use the Device Manager or the \mach{MODE} command to display the available ports.
+\href{https://plugable.com/2011/07/04/how-to-change-the-com-port-for-a-usb-serial-adapter-on-windows-7/}{This article}
+describes how to set a device to a fixed port.
+
+On \textbf{Linux}, it appears as \mach{/dev/ttyUSB0}, 1, 2 etc.
+The actual number depends on the order that devices were added.
+However it also appears as something like:
+\begin{lstlisting}
+    /dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DO00QS8D-if00-port0
+\end{lstlisting}
+Where \mach{DO00QS8D} is the serial code of the SPIDriver (which is printed on the bottom of each SPIDriver).
+This is longer, of course, but always the same for a given device.
+
+Similarly on \textbf{Mac OS}, the SPIDriver appears as \mach{/dev/cu.usbserial-DO00QS8D}.
+
+\subsection{Decreasing the USB latency timer}
+
+SPIDriver performance can be increased by setting the USB latency timer to its minimum value of 1 ms.
+This can increase the speed of two-way SPI traffic by up to 10X.
+
+On \textbf{Linux} do:
+
+\begin{lstlisting}
+    setserial /dev/ttyUSB0 low_latency
+\end{lstlisting}
+
+On \textbf{Windows} and \textbf{Mac OS} follow
+\href{https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/}{these instructions}.
+
+\subsection{Temperature sensor}
+
+The temperature sensor is located in the on-board EFM8 microcontroller.
+It is calibrated at manufacture to within 2 C.
+A sudden temperature rise may indicate that one of the output pins (MOSI, SCK, CS, A, or B) is shorted to VCC or GND.
+
+\subsection{Raw protocol}
 
 SPIDriver uses a serial protocol to send and receive SPI commands.
 Connect to the SPIDriver at 460800 baud, 8 bits, no parity, 1 stop bit (460800 8N1).
@@ -509,9 +587,9 @@ crc             & 16-bit CRC of all input and output bytes (CRC-16-CCITT) \\
 \newpage
 \hypertarget{technical-specifications}{}
 \hypertarget{technical-specifications}{%
-\section{Specifications}\label{electrical-characteristics}}
+\subsection{Specifications}\label{electrical-characteristics}}
 
-\subsection{DC characteristics}
+\subsubsection*{DC characteristics}
 \vspace{10 pt}
 {\renewcommand{\arraystretch}{1.2}% for the vertical padding
 
@@ -521,7 +599,7 @@ crc             & 16-bit CRC of all input and output bytes (CRC-16-CCITT) \\
 
 Voltage accuracy              && 0.01 && V            \\ \hline
 Current accuracy              && 5 && mA              \\ \hline
-Temperature accuracy          && $\pm$ 2 && C            \\ \hline
+Temperature accuracy          && $\pm$ 2 && $^{\circ}$C            \\ \hline
 MISO & & & & \\
 \hspace{10pt}low voltage & & & 0.6 & V \\
 \hspace{10pt}high voltage & 2.7 &   & 5.8 & V \\ \hline
@@ -532,7 +610,7 @@ Current consumption   & & 25 & & mA                   \\ \hline
 \end{tabularx}}
 \vspace{10 pt}
 
-\subsection{AC characteristics}
+\subsubsection*{AC characteristics}
 \vspace{10 pt}
 
 {\renewcommand{\arraystretch}{1.2}% for the vertical padding
@@ -542,7 +620,7 @@ Current consumption   & & 25 & & mA                   \\ \hline
 
 SPI speed                     &495& 500 &505& Kbps   \\ \hline
 Uptime accuracy               && 150 && ppm           \\ \hline
-Uptime wrap                   && 31.7 && years        \\ \hline
+Uptime rollover               && 31.7 && years        \\ \hline
 Startup time & & & 200 & ms \\ \hline
 \end{tabularx}}
 \vspace{10 pt}
