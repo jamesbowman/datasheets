@@ -10,6 +10,7 @@
 \usepackage{xcolor}
 
 \usepackage{listings}
+\usepackage{tikz}
 
 \lstset{frame=tblr,
   rulecolor=\color{lightgray},
@@ -18,7 +19,7 @@
   belowskip=5mm,
   showstringspaces=false,
   columns=flexible,
-  basicstyle={\small\ttfamily},
+  basicstyle=\linespread{1.0}\small\ttfamily,
   numbers=none,
   % numberstyle=\tiny\color{gray},
   % keywordstyle=\color{blue},
@@ -47,6 +48,7 @@
 
 \newcommand{\iic}{I\two{}C}
 \newcommand{\iicdriver}{I\two{}CDriver}
+\newcommand{\degc}{$^{\circ}$C}
 
 \setlength{\headheight}{40pt}
 \setlength{\headsep}{0.2in}
@@ -84,6 +86,10 @@
 
 \newcommand{\mach}[1]{\texttt{\textbf{#1}}}
 \newcommand{\gap}{\vspace{10pt}}
+
+\newcommand\encircle[1]{%
+  \tikz[baseline=(X.base)] 
+   \node (X) [draw, shape=circle, inner sep=0] {\strut #1};}
 
 \input{pyg.tex}
 
@@ -166,349 +172,323 @@ Available are:
 
 Installation of the GUI and command-line utilities varies by platform.
 
-% Windows
-% ^^^^^^^
-% 
-% This
-% `installer <https://github.com/jamesbowman/i2cdriver/releases/download/0.0.04b/i2cdriver-installer.exe>`_
-% contains the GUI and command-line utilities.
-% 
-% The GUI shortcut is installed on the desktop:
-% 
-% .. im:: images/i2c/win32-icon.png
-% 
-% launching it brings up the control window:
-% 
-% .. im:: images/i2c/win32-gui.jpg
-% 
-% If there is only one serial device, 
-% the \iicdriver{} device should be automatically selected.
-% If there is more than one device, select its COM port from the pulldown menu at the top.
-% Once connected, you can select a connected \iic{} device and write and read data. 
-% 
-% The command line utility ``i2ccl`` is also installed. For example to display status information::
-% 
-%   c:\>"c:\Program Files\Excamera Labs\I2CDriver\i2ccl.exe" COM6 i
-%   uptime 8991  4.957 V  30 mA  25.8 C SDA=1 SCL=1 speed=100 kHz
-% 
-% See below for more information on the command-line syntax.
-% 
-% Linux
-% ^^^^^
-% 
-% ..
-%   The Linux GUI is available for download as
-%   `i2cgui-linux64 <https://github.com/jamesbowman/i2cdriver/releases/download/v0.1.0/i2cgui-linux64>`_.
-%   Or you can run the native Python GUI directly as shown below.
-% 
-% For the command-line tool, clone the
-% `repository <https://github.com/jamesbowman/i2cdriver>`_
-% , then do::
-% 
-%     cd i2cdriver/c
-%     make -f linux/Makefile
-%     sudo make -f linux/Makefile install
-%     i2ccl /dev/ttyUSB0 i
-% 
-% and you should see something like::
-% 
-%     uptime 1651  4.971 V  0 mA  21.2 C SDA=1 SCL=1 speed=100 kHz
-% 
-% MacOS
-% ^^^^^
-% 
-% ..
-%   The MacOS GUI is available for download as
-%   `i2cgui-macos <https://github.com/jamesbowman/i2cdriver/releases/download/v0.1.0/i2cgui-macos>`_.
-%   This is a Mac executable, so after downloading it do::
-% 
-%       $ cd Downloads
-%       $ chmod a+x i2cgui-macos
-%       $ ./i2cgui-macos
-% 
-%   Or you can run the native Python GUI directly as shown below.
-% 
-% For the command-line tool, clone the
-% `repository <https://github.com/jamesbowman/i2cdriver>`_
-% , then do::
-% 
-%     cd i2cdriver/c
-%     make -f linux/Makefile
-%     sudo make -f linux/Makefile install
-%     i2ccl /dev/cu.usbserial-DO00QS8D i
-% 
-% (substituting your actual \iicdriver{}'s ID for ``DO00QS8D``)
-% and you should see something like::
-% 
-%     uptime 1651  4.971 V  5 mA  21.2 C SDA=1 SCL=1 speed=100 kHz
-% 
-% Note that the port to use is ``/dev/cu.usbserial-XXXXXXXX``, as explained
-% `here <https://pbxbook.com/other/mac-tty.html>`_.
-% 
-% Python 2 and 3
-% ^^^^^^^^^^^^^^
-% 
-% The \iicdriver{} bindings can be installed with ``pip`` like this::
-% 
-%     pip install i2cdriver
-% 
-% then from Python you can read an LM75B temperature sensor with::
-% 
-%     >>> import i2cdriver
-%     >>> i2c = i2cdriver.I2CDriver("/dev/ttyUSB0")   # or something like COM16 for Windows
-%     >>> d=i2cdriver.EDS.Temp(i2c)
-%     >>> d.read()
-%     17.875
-%     >>> d.read()
-%     18.0
-% 
-% You can print a bus scan with:
-% 
-%     >>> i2c.scan()
-%     -- -- -- -- -- -- -- -- 
-%     -- -- -- -- -- -- -- -- 
-%     -- -- -- -- 1C -- -- -- 
-%     -- -- -- -- -- -- -- -- 
-%     -- -- -- -- -- -- -- -- 
-%     -- -- -- -- -- -- -- -- 
-%     -- -- -- -- -- -- -- -- 
-%     -- -- -- -- -- -- -- -- 
-%     48 -- -- -- -- -- -- -- 
-%     -- -- -- -- -- -- -- -- 
-%     -- -- -- -- -- -- -- -- 
-%     -- -- -- -- -- -- -- -- 
-%     68 -- -- -- -- -- -- -- 
-%     -- -- -- -- -- -- -- -- 
-%     [28, 72, 104]
-% 
-% The Python GUI (which uses `wxPython <https://www.wxpython.org/pages/downloads/>`_) can be run with::
-% 
-%     python i2cgui.py
-% 
-% which depending on your distribution looks something like this:
-% 
-% .. im:: images/i2cdriver-gui-linux.jpg
-% 
-% There are more examples in the 
-% `samples folder in the repository <https://github.com/jamesbowman/i2cdriver/tree/master/python/samples>`_.
-% 
-% ``help(i2cdriver)`` shows the documentation for the module.
-% 
-% C/C++
-% ^^^^^
-% 
-% \iicdriver{} is contained in a single source file with a single header.
-% Both are in `this subdirectory <https://github.com/jamesbowman/i2cdriver/tree/master/c/common>`_.
-% Usage follows the Python API and is fairly self-explanatory.
-% 
-% The command-line tool ``i2ccl``
-% ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-% 
-% ``i2ccl`` is the same on all platforms.
-% 
-% The first parameter to the command is the serial port, which depends on your operating system.
-% All following parameters are control commands. These are:
-% 
-% =================== ==================================================================
-%   ``i``             display status information (uptime, voltage, current, temperature)
-%   ``d``             device scan
-%   ``w`` dev <bytes> write bytes to \iic{} device dev
-%   ``p``             send a STOP
-%   ``r`` dev N       read N bytes from \iic{} device dev, then STOP
-%   ``m``             enter \iic{} bus monitor mode
-% =================== ==================================================================
-% 
-% For example the command::
-% 
-%   i2ccl /dev/ttyUSB0 r 0x48 2
-% 
-% reads two bytes from the \iic{} device at address 0x48.
-% So with an
-% `LM75B temperature sensor <https://www.nxp.com/docs/en/data-sheet/LM75B.pdf>`_
-% connected you might see output like::
-% 
-%   0x16,0x20
-% 
-% which indicates a temperature of about 22 degrees C.
-% 
-% \iic{} devices usually have multiple registers.
-% To read register 3 of the LM75B, you first write the register address 3, then read two bytes as before::
-% 
-%   i2ccl /dev/ttyUSB0 w 0x48 3 r 0x48 2
-%   0x50,0x00
-% 
-% Which shows that register 3 has the value ``0x5000``.
-% 
-% The display
-% ===========
-% 
-% The main display on the screen has three sections.
-% The top section is a heat-map showing all 112 legal \iic{} addresses. Devices that are currently active are white. Inactive devices fade to yellow, purple and finally blue.
-% The middle section is a symbolic interpretation of current \iic{} traffic. Details on this are below.
-% The bottom two lines show a representation of the SDA (blue) and SCL (yellow) signals.
-% 
-% .. im:: images/i2c/hero2.jpg
-% 
-% The symolic decode section shows \iic{} transactions as they happen.
-% Start and stop are shown as ``S`` and ``P`` symbols.
-% After a ``S`` symbol the address byte is shown, with a right arrow (write) or left arrow (read). There are gray lines connecting the address byte to its heat-map indicator.
-% Following this is a series of data bytes.
-% Each byte is shown in hex, with either a green dot (ACK) or red dot (NACK).
-% 
-% .. im:: images/i2c/hero3.jpg
-% 
-% So for example the above sequence is showing
-% 
-%  * Start, write to address ``45``
-%  * Write byte ``7A``
-%  * Repeated Start, read from address ``45``
-%  * Read byte ``00``
-%  * Read byte ``A2``
-%  * Stop
-% 
-% The above sequence is very typical for reading registers from an \iic{} Device.
-% Note that the final NACK (red dot) is not an error condition, but the standard way of handling the last byte of read transaction.
-% 
-% As a monitor
-% ============
-% 
-% In monitor mode, the \iicdriver{} does not write any data to the \iic{} bus.
-% Instead it monitors bus traffic and draws it on the display.
-% This makes it an ideal tool for troubleshooting and debugging \iic{} hardware and software.
-% 
-% In monitor mode the mode indicator character in the top-left of the display changes from ``D`` to ``M``.
-% 
-% There are several ways of entering monitor mode:
-% 
-% * use the command-line tool::
-% 
-%     i2ccl m
-% 
-% * from the GUI check the "Monitor" box
-% * from Python issue::
-% 
-%     i2c.monitor(True)
-%   
-%   and to exit::
-% 
-%     i2c.monitor(False)
-% 
-% * connect a terminal to the \iicdriver{} (at 1000000 8N1) and type the ``m`` character, then type any character to exit monitor mode
-% 
-% Capture mode
-% ============
-% 
-% Pull-up resistors
-% =================
-% 
-% \iicdriver{} has programmable pull-up resistors.
-% 6 control bits each enable or disable a pull-up resistor. These bits are:
-% 
-% === =============
-% Bit Resistor
-% === =============
-%  0  2.2K to SDA
-%  1  4.3K to SDA
-%  2  4.7K to SDA
-%  3  2.2K to SCL
-%  4  4.3K to SCL
-%  5  4.7K to SCL
-% === =============
-% 
-% At boot the two 4.7K resistors are enabled.
-% By setting combinations of parallel resistors, a range of pull-up strengths can be achieved:
-% 
-% ==== ==== ==== ====================
-% 4.7K 4.3K 2.2K pull-up strength
-% ==== ==== ==== ====================
-%  0    0     0  0 (i.e. no pull-up)
-%  0    0     1  2.2K
-%  0    1     0  4.3K
-%  0    1     1  1.5K
-%  1    0     0  4.7K
-%  1    0     1  1.5K
-%  1    1     0  2.2K
-%  1    1     1  1.1K
-% ==== ==== ==== ====================
-% 
-% Ordering this by useful resistances, the 3-bit combinations are:
-% 
-% =========== =============
-% 3-bit value Resistance
-% =========== =============
-%   0         0
-%   1         2.2K
-%   2         4.3K
-%   4         4.7K
-%   5         1.5K
-%   7         1.1K
-% =========== =============
-% 
-% In Python, the pullups are controlled by the ``setpullups()`` method, and the state can be read from the ``pullups`` variable.
-% Both are 6-bit values as above.
-% 
-% The GUI has a control for the pull-up resistors.
-% It sets the same pull-up strength for both SDA and SCL.
-% 
-% Examples
-% ========
-% 
-% The Python ``samples`` directory contains short examples of using all
-% `Electric Dollar Store <https://electricdollarstore.com>`_ I2C modules:
-% 
-% ====== ======================== =================================
-% Module Function                 Sample
-% ====== ======================== =================================
-% DIG2   2-digit 7-seg display    `EDS-DIG2.py    <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-DIG2.py>`_
-% LED    RGB LED                  `EDS-LED.py     <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-LED.py>`_
-% POT    potentiometer            `EDS-POT.py     <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-POT.py>`_
-% BEEP   Piezo beeper             `EDS-BEEP.py    <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-BEEP.py>`_
-% REMOTE IR remote receiver       `EDS-REMOTE.py  <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-REMOTE.py>`_
-% EPROM  CAT24C512 64 Kbyte EPROM `EDS-EPROM.py   <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-EPROM.py>`_
-% MAGNET LIS3MDL magnetometer     `EDS-MAGNET.py  <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-MAGNET.py>`_
-% TEMP   LM75B temperature sensor `EDS-TEMP.py    <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-TEMP.py>`_
-% ACCEL  RT3000C Accelerometer    `EDS-ACCEL.py   <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-ACCEL.py>`_
-% CLOCK  HT1382 real-time clock   `EDS-CLOCK.py   <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-CLOCK.py>`_
-% ====== ======================== =================================
-% 
-% All demos and applications are run the same way, supplying the \iicdriver{} on the command-line. For example::
-% 
-%     python EDS-LED.py COM16
-% 
-% Also included are some small applications which demonstrate combinations of modules:
-% 
-% Color Compass
-% ^^^^^^^^^^^^^
-% 
-% Source code: `EDS-color-compass.py <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-color-compass.py>`_
-% 
-% Color compass uses MAGNET and LED, reading the current magnetic field direction and rendering it as a color on the LED.
-% As you twist the module, the color changes.
-% For example there is a particular direction for pure red, as well as all other colors.
-% The code
-% reads the magnetic field direction, scales the values to 0-255, and sets the LED color.
-% 
-% Egg Timer
-% ^^^^^^^^^
-% 
-% Source code: `EDS-egg-timer.py <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-egg-timer.py>`_
-% 
-% The demo uses POT, DIG2 and BEEPER to make a simple kitchen egg timer.
-% Twisting the POT sets a countdown time in seconds,
-% and after it's released the ticker starts counting.
-% When it reaches "00" it flashes and beeps.
-% 
-% Take-a-ticket
-% ^^^^^^^^^^^^^
-% 
-% Source code: `EDS-take-a-ticket.py <https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-take-a-ticket.py>`_
-% 
-% This demo runs a take-a-ticket display for a store or deli counter,
-% using REMOTE, DIG2 and BEEP modules.
-% It shows 2-digit "now serving" number, and each time '+' is
-% pressed on the remote it increments the counter and
-% makes a beep, so the next customer can be served.
-% Pressing '-' turns the number back one.
+\subsection{Windows}
+
+This
+\href{https://spidriver.com/windows}{installer}
+contains the GUI and command-line utilities.
+
+The GUI shortcut is installed on the desktop:
+
+\pngw{img/i2cdriver/win32-icon}{.3}
+
+launching it brings up the control window:
+
+\pngw{img/i2cdriver/win32-gui}{.75}
+
+If there is only one serial device, 
+the \iicdriver{} device should be automatically selected.
+If there is more than one device, select its COM port from the pulldown menu at the top.
+Once connected, you can select a connected \iic{} device and write and read data. 
+
+The command line utility \mach{i2ccl} is also installed. For example to display status information:
+
+\begin{lstlisting}
+c:\>"c:\Program Files\Excamera Labs\I2CDriver\i2ccl.exe" COM6 i
+uptime 8991  4.957 V  30 mA  25.8 C SDA=1 SCL=1 speed=100 kHz
+\end{lstlisting}
+
+See below for more information on the command-line syntax.
+
+\subsection{Linux}
+
+For the command-line tool, clone the
+\href{https://github.com/jamesbowman/i2cdriver}{repository},
+then do:
+
+\begin{lstlisting}
+cd i2cdriver/c
+make -f linux/Makefile
+sudo make -f linux/Makefile install
+i2ccl /dev/ttyUSB0 i
+\end{lstlisting}
+
+and you should see something like:
+
+\begin{lstlisting}
+uptime 1651  4.971 V  0 mA  21.2 C SDA=1 SCL=1 speed=100 kHz
+\end{lstlisting}
+
+\subsection{MacOS}
+
+For the command-line tool, clone the
+\href{https://github.com/jamesbowman/i2cdriver}{repository}
+, then do:
+
+\begin{lstlisting}
+cd i2cdriver/c
+make -f linux/Makefile
+sudo make -f linux/Makefile install
+i2ccl /dev/cu.usbserial-DO00QS8D i
+\end{lstlisting}
+
+(substituting your actual \iicdriver{}'s ID for \mach{DO00QS8D})
+and you should see something like:
+
+\begin{lstlisting}
+uptime 1651  4.971 V  5 mA  21.2 C SDA=1 SCL=1 speed=100 kHz
+\end{lstlisting}
+
+Note that the port to use is \mach{/dev/cu.usbserial-XXXXXXXX}, as explained
+\href{https://pbxbook.com/other/mac-tty.html}{here}.
+
+\subsection{Python 2 and 3}
+
+The \iicdriver{} bindings can be installed with \mach{pip} like this:
+
+\begin{lstlisting}
+  pip install i2cdriver
+\end{lstlisting}
+
+then from Python you can read an LM75B temperature sensor with:
+
+\begin{lstlisting}
+>>> import i2cdriver
+>>> i2c = i2cdriver.I2CDriver("/dev/ttyUSB0")
+>>> d=i2cdriver.EDS.Temp(i2c)
+>>> d.read()
+17.875
+>>> d.read()
+18.0
+\end{lstlisting}
+
+You can print a bus scan with:
+
+\begin{lstlisting}
+>>> i2c.scan()
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- 1C -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+48 -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+68 -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+[28, 72, 104]
+\end{lstlisting}
+
+The Python GUI (which uses \href{https://www.wxpython.org/pages/downloads/}{wxPython}) can be run with:
+
+\begin{lstlisting}
+python i2cgui.py
+\end{lstlisting}
+
+which depending on your distribution looks something like this:
+
+\png{img/i2cdriver/i2cdriver-gui-linux}
+
+There are more examples in the 
+\href{https://github.com/jamesbowman/i2cdriver/tree/master/python/samples}{samples folder in the repository}.
+
+The module has extensive help strings:
+\begin{lstlisting}
+>>> help(i2cdriver)
+\end{lstlisting}
+displays the API documentation.
+
+\subsection{C/C++}
+
+\iicdriver{} is contained in a single source file with a single header.
+Both are in \href{https://github.com/jamesbowman/i2cdriver/tree/master/c/common}{this subdirectory}.
+Usage follows the Python API and is fairly self-explanatory.
+
+\newpage
+\section{Using \iicdriver{}}
+\subsection{The display}
+
+The main display on the screen has three sections.
+The top section is a heat-map showing all 112 legal \iic{} addresses. Devices that are currently active are white. Inactive devices fade to yellow, purple and finally blue.
+The middle section is a symbolic interpretation of current \iic{} traffic. Details on this are below.
+The bottom two lines show a representation of the SDA (blue) and SCL (yellow) signals.
+
+\png{img/i2cdriver/hero2}
+
+The symolic decode section shows \iic{} transactions as they happen.
+Start and stop are shown as
+\encircle{\textbf{S}}
+and
+\encircle{\textbf{P}}
+symbols.
+After a
+\encircle{\textbf{S}}
+symbol the address byte is shown, with a right arrow (write) or left arrow (read). There are gray lines connecting the address byte to its heat-map indicator.
+Following this is a series of data bytes.
+Each byte is shown in hex, with either a green dot (ACK) or red dot (NACK).
+
+\png{img/i2cdriver/hero3}
+
+So for example the above sequence is showing
+
+\begin{itemize}
+\item Start, write to address \mach{45}
+\item Write byte \mach{7A}
+\item Repeated Start, read from address \mach{45}
+\item Read byte \mach{00}
+\item Read byte \mach{A2}
+\item Stop
+\end{itemize}
+
+The above sequence is very typical for reading registers from an \iic{} Device.
+Note that the final NACK (red dot) is not an error condition, but the standard way of handling the last byte of read transaction.
+
+\subsection{The GUI}
+\subsection{The command-line tool \mach{i2ccl}}
+
+\mach{i2ccl} is the same on all platforms.
+
+The first parameter to the command is the serial port, which depends on your operating system.
+All following parameters are control commands. These are:
+
+\begin{tabular}{ll}
+  \mach{i}               & display status information (uptime, voltage, current, temperature) \\
+  \mach{d}               & device scan \\
+  \mach{w} $dev$ $bytes$ & write $bytes$ to \iic{} device $dev$ \\
+  \mach{p}               & send a STOP \\
+  \mach{r} $dev$ $N$     & read $N$ bytes from \iic{} device $dev$, then STOP \\
+  \mach{m}               & enter \iic{} bus monitor mode \\
+\end{tabular}\gap
+
+For example the command:
+
+\begin{lstlisting}
+  i2ccl /dev/ttyUSB0 r 0x48 2
+\end{lstlisting}
+
+reads two bytes from the \iic{} device at address 0x48.
+So with an
+\href{https://www.nxp.com/docs/en/data-sheet/LM75B.pdf}{LM75B temperature sensor}
+connected you might see output like:
+
+\begin{lstlisting}
+  0x16,0x20
+\end{lstlisting}
+
+which indicates a temperature of about 22 \degc.
+
+\iic{} devices usually have multiple registers.
+To read register 3 of the LM75B, you first write the register address 3, then read two bytes as before:
+
+\begin{lstlisting}
+  i2ccl /dev/ttyUSB0 w 0x48 3 r 0x48 2
+  0x50,0x00
+\end{lstlisting}
+
+Which shows that register 3 has the value \mach{0x5000}.
+
+\subsection{Monitor mode}
+
+In monitor mode, the \iicdriver{} does not write any data to the \iic{} bus.
+Instead it monitors bus traffic and draws it on the display.
+This makes it an ideal tool for troubleshooting and debugging \iic{} hardware and software.
+
+To show that it is in monitor mode, the \iicdriver{} changes the character in the top-left of the display from \mach{D} to \mach{M}.
+
+There are several ways of entering monitor mode:
+
+\begin{itemize}
+\item use the command-line tool:
+
+\begin{lstlisting}
+    i2ccl m
+\end{lstlisting}
+
+\item from the GUI check the "Monitor" box
+\item from Python issue:
+
+\begin{lstlisting}
+    i2c.monitor(True)
+\end{lstlisting}
+  
+and to exit:
+
+\begin{lstlisting}
+    i2c.monitor(False)
+\end{lstlisting}
+
+\item connect a terminal to the \iicdriver{} (at 1000000 8N1) and type the \mach{m} character, then type any character to exit monitor mode
+\end{itemize}
+
+\subsection{Capture mode}
+
+% TBD
+
+\section{Examples}
+
+The Python \mach{samples} directory contains short examples of using all
+\href{https://electricdollarstore.com}{Electric Dollar Store} I2C modules:
+
+\begin{center}\begin{tabular}{lll}
+\hline
+Module & Function                 & Sample \\
+\hline
+DIG2   & 2-digit 7-seg display    & \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-DIG2.py}{EDS-DIG2.py} \\
+LED    & RGB LED                  & \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-LED.py}{EDS-LED.py} \\
+POT    & potentiometer            & \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-POT.py}{EDS-POT.py} \\
+BEEP   & Piezo beeper             & \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-BEEP.py}{EDS-BEEP.py} \\
+REMOTE & IR remote receiver       & \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-REMOTE.py}{EDS-REMOTE.py} \\
+EPROM  & CAT24C512 64 Kbyte EPROM & \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-EPROM.py}{EDS-EPROM.py} \\
+MAGNET & LIS3MDL magnetometer     & \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-MAGNET.py}{EDS-MAGNET.py} \\
+TEMP   & LM75B temperature sensor & \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-TEMP.py}{EDS-TEMP.py} \\
+ACCEL  & RT3000C Accelerometer    & \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-ACCEL.py}{EDS-ACCEL.py} \\
+CLOCK  & HT1382 real-time clock   & \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-CLOCK.py}{EDS-CLOCK.py} \\
+\hline
+\end{tabular}\end{center}\gap
+
+
+All demos and applications are run the same way, supplying the \iicdriver{} on the command-line. For example:
+
+\begin{lstlisting}
+python EDS-LED.py COM16
+\end{lstlisting}
+
+Also included are some small applications which demonstrate combinations of modules.
+
+\subsection{Color Compass}
+
+Source code: \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-color-compass.py}{EDS-color-compass.py}
+
+Color compass uses MAGNET and LED, reading the current magnetic field direction and rendering it as a color on the LED.
+As you twist the module, the color changes.
+For example there is a particular direction for pure red, as well as all other colors.
+The code
+reads the magnetic field direction, scales the values to 0-255, and sets the LED color.
+
+\subsection{Egg Timer}
+
+Source code: \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-egg-timer.py}{EDS-egg-timer.py}
+
+The demo uses POT, DIG2 and BEEPER to make a simple kitchen egg timer.
+Twisting the POT sets a countdown time in seconds,
+and after it's released the ticker starts counting.
+When it reaches ``00" it flashes and beeps.
+
+\subsection{Take-a-ticket}
+
+Source code: \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-take-a-ticket.py}{EDS-take-a-ticket.py}
+
+This demo runs a take-a-ticket display for a store or deli counter,
+using REMOTE, DIG2 and BEEP modules.
+It shows 2-digit ``now serving" number, and each time '+' is
+pressed on the remote it increments the counter and
+makes a beep, so the next customer can be served.
+Pressing '-' turns the number back one.
+
 \newpage
 \section{Technical notes}
 
@@ -549,70 +529,143 @@ On \textbf{Windows} and \textbf{Mac OS} follow
 \subsection{Temperature sensor}
 
 The temperature sensor is located in the on-board EFM8 microcontroller.
-It is calibrated at manufacture to within 2 C.
-A sudden temperature rise may indicate that one of the output pins (MOSI, SCK, CS, A, or B) is shorted to VCC or GND.
+It is calibrated at manufacture to within 2 \degc.
 
+\newpage
 \subsection{Raw protocol}
 
 \iicdriver{} uses a serial protocol to send and receive \iic{} commands.
-Connect to the \iicdriver{} at 460800 baud, 8 bits, no parity, 1 stop bit (460800 8N1).
-Many \iicdriver{} commands are ASCII, you can control it
-interactively from any terminal application that can connect at 460800
-baud. For example typing u and s toggles the CS line and ? displays the
-status info.
+Connect to the \iicdriver{} at 1M baud, 8 bits, no parity, 1 stop bit (1000000 8N1).
+
+Because many \iicdriver{} commands are ASCII, you can control it interactively from any
+terminal application that can connect at 1M baud.
+For example typing \mach{u} and \mach{s} toggles the CS line and \mach{?} displays the status info.
+
 Commands are:
 
 \gap\begin{tabular}{ll}
 \hline
-\mach{?}        & transmit status information (see below)        \\
-\mach{e} $byte$ & echo $byte$       \\
-\mach{s}        & select        \\
-\mach{u}        & unselect        \\
-\mach{a} $byte$ & set A output to 0/1       \\
-\mach{b} $byte$ & set B output to 0/1       \\
-\mach{x}        & disconnect from SPI bus       \\
-\mach{0x80-bf}  & write and read 1-64 bytes       \\
-\mach{0xc0-ff}  & write 1-64 bytes        \\ \hline
+  \mach{?}        & transmit status info \\
+  \mach{e} $byte$ & echo $byte$\\
+\\
+  \mach{1}        & set speed to 100 KHz\\
+  \mach{4}        & set speed to 400 KHz\\
+  \mach{s} $addr$ & send START/addr, return status\\
+  0x80-bf         & read 1-64 bytes, NACK the final byte\\
+  0xc0-ff         & write 1-64 bytes\\
+  \mach{a} $N$    & read N bytes, ACK every byte\\
+  \mach{p}        & send STOP\\
+  \mach{x}        & reset \iic{} bus\\
+  \mach{r}        & register read\\
+  \mach{d}        & scan devices, return 112 status bytes\\
+\\
+  \mach{m}        & enter monitor mode\\
+  \mach{c}        & enter capture mode\\
+  \mach{b}        & enter bitbang mode\\
+  \mach{i}        & leave bitmang, return to \iic{} mode\\
+\\
+  \mach{u} $byte$ & set pullup control lines\\
+  \mach{v}        & start analog voltage measurement\\
+  \mach{w}        & read voltage measurement result\\
+\hline
 \end{tabular}\gap
 
-So for example to select, transfer two bytes
-\mach{0x12,0x34},
-unselect, the host sends 5 bytes.
-The command \mach{0x81} is a two byte send/receive, so two bytes are returned to the PC.
+So for example to send this sequence:
+
+\png{img/i2cdriver/hero3}
+
+The host should send:
+
+\gap\begin{tabular}{ll}
+\mach{s} \mach{0x90}    & Start write to device 45 \\
+\mach{0xc0} \mach{0x7a} & Write 1 byte \\
+\mach{s} \mach{0x91}    & Start read from device 45 \\
+\mach{0x80}          & Read 1 byte \\
+\mach{p}             & Stop \\
+\end{tabular}\gap
+
+The status response is always 80 characters, space padded. For example::
 
 \begin{lstlisting}
-s
-0x81
-0x12
-0x34
-u
+[i2cdriver1 DO01JUOO 000000061 4.971 000 23.8 I 1 1 100 24 ffff                ]
 \end{lstlisting}
-
-
-The status information is always 80 characters, space padded. For example:
-
-{\scriptsize
-\begin{framed}\begin{Verbatim}
-[spidriver1 DO00QS8D 000007219 4.807 045 25.4 1 1 1 49c1                       ]
-\end{Verbatim}
-\end{framed}}
 
 The fields are space-delimited:
 
 \gap\begin{tabular}{ll}
 \hline
-spidriver1      & fixed identifier \\
-serial          & serial code identifier \\
-uptime          & \iicdriver{} uptime 0-999999999, in seconds \\
-voltage         & USB bus voltage, in volts \\
-current         & attached device current, in mA \\
-temperature     & junction temperature, in C \\
-CS              & CS line state \\
-A               & A line state \\
-B               & B line state \\
-crc             & 16-bit CRC of all input and output bytes (CRC-16-CCITT) \\
+identifier     & always \mach{i2cdriver1} \\
+serial         & serial code identifier \\
+uptime         & \iicdriver{} uptime 0-999999999, in seconds \\
+voltage        & USB bus voltage, in volts \\
+current        & attached device current, in mA \\
+temperature    & junction temperature, in \degc \\
+mode           & current mode, \mach{I} for \iic{}, \mach{B} for bitbang \\
+SDA            & SDA line state, 0 or 1 \\
+SCL            & SCL line state, 0 or 1 \\
+speed          & \iic{} bus speed, in KHz \\
+pullups        & pullup state byte \\
+crc            & 16-bit CRC of all input and output bytes (CRC-16-CCITT) \\
+\hline\end{tabular}\gap
+
+The sample \mach{confirm.py} shows the CRC-16-CCITT calculation.
+
+\subsection{Pull-up resistors}
+
+\iicdriver{} has 6 programmable pull-up resistors, 3 each for SDA and SCL.
+6 control bits each enable or disable a pull-up resistor. These bits are:
+
+\begin{center}\begin{tabular}{ll}
 \hline
-\end{tabular}\gap
+bit & resistor \\
+\hline
+ 0  & 2.2K to SDA \\
+ 1  & 4.3K to SDA \\
+ 2  & 4.7K to SDA \\
+ 3  & 2.2K to SCL \\
+ 4  & 4.3K to SCL \\
+ 5  & 4.7K to SCL \\
+\hline
+\end{tabular}\end{center}\gap
+
+At boot the two 4.7K resistors are enabled.
+By setting combinations of parallel resistors, a range of pull-up strengths can be achieved:
+
+\begin{center}\begin{tabular}{cccl}
+\hline
+4.7K & 4.3K & 2.2K & pull-up strength \\
+\hline
+ 0   &  0   &   0  & 0 (i.e. no pull-up) \\
+ 0   &  0   &   1  & 2.2K \\
+ 0   &  1   &   0  & 4.3K \\
+ 0   &  1   &   1  & 1.5K \\
+ 1   &  0   &   0  & 4.7K \\
+ 1   &  0   &   1  & 1.5K \\
+ 1   &  1   &   0  & 2.2K \\
+ 1   &  1   &   1  & 1.1K \\
+\hline
+\end{tabular}\end{center}\gap
+
+Ordering this by useful resistances, the 3-bit combinations are:
+
+\begin{center}\begin{tabular}{cl}
+\hline
+3-bit value & Resistance \\
+\hline
+  0         & 0 \\
+  1         & 2.2K \\
+  2         & 4.3K \\
+  4         & 4.7K \\
+  5         & 1.5K \\
+  7         & 1.1K \\
+\hline
+\end{tabular}\end{center}\gap
+
+In Python, the pullups are controlled by the \mach{setpullups()} method, and the state can be read from the \mach{pullups} variable.
+Both are 6-bit values as above.
+
+The GUI has a control for the pull-up resistors.
+It sets the same pull-up strength for both SDA and SCL.
 
 \newpage
 \hypertarget{technical-specifications}{}
@@ -629,7 +682,7 @@ crc             & 16-bit CRC of all input and output bytes (CRC-16-CCITT) \\
 
 Voltage accuracy              && 0.01 && V            \\ \hline
 Current accuracy              && 5 && mA              \\ \hline
-Temperature accuracy          && $\pm$ 2 && $^{\circ}$C            \\ \hline
+Temperature accuracy          && $\pm$ 2 && \degc            \\ \hline
 SDA,SCL & & & & \\
 \hspace{10pt}low voltage & & & 0.6 & V \\
 \hspace{10pt}high voltage & 2.7 &   & 5.8 & V \\ \hline
