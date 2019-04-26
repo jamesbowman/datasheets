@@ -6,3 +6,9 @@
 *.out
 *.toc
 i2csphinx.tex
+*.fls
+*.idx
+*.fdb_latexmk
+*.ilg
+*.ind
+0
