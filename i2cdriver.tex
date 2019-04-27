@@ -118,7 +118,6 @@ Last updated on \today
 \iicdriver{} is an easy-to-use, open source tool for controlling \iic{} devices. It works with Windows, Mac, and Linux, and has a built-in color screen that shows a live “dashboard” of all the \iic{} activity. It uses a standard FTDI USB serial chip to talk to the PC, so no special drivers need to be installed. The board includes a separate 3.3 V supply with voltage and current monitoring.
 
 \subsection{Features}
-
 \begin{itemize}
 \item \textbf{Live display}: shows you exactly what it's doing all the time  
 \item \textbf{Supports all \iic{} features}: 7- and 10-bit \iic{} addressing, clock stretching, bus arbitration,
@@ -257,7 +256,7 @@ The \iicdriver{} bindings can be installed with \mach{pip} like this:
 \end{lstlisting}
 
 then from Python you can read an LM75B temperature sensor with:
-\index{LM75B}
+\index{Example!LM75B}
 
 \begin{lstlisting}
 >>> import i2cdriver
@@ -311,6 +310,9 @@ displays the API documentation.
 
 \newpage
 \subsubsection{Reference}
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
 \input{i2csphinx.tex}
 
 \subsection{C/C++}\index{drivers!C/C++}
@@ -321,7 +323,7 @@ Usage follows the Python API and is fairly self-explanatory.
 
 \newpage
 \section{Using \iicdriver{}}
-\subsection{The display}
+\subsection{The display}\index{display}
 
 The main display on the screen has three sections.
 \index{heat-map}
@@ -330,7 +332,7 @@ The middle section is a symbolic interpretation of current \iic{} traffic. Detai
 The bottom two lines show a representation of the SDA (blue) and SCL (yellow) signals.
 
 \png{img/i2cdriver/hero2}
-\index{symbols,display}
+\index{symbols}
 The symbolic decode section shows \iic{} transactions as they happen.
 Start and stop are shown as
 \encircle{\textbf{S}}
@@ -385,7 +387,7 @@ For example the command:
 reads two bytes from the \iic{} device at address 0x48.
 So with an
 \href{https://www.nxp.com/docs/en/data-sheet/LM75B.pdf}{LM75B temperature sensor}
-\index{LM75B}
+\index{Example!LM75B}
 connected you might see output like:
 
 \begin{lstlisting}
@@ -444,7 +446,7 @@ and to exit:
 \section{Examples}
 
 The Python \mach{samples} directory contains short examples of using all
-\href{https://electricdollarstore.com}{Electric Dollar Store} I2C modules:
+\href{https://electricdollarstore.com}{Electric Dollar Store} \iic{} modules:\gap
 
 \begin{center}\begin{tabular}{lll}
 \hline
@@ -472,7 +474,7 @@ python EDS-LED.py COM16
 
 Also included are some small applications which demonstrate combinations of modules.
 
-\subsection{Color Compass}\index{Compass}\index{RGB}\index{Magnetometer}
+\subsection{Color Compass}\index{Example!Compass}\index{Example!RGB}\index{Example!Magnetometer}
 
 Source code: \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-color-compass.py}{EDS-color-compass.py}
 
@@ -482,7 +484,7 @@ For example there is a particular direction for pure red, as well as all other c
 The code
 reads the magnetic field direction, scales the values to 0-255, and sets the LED color.
 
-\subsection{Egg Timer}\index{Potentiometer}\index{Beeper}
+\subsection{Egg Timer}\index{Example!Potentiometer}\index{Example!Beeper}
 
 Source code: \href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/EDS-egg-timer.py}{EDS-egg-timer.py}
 
@@ -616,9 +618,9 @@ temperature    & junction temperature, in \degc \\
 mode           & current mode, \mach{I} for \iic{}, \mach{B} for bitbang \\
 SDA            & SDA line state, 0 or 1 \\
 SCL            & SCL line state, 0 or 1 \\
-speed          & \iic{} bus speed, in KHz \\
+speed          & \iic{} bus speed, in KHz \index{speed}\\
 pullups        & pullup state byte \\
-crc            & 16-bit CRC of all input and output bytes (CRC-16-CCITT) \\
+crc            & 16-bit CRC of all input and output bytes (CRC-16-CCITT) \index{CRC} \\
 \hline\end{tabular}\gap
 
 The sample \mach{confirm.py} shows the CRC-16-CCITT calculation.
@@ -729,6 +731,7 @@ Technical and product support is available at
 \href{https://excamera.com}{Excamera Labs}.
 
 \newpage
+\raggedright
 \addcontentsline{toc}{section}{Index}
 \renewcommand{\indexname}{Index}
 \printindex
