@@ -391,6 +391,9 @@ The above sequence is very typical for reading registers from an \iic{} Device.
 Note that the final NACK (red dot) is not an error condition, but the standard way of handling the last byte of read transaction.
 
 \subsection{The GUI}\index{GUI}
+
+(TBD: describe how each button in the GUI works)
+
 \subsection{The command-line tool \mach{i2ccl}}
 
 \mach{i2ccl} is the same on all platforms.
@@ -469,6 +472,10 @@ and to exit:
 \end{itemize}
 
 \subsection{Capture mode}\index{Capture mode}
+
+In capture mode, the \iicdriver{} does not write any data to the \iic{} bus.
+Instead it monitors bus traffic and transmits it via USB for recording on the PC.
+
 \subsubsection{Command line}\index{capture.py@\mach{capture.py}}
 
 There is a Python sample program that can be used to capture traffic on the command-line at
@@ -498,6 +505,8 @@ can be examined and processed by any tool that can accept CSV files.
 
 \png{img/i2cdriver/csv}
 
+\subsubsection{GUI}
+
 The GUI also supports capture to CSV file.
 
 \png{img/i2cdriver/win32-gui-capture}
@@ -507,6 +516,7 @@ and prompts for a destination CSV file.
 The character in the top-left of the display changes from \mach{D} to \mach{C}.
 Capture continues until you click ``Capture mode'' again.
 
+\newpage
 \section{Examples}
 
 The Python \mach{samples} directory contains short examples of using all
