@@ -326,7 +326,7 @@ python i2cgui.py
 
 which depending on your distribution looks something like this:
 
-\png{img/i2cdriver/i2cdriver-gui-linux}
+\png{img/i2cdriver/win32-gui}
 
 There are more examples in the 
 \href{https://github.com/jamesbowman/i2cdriver/tree/master/python/samples}{samples folder in the repository}.
@@ -497,6 +497,15 @@ It also writes a traffic summary to \mach{log.csv} which
 can be examined and processed by any tool that can accept CSV files.
 
 \png{img/i2cdriver/csv}
+
+The GUI also supports capture to CSV file.
+
+\png{img/i2cdriver/win32-gui-capture}
+
+Clicking ``Capture mode'' starts the capture
+and prompts for a destination CSV file.
+The character in the top-left of the display changes from \mach{D} to \mach{C}.
+Capture continues until you click ``Capture mode'' again.
 
 \section{Examples}
 
