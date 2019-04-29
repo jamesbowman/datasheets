@@ -469,8 +469,34 @@ and to exit:
 \end{itemize}
 
 \subsection{Capture mode}\index{Capture mode}
+\subsubsection{Command line}\index{capture.py@\mach{capture.py}}
 
-% TBD
+There is a Python sample program that can be used to capture traffic on the command-line at
+\href{https://github.com/jamesbowman/i2cdriver/blob/master/python/samples/capture.py}{\mach{capture.py}}.
+
+Running it with the \iicdriver{} address as an argument puts the \iicdriver{} into capture mode:
+the character in the top-left of the display changes from \mach{D} to \mach{C}.
+
+\begin{lstlisting}
+$ python samples/capture.py /dev/ttyUSB0
+
+Now capturing traffic to
+    standard output (human-readable)
+    log.csv
+Hit CTRL-C to leave capture mode
+<START 0x14 WRITE ACK>
+<WRITE 0x02 ACK>
+<WRITE 0x22 ACK>
+<STOP>
+^C
+Capture finished
+\end{lstlisting}
+
+When run, it displays any traffic on standard output.
+It also writes a traffic summary to \mach{log.csv} which
+can be examined and processed by any tool that can accept CSV files.
+
+\png{img/i2cdriver/csv}
 
 \section{Examples}
 
