@@ -10,6 +10,10 @@
 \usepackage{xcolor}
 
 \usepackage{listings}
+\usepackage{tikz}
+
+\usepackage{makeidx}         % allows index generation
+\makeindex
 
 \lstset{frame=tblr,
   rulecolor=\color{lightgray},
@@ -18,7 +22,7 @@
   belowskip=5mm,
   showstringspaces=false,
   columns=flexible,
-  basicstyle={\small\ttfamily},
+  basicstyle=\linespread{1.0}\small\ttfamily,
   numbers=none,
   % numberstyle=\tiny\color{gray},
   % keywordstyle=\color{blue},
@@ -164,7 +168,7 @@ Available are:
 
 Installation of the GUI and command-line utilities varies by platform.
 
-\subsection{Windows}
+\subsection{Windows}\index{software!Windows}
 
 This
 \href{https://spidriver.com/windows}{installer}
@@ -182,6 +186,7 @@ the SPIDriver device should be automatically selected.
 If there is more than one device, select its COM port from the pulldown menu at the top.
 Once connected, you can control the signal lines and transmit hex values.
 
+\index{spicl@\mach{spicl}}
 The command line utility \mach{spicl} is also installed. For example to display status information:
 
 \begin{lstlisting}
@@ -191,12 +196,13 @@ The command line utility \mach{spicl} is also installed. For example to display 
 
 See below for more information on the command-line syntax.
 
-\subsection{Linux}
+\subsection{Linux}\index{software!Linux}
 
 The Linux GUI is available for download as
 \href{https://spidriver.com/linux}{spigui-linux64}.
 Alternatively you can run the native Python GUI directly as shown below.
 
+\index{spicl@\mach{spicl}}
 To build the command-line tool, clone the
 \href{https://github.com/jamesbowman/spidriver}{repository}, then do:
 \begin{lstlisting}
@@ -210,7 +216,7 @@ and you should see something like:
     uptime 2285  4.812 V  45 mA  23.6 C
 \end{lstlisting}
 
-\subsection{MacOS}
+\subsection{MacOS}\index{software!Mac}
 
 The MacOS GUI is available for download as
 \href{https://spidriver.com/mac}{spigui-macos}.
@@ -223,6 +229,7 @@ This is a Mac executable, so after downloading it do:
 
 Alternatively you can run the native Python GUI directly as shown below.
 
+\index{spicl@\mach{spicl}}
 To  build the command-line tool, clone the
 \href{https://github.com/jamesbowman/spidriver}{repository}, then do:
 
@@ -241,6 +248,7 @@ and you should see something like:
 Note that the port to use is \mach{/dev/cu.usbserial-XXXXXXXX}, as explained
 \href{https://pbxbook.com/other/mac-tty.html}{here}.
 
+\section{APIs}
 \subsection{Python 2 and 3}
 
 The SPIDriver bindings can be installed with \mach{pip} like this:
@@ -286,7 +294,11 @@ Both are in the
 \href{https://github.com/jamesbowman/spidriver/tree/master/c/common}{\mach{c/common}} folder in the repository.
 Usage follows the Python API and is fairly self-explanatory.
 
+\newpage
+\section{Using SPIDriver}
+
 \subsection{The command-line tool \mach{spicl}}
+\index{spicl@\mach{spicl}}
 
 \mach{spicl} is the same on all platforms.
 
@@ -326,10 +338,8 @@ does the following:
 Byte values are decimal by default, or hex if prefixed with \mach{0x}.
 To send multiple bytes, separate them with a comma.
 
-\newpage
-\section{Using SPIDriver}
-
-\subsection{ST7735R 1.8" LCD}
+\section{Examples}
+\subsection{ST7735R 1.8" LCD}\index{Examples!ST7735R}
 
 The ST7735R is a small color LCD controller,
 with a panel resolution of 160x128.
@@ -376,7 +386,7 @@ Then in the SPIDriver repository do:
 You can supply any image files as the last argument,
 and the script will resize and display them in order.
 
-\subsection{SPI Flash}
+\subsection{SPI Flash}\index{Examples!SPI flash}\index{flash}
 
 First confirm the flash pinout on its datasheet. Modern SPI flash chips have a pinout like this one:
 
@@ -387,6 +397,7 @@ For example this is the clip connected to the flash on a ESP8266 board:
 
 \png{img/spidriver/spidriver-esp1}
  
+\index{ESP8266}
 For the ESP8266, the CPU needs to be kept in reset so there is no contention while SPIDriver is driving to the flash.
 Connect SPIDriver's A signal (purple) to the ESP8266 reset:
  
@@ -413,6 +424,7 @@ SPIDriver&        & flash   \\
 \end{tabular}
 \end{center}
 
+\index{JEDEC ID}
 You should be able to use the command-line utility to confirm the flash 3-byte JEDEC ID.
 For example:
 
@@ -483,7 +495,7 @@ Similarly the \mach{-w} option erases the flash and writes a file to it:
 \newpage
 \section{Technical notes}
 
-\subsection{Port names}
+\subsection{Port names}\index{USB ports}\index{port names}
 
 The serial port that SPIDriver appears at depends on your operating system.
 
@@ -517,16 +529,17 @@ On \textbf{Linux} do:
 On \textbf{Windows} and \textbf{Mac OS} follow
 \href{https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/}{these instructions}.
 
-\subsection{Temperature sensor}
+\subsection{Temperature sensor}\index{temperature sensor}
 
 The temperature sensor is located in the on-board EFM8 microcontroller.
 It is calibrated at manufacture to within 2 C.
 A sudden temperature rise may indicate that one of the output pins (MOSI, SCK, CS, A, or B) is shorted to VCC or GND.
 
-\subsection{Raw protocol}
+\subsection{Raw protocol}\index{protocol}
 
 SPIDriver uses a serial protocol to send and receive SPI commands.
 Connect to the SPIDriver at 460800 baud, 8 bits, no parity, 1 stop bit (460800 8N1).
+\index{speed!serial}
 Many SPIDriver commands are ASCII, you can control it
 interactively from any terminal application that can connect at 460800
 baud. For example typing u and s toggles the CS line and ? displays the
@@ -581,14 +594,12 @@ temperature     & junction temperature, in C \\
 CS              & CS line state \\
 A               & A line state \\
 B               & B line state \\
-crc             & 16-bit CRC of all input and output bytes (CRC-16-CCITT) \\
+crc             & 16-bit CRC of all input and output bytes (CRC-16-CCITT)  \index{CRC}\\
 \hline
 \end{tabular}\gap
 
 \newpage
-\hypertarget{technical-specifications}{}
-\hypertarget{technical-specifications}{%
-\subsection{Specifications}\label{electrical-characteristics}}
+\subsection{Specifications}\label{electrical-characteristics}
 
 \subsubsection*{DC characteristics}
 \vspace{10 pt}
@@ -619,8 +630,8 @@ Current consumption   & & 25 & & mA                   \\ \hline
 \heavyline
 & min & typ & max & units \\ \heavyline
 
-SPI speed                     &495& 500 &505& Kbps   \\ \hline
-Uptime accuracy               && 150 && ppm           \\ \hline
+SPI speed                     &495& 500 &505& Kbps   \index{speed!SPI}\\ \hline
+Uptime accuracy               && 150 && ppm           \index{uptime}\\ \hline
 Uptime rollover               && 31.7 && years        \\ \hline
 Startup time & & & 200 & ms \\ \hline
 \end{tabularx}}
@@ -634,5 +645,10 @@ Technical and product support is available at
 SPIDriver is built and maintained by
 \href{https://excamera.com}{Excamera Labs}.
 
+\newpage
+\raggedright
+\addcontentsline{toc}{section}{Index}
+\renewcommand{\indexname}{Index}
+\printindex
 
 \end{document}

@@ -180,7 +180,7 @@ Installation of the GUI and command-line utilities varies by platform.
 \subsection{Windows}\index{drivers!Windows}
 
 This
-\href{https://spidriver.com/windows}{installer}
+\href{https://i2cdriver.com/windows}{installer}
 contains the GUI and command-line utilities.
 
 The GUI shortcut is installed on the desktop:
@@ -207,6 +207,19 @@ See below for more information on the command-line syntax.
 
 \subsection{Linux}\index{drivers!Linux}
 
+The GUI is included in the \mach{i2cdriver} Python package, compatible with both Python 2 and 3.
+To install it, open a shell prompt and do:
+
+\begin{lstlisting}
+sudo pip install i2cdriver
+\end{lstlisting}
+
+Then run it with
+
+\begin{lstlisting}
+i2cgui.py
+\end{lstlisting}
+
 For the command-line tool, clone the
 \href{https://github.com/jamesbowman/i2cdriver}{repository},
 then do:
@@ -225,6 +238,19 @@ uptime 1651  4.971 V  0 mA  21.2 C SDA=1 SCL=1 speed=100 kHz
 \end{lstlisting}
 
 \subsection{MacOS}\index{drivers!Mac}
+
+The GUI is included in the \mach{i2cdriver} Python package, compatible with both Python 2 and 3.
+To install it, open a shell prompt and do:
+
+\begin{lstlisting}
+sudo pip install i2cdriver
+\end{lstlisting}
+
+Then run it with
+
+\begin{lstlisting}
+i2cgui.py
+\end{lstlisting}
 
 For the command-line tool, clone the
 \href{https://github.com/jamesbowman/i2cdriver}{repository}
@@ -686,9 +712,7 @@ The GUI has a control for the pull-up resistors.
 It sets the same pull-up strength for both SDA and SCL.
 
 \newpage
-\hypertarget{technical-specifications}{}
-\hypertarget{technical-specifications}{%
-\subsection{Specifications}\label{electrical-characteristics}}
+\subsection{Specifications}\label{electrical-characteristics}
 
 \subsubsection*{DC characteristics}
 \vspace{10 pt}
