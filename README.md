@@ -5,6 +5,8 @@
 Products are:
 
 * [TermDriver](http://excamera.com/sphinx/termdriver/index.html)
+* [SPIDriver](https://spidriver.com)
+* [I2CDriver](https://i2cdriver.com)
 
 To build:
 
