@@ -1,0 +1,272 @@
+\index{I2CDriver (class in i2cdriver)@\spxentry{I2CDriver}\spxextra{class in i2cdriver}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{i2cdriver.}}\sphinxbfcode{\sphinxupquote{I2CDriver}}}{\emph{port='/dev/ttyUSB0'}, \emph{reset=True}}{}
+A connected I2CDriver.
+\begin{quote}\begin{description}
+\item[{Variables}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{product}} \textendash{} product code e.g. ‘i2cdriver1’
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{serial}} \textendash{} serial string of I2CDriver
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{uptime}} \textendash{} time since I2CDriver boot, in seconds
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{voltage}} \textendash{} USB voltage, in V
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{current}} \textendash{} current used by attached device, in mA
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{temp}} \textendash{} temperature, in degrees C
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{scl}} \textendash{} state of SCL
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{sda}} \textendash{} state of SDA
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{speed}} \textendash{} current device speed in KHz (100 or 400)
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{mode}} \textendash{} IO mode (I2C or bitbang)
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{pullups}} \textendash{} programmable pullup enable pins
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{ccitt\_crc}} \textendash{} CCITT-16 CRC of all transmitted and received bytes
+
+\end{itemize}
+
+\end{description}\end{quote}
+\index{\_\_init\_\_() (i2cdriver.I2CDriver method)@\spxentry{\_\_init\_\_()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.__init__}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{\_\_init\_\_}}}{\emph{port='/dev/ttyUSB0'}, \emph{reset=True}}{}
+Connect to a hardware i2cdriver.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{port}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The USB port to connect to
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{reset}} (\sphinxhref{https://docs.python.org/3/library/functions.html\#bool}{\sphinxstyleliteralemphasis{\sphinxupquote{bool}}}) \textendash{} Issue an I2C bus reset on connection
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{setspeed() (i2cdriver.I2CDriver method)@\spxentry{setspeed()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.setspeed}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{setspeed}}}{\emph{s}}{}
+Set the I2C bus speed.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{s}} (\sphinxhref{https://docs.python.org/3/library/functions.html\#int}{\sphinxstyleliteralemphasis{\sphinxupquote{int}}}) \textendash{} speed in KHz, either 100 or 400
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{setpullups() (i2cdriver.I2CDriver method)@\spxentry{setpullups()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.setpullups}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{setpullups}}}{\emph{s}}{}
+Set the I2CDriver pullup resistors
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{s}} \textendash{} 6-bit pullup mask
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{scan() (i2cdriver.I2CDriver method)@\spxentry{scan()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.scan}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{scan}}}{\emph{silent=False}}{}
+Performs an I2C bus scan.
+If silent is False, prints a map of devices.
+Returns a list of the device addresses.
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{i2c}\PYG{o}{.}\PYG{n}{scan}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} 1C \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{48 \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{68 \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{\PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} \PYGZhy{}\PYGZhy{} }
+\PYG{g+go}{[28, 72, 104]}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{reset() (i2cdriver.I2CDriver method)@\spxentry{reset()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.reset}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{reset}}}{}{}
+Send an I2C bus reset
+
+\end{fulllineitems}
+
+\index{start() (i2cdriver.I2CDriver method)@\spxentry{start()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.start}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{start}}}{\emph{dev}, \emph{rw}}{}
+Start an I2C transaction
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{dev}} \textendash{} 7-bit I2C device address
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{rw}} \textendash{} read (1) or write (0)
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+To write bytes \sphinxcode{\sphinxupquote{{[}0x12,0x34{]}}} to device \sphinxcode{\sphinxupquote{0x75}}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{i2c}\PYG{o}{.}\PYG{n}{start}\PYG{p}{(}\PYG{l+m+mh}{0x75}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{i2c}\PYG{o}{.}\PYG{n}{write}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mh}{0x12}\PYG{p}{,}\PYG{l+m+mi}{034}\PYG{p}{]}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{i2c}\PYG{o}{.}\PYG{n}{stop}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{read() (i2cdriver.I2CDriver method)@\spxentry{read()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.read}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{read}}}{\emph{l}}{}
+Read l bytes from the I2C device, and NAK the last byte
+
+\end{fulllineitems}
+
+\index{write() (i2cdriver.I2CDriver method)@\spxentry{write()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.write}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{write}}}{\emph{bb}}{}
+Write bytes to the selected I2C device
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{bb}} \textendash{} sequence to write
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{stop() (i2cdriver.I2CDriver method)@\spxentry{stop()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.stop}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{stop}}}{}{}
+stop the i2c transaction
+
+\end{fulllineitems}
+
+\index{regrd() (i2cdriver.I2CDriver method)@\spxentry{regrd()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.regrd}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{regrd}}}{\emph{dev}, \emph{reg}, \emph{fmt='B'}}{}
+Read a register from a device.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{dev}} \textendash{} 7-bit I2C device address
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{reg}} \textendash{} register address 0-255
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{fmt}} \textendash{} \sphinxhref{https://docs.python.org/3/library/struct.html\#struct.unpack}{\sphinxcode{\sphinxupquote{struct.unpack()}}} format string for the register contents
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+If device 0x75 has a 16-bit register 102, it can be read with:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{i2c}\PYG{o}{.}\PYG{n}{regrd}\PYG{p}{(}\PYG{l+m+mh}{0x75}\PYG{p}{,} \PYG{l+m+mi}{102}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{\PYGZgt{}H}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+go}{4999}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{regwr() (i2cdriver.I2CDriver method)@\spxentry{regwr()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.regwr}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{regwr}}}{\emph{dev}, \emph{reg}, \emph{*vv}}{}
+Write a device’s register.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{dev}} \textendash{} 7-bit I2C device address
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{reg}} \textendash{} register address 0-255
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{vv}} \textendash{} sequence of values to write
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+To set device 0x34 byte register 7 to 0xA1:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{i2c}\PYG{o}{.}\PYG{n}{regwr}\PYG{p}{(}\PYG{l+m+mh}{0x34}\PYG{p}{,} \PYG{l+m+mi}{7}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mh}{0xa1}\PYG{p}{]}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+If device 0x75 has a big-endian 16-bit register 102 you can set it to 4999 with:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{i2c}\PYG{o}{.}\PYG{n}{regwr}\PYG{p}{(}\PYG{l+m+mh}{0x75}\PYG{p}{,} \PYG{l+m+mi}{102}\PYG{p}{,} \PYG{n}{struct}\PYG{o}{.}\PYG{n}{pack}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{\PYGZgt{}H}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+m+mi}{4999}\PYG{p}{)}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{monitor() (i2cdriver.I2CDriver method)@\spxentry{monitor()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.monitor}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{monitor}}}{\emph{s}}{}
+Enter or leave monitor mode
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{s}} \textendash{} \sphinxcode{\sphinxupquote{True}} to enter monitor mode, \sphinxcode{\sphinxupquote{False}} to leave
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{getstatus() (i2cdriver.I2CDriver method)@\spxentry{getstatus()}\spxextra{i2cdriver.I2CDriver method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:i2cdriver.I2CDriver.getstatus}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{getstatus}}}{}{}
+Update all status variables
+
+\end{fulllineitems}
+
+
+\end{fulllineitems}
+
+

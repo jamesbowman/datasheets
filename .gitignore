@@ -5,7 +5,6 @@
 *.lot
 *.out
 *.toc
-i2csphinx.tex
 *.fls
 *.idx
 *.fdb_latexmk
