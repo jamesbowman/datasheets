@@ -474,6 +474,11 @@ Similarly the \mach{-w} option erases the flash and writes a file to it:
     504/512 KBytes
 \end{lstlisting}
 
+Many flash devices -- like the one above -- report their size in bits in the third ID byte.
+However some do not follow this convention.
+To support these devices, the script's
+\mach{-s} option specifies the device size in bytes, overriding the default calculation.
+
 % The Shield Adapter
 % ------------------
 % 
