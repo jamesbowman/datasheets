@@ -756,6 +756,44 @@ Both are 6-bit values as above.
 The GUI has a control for the pull-up resistors.
 It sets the same pull-up strength for both SDA and SCL.
 
+\subsection{Bitbang mode}\index{bitbang}\index{GPIO}
+
+In bitbang mode, the SCL and SDA signals are driven as bidirectional IO signals.
+
+Following the 'b' command,
+the host sends a \textbf{bitbang control sequence} \index{bitbang control sequence}
+where each sent byte controls the state of the SCL and SDA signals.
+Each byte is a bitfield, encoded as:
+
+\begin{center}\begin{tabular}{cl}
+\hline
+bit & meaning \\
+\hline
+  0         & SDA pin direction (0: input, 1: output) \\
+  1         & SDA pin output value \\
+  2         & SCL pin direction (0: input, 1: output) \\
+  3         & SCL pin output value \\
+  4         & report pin states \\
+\hline
+\end{tabular}\end{center}\gap
+
+Note that when using a pin as an input, the corresponding output value bit should be '1'.
+When bit 4 is set, the pins are sampled and \iicdriver{} transmits a byte to the host with their state:
+
+\begin{center}\begin{tabular}{cl}
+\hline
+bit & meaning \\
+\hline
+  0         & SDA state \\
+  1         & SCL state \\
+\hline
+\end{tabular}\end{center}\gap
+
+The special value \mach{0x40} ends the bitbang control sequence,
+but does not exit bitbang mode.
+To exit bitbang mode and re-enter \iic{} mode,
+send command 'i'.
+
 \newpage
 \subsection{Specifications}\label{electrical-characteristics}
 
