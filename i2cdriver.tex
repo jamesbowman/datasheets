@@ -1,5 +1,7 @@
 \documentclass{article}
+\usepackage{etex}
 
+\usepackage{bytefield}
 \usepackage{booktabs}
 \usepackage{fancyhdr}
 \usepackage{float}
@@ -8,6 +10,7 @@
 \usepackage{hyperref}
 \usepackage{tabularx}
 \usepackage{xcolor}
+\usepackage{color, colortbl}
 
 \usepackage{listings}
 \usepackage{tikz}
@@ -51,6 +54,7 @@
 
 \newcommand{\iic}{I\two{}C}
 \newcommand{\iicdriver}{I\two{}CDriver}
+\newcommand{\iicmini}{I\two{}CMini}
 \newcommand{\degc}{$^{\circ}$C}
 
 \setlength{\headheight}{40pt}
@@ -628,21 +632,22 @@ Connect to the \iicdriver{} at 1M baud, 8 bits, no parity, 1 stop bit (1000000 8
 
 Because many \iicdriver{} commands are ASCII, you can control it interactively from any
 terminal application that can connect at 1M baud.
-For example typing \mach{u} and \mach{s} toggles the CS line and \mach{?} displays the status info.
+For example typing \mach{?} displays the status info,
+and \mach{d} returns a bus scan.
 
 Commands are:
 
 \gap\begin{tabular}{ll}
 \hline
   \mach{?}        & transmit status info \\
-  \mach{e} $byte$ & echo $byte$\\
+  \mach{e}        & echo byte \\
 \\
   \mach{1}        & set speed to 100 KHz\\
   \mach{4}        & set speed to 400 KHz\\
-  \mach{s} $addr$ & send START/addr, return status\\
+  \mach{s}        & send START/addr, return status\\
   0x80-bf         & read 1-64 bytes, NACK the final byte\\
   0xc0-ff         & write 1-64 bytes\\
-  \mach{a} $N$    & read N bytes, ACK every byte\\
+  \mach{a}        & read N bytes, ACK every byte\\
   \mach{p}        & send STOP\\
   \mach{x}        & reset \iic{} bus\\
   \mach{r}        & register read\\
@@ -653,9 +658,11 @@ Commands are:
   \mach{b}        & enter bitbang mode\\
   \mach{i}        & leave bitmang, return to \iic{} mode\\
 \\
-  \mach{u} $byte$ & set pullup control lines\\
-  \mach{v}        & start analog voltage measurement\\
-  \mach{w}        & read voltage measurement result\\
+  \mach{u}        & set pullup control lines\\
+% \mach{v}        & start analog voltage measurement\\
+% \mach{w}        & read voltage measurement result\\
+\\
+  \mach{\_}       & reboot \iicdriver{}\\
 \hline
 \end{tabular}\gap
 
@@ -663,17 +670,67 @@ So for example to send this sequence:
 
 \png{img/i2cdriver/hero3}
 
-The host should send:
+Then the serial conversation is:
 
-\gap\begin{tabular}{ll}
-\mach{s} \mach{0x90}    & Start write to device 45 \\
-\mach{0xc0} \mach{0x7a} & Write 1 byte \\
-\mach{s} \mach{0x91}    & Start read from device 45 \\
-\mach{0x80}          & Read 1 byte \\
-\mach{p}             & Stop \\
+\definecolor{Gray}{gray}{0.9}
+
+\gap\begin{tabular}{lll}
+sender & bytes & meaning \\ \hline
+host & \mach{s} \mach{0x90}    & START write to device 45 \\
+\rowcolor{Gray}
+\iicdriver{} & 0x01 & acknowledge \\
+host & \mach{0xc0} \mach{0x7a} & Write 1 byte \\
+\rowcolor{Gray}
+\iicdriver{} & 0x01 & acknowledge \\
+host & \mach{s} \mach{0x91}    & START read from device 45 \\
+\rowcolor{Gray}
+\iicdriver{} & 0x01 & acknowledge \\
+host & \mach{0x81}          & Read 2 bytes, NAK on last \\
+\rowcolor{Gray}
+\iicdriver{} & 0x00 0xa2 & byte data \\
+host & \mach{p}             & STOP \\
 \end{tabular}\gap
 
-The status response is always 80 characters, space padded. For example::
+\newcommand{\byteseq}[1]{%
+\gap
+\begin{bytefield}[endianness=big,bitwidth=3.2em]{8}
+  \bitheader{0-7} \\
+  #1
+\end{bytefield}
+}
+
+\newcommand{\ackfield}{%
+\byteseq{
+  \bitbox{1}{0}
+  \bitbox{1}{0}
+  \bitbox{1}{1}
+  \bitbox{1}{1}
+  \bitbox{1}{0}
+  \bitbox{1}{ARB}
+  \bitbox{1}{TO}
+  \bitbox{1}{ACK}
+}
+
+\textbf{ARB} is set if bus arbitration is lost during the transmission
+
+\textbf{TO} is set if the transmission times out
+
+\textbf{ACK} is set if the \iic{} device acknowledged the transmission
+
+}
+\newcommand{\ackbyte}{%
+The single byte response is:
+
+\ackfield
+}
+
+\subsubsection{\mach{?}: transmit status info}
+
+\byteseq{
+  \bitbox{8}{\mach{?} (0x3f)}\\
+}
+
+The response is always 80 bytes, space padded. For example::
 
 \begin{lstlisting}
 [i2cdriver1 DO01JUOO 000000061 4.971 000 23.8 I 1 1 100 24 ffff                ]
@@ -683,7 +740,7 @@ The fields are space-delimited:
 
 \gap\begin{tabular}{ll}
 \hline
-identifier     & always \mach{i2cdriver1} \\
+identifier     & \mach{i2cdriver1} for \iicdriver{}, \mach{i2cdriverm} for \iicmini{} \\
 serial         & serial code identifier \\
 uptime         & \iicdriver{} uptime 0-999999999, in seconds \\
 voltage        & USB bus voltage, in volts \\
@@ -697,13 +754,241 @@ pullups        & pullup state byte \\
 crc            & 16-bit CRC of all input and output bytes (CRC-16-CCITT) \index{CRC} \\
 \hline\end{tabular}\gap
 
-The sample \mach{confirm.py} shows the CRC-16-CCITT calculation.
+The Python sample \mach{confirm.py} shows the CRC-16-CCITT calculation.
 
-\subsection{Pull-up resistors}\index{pull-ups}
+\subsubsection{\mach{e}: echo byte}
+
+\byteseq{
+  \bitbox{8}{\mach{e} (0x65)}\\
+  \bitbox{8}{byte}\\
+}
+
+\textbf{byte} is any byte value.  The reponse is the same value:
+
+\byteseq{
+  \bitbox{8}{byte}\\
+}
+
+This command is normally used when first connecting to the \iicdriver{} to check the serial channel.
+
+\subsubsection{\mach{1}: set speed to 100 KHz}
+
+\byteseq{
+  \bitbox{8}{\mach{1} (0x31)}\\
+}
+
+Sets the \iic{} bus speed to 100 KHz. There is no reponse.
+
+\subsubsection{\mach{4}: set speed to 400 KHz}
+
+\byteseq{
+  \bitbox{8}{\mach{4} (0x34)}\\
+}
+
+Sets the \iic{} bus speed to 400 KHz. There is no reponse.
+
+\subsubsection{\mach{s}: START}
+\byteseq{
+  \bitbox{8}{\mach{s} (0x73)}\\
+  \bitbox{7}{dev} \bitbox{1}{r/w}\\
+}
+
+\textbf{dev} is the \iic{} 7-bit device address \\
+\textbf{r/w} is 0 to start a write, 1 to start a read
+
+\ackbyte
+
+\subsubsection{\mach{0x80-bf} : read 1-64 bytes, NACK the final byte}
+
+\byteseq{
+  \bitbox{1}{\mach{1}}
+  \bitbox{1}{\mach{0}}
+  \bitbox{6}{count-1}\\
+}
+
+\textbf{count} is the number of bytes to read.
+
+\iicdriver{} ACKs each read byte, except the last which is NACKed.
+
+The response is \textbf{count} bytes of \iic{} bus data.
+
+\subsubsection{\mach{0xc0-ff} : write 1-64 bytes}
+
+\byteseq{
+  \bitbox{1}{\mach{1}}
+  \bitbox{1}{\mach{1}}
+  \bitbox{6}{count-1}\\
+
+  \bitbox{8}{byte$_0$} \\
+  \bitbox[]{8}{...} \\
+  \bitbox{8}{byte$_{count-1}$} \\
+}
+
+\ackbyte
+
+\subsubsection{\mach{a}: read N bytes, ACK every byte}
+
+\byteseq{
+  \bitbox{8}{\mach{a} (0x61)} \\
+  \bitbox{8}{count}
+}
+
+\textbf{count} is the number of bytes to read.
+
+\iicdriver{} ACKs each read byte. This command is useful when reading more than 64 bytes from an \iic{} device.
+
+The response is \textbf{count} bytes of \iic{} bus data.
+
+\subsubsection{\mach{p}: send STOP}
+
+\byteseq{
+  \bitbox{8}{\mach{p} (0x70)}
+}
+
+Send an \iic{} STOP symbol, ending the current transaction.
+There is no response.
+
+\subsubsection{\mach{x}: reset \iic{} bus}
+
+\byteseq{
+  \bitbox{8}{\mach{x} (0x78)}
+}
+
+Attempts an \iic{} bus reset.
+This consists of:
+\begin{itemize}
+\item 10 pulses of SCK with SDA high
+\item an \iic{} STOP symbol
+\end{itemize}
+
+The reponse is sent after the reset, and indicates the state of the \iic{} signals:
+
+\byteseq{
+  \bitbox{6}{}
+  \bitbox{1}{SDA}
+  \bitbox{1}{SCL}
+}
+
+If both signals are 1, the \iic{} bus is free.
+
+\subsubsection{\mach{r}: register read}
+
+\byteseq{
+  \bitbox{8}{\mach{r} (0x72)} \\
+  \bitbox{1}{0} \bitbox{7}{dev} \\
+  \bitbox{8}{addr} \\
+  \bitbox{8}{count}
+}
+
+\textbf{dev} is the \iic{} 7-bit device address \\
+\textbf{addr} is the device register address \\
+\textbf{count} is the number of bytes to read
+
+Reads an \iic{} device register data.
+This command executes the following \iic{} operations:
+
+\begin{itemize}
+\item START, select address \textbf{dev} for writing
+\item write a single byte \textbf{addr}
+\item START, select address \textbf{dev} for reading
+\item read \textbf{count} bytes
+item STOP
+\end{itemize}
+
+The response is \textbf{count} bytes of \iic{} bus data.
+
+\subsubsection{\mach{d}: scan devices, return 112 status bytes}
+
+\byteseq{
+  \bitbox{8}{\mach{d} (0x64)}
+}
+
+Execute an \iic{} bus scan for devices from addresses 0x08 to 0x77.
+
+The response is 112 bytes. Each byte is:
+
+\ackfield
+
+\subsubsection{\mach{m}: enter monitor mode}
+
+\byteseq{
+  \bitbox{8}{\mach{m} (0x6d)}
+}
+
+Enters monitor mode.
+The \iicdriver{} updates the graphical display with any
+traffic on the \iic{} bus.
+To exit monitor mode, send byte 0x20:
+
+\byteseq{
+  \bitbox{8}{0x20}
+}
+
+\subsubsection{\mach{c}: enter capture mode}
+
+TBD
+
+\subsubsection{\mach{b}: enter bitbang mode}
+
+\byteseq{
+  \bitbox{8}{\mach{b} (0x62)}
+}
+
+Enters bitbang mode.
+See section \ref{bitbang} \nameref{bitbang}.
+
+\subsubsection{\mach{i}: leave bitmang, return to \iic{} mode.}
+
+\byteseq{
+  \bitbox{8}{\mach{i} (0x69)}
+}
+
+Leaves bitbang mode and enters \iic{} mode.
+See section \ref{bitbang} \nameref{bitbang}.
+
+\subsubsection{\mach{u}: set pullup control lines}
+
+\byteseq{
+  \bitbox{8}{\mach{u} (0x75)}\\
+
+  \bitbox[lr]{2}{}
+  \bitbox[lr]{1}{SCL}
+  \bitbox[lr]{1}{SCL}
+  \bitbox[lr]{1}{SCL}
+  \bitbox[lr]{1}{SDA}
+  \bitbox[lr]{1}{SDA}
+  \bitbox[lr]{1}{SDA} \\
+
+  \bitbox[blr]{2}{}
+  \bitbox[blr]{1}{4.7K}
+  \bitbox[blr]{1}{4.3K}
+  \bitbox[blr]{1}{2.2K}
+  \bitbox[blr]{1}{4.7K}
+  \bitbox[blr]{1}{4.3K}
+  \bitbox[blr]{1}{2.2K}
+}
+
+Sets the \iic{} line pullup resistors.
+See section \ref{pullups} \nameref{pullups}.
+
+% \subsubsection{\mach{v}: start analog voltage measurement}
+% \subsubsection{\mach{w}: read voltage measurement result}
+
+\subsubsection{\mach{\_}: reboot}
+
+\byteseq{
+  \bitbox{8}{\mach{\_} (0x5f)}
+}
+
+Reboots the \iicdriver{}. There is no response.
+The host should wait at least 500ms before sending the following command.
+
+\subsection{Pull-up resistors}\index{pull-ups}\label{pullups}
 
 \iicdriver{} has 6 programmable pull-up resistors, 3 each for SDA and SCL.
 6 control bits each enable or disable a pull-up resistor. These bits are:
 
+\gap
 \begin{center}\begin{tabular}{ll}
 \hline
 bit & resistor \\
@@ -720,6 +1005,7 @@ bit & resistor \\
 At boot the two 4.7K resistors are enabled.
 By setting combinations of parallel resistors, a range of pull-up strengths can be achieved:
 
+\gap
 \begin{center}\begin{tabular}{cccl}
 \hline
 4.7K & 4.3K & 2.2K & pull-up strength \\
@@ -737,6 +1023,7 @@ By setting combinations of parallel resistors, a range of pull-up strengths can 
 
 Ordering this by useful resistances, the 3-bit combinations are:
 
+\gap
 \begin{center}\begin{tabular}{cl}
 \hline
 3-bit value & Resistance \\
@@ -756,7 +1043,7 @@ Both are 6-bit values as above.
 The GUI has a control for the pull-up resistors.
 It sets the same pull-up strength for both SDA and SCL.
 
-\subsection{Bitbang mode}\index{bitbang}\index{GPIO}
+\subsection{Bitbang mode}\index{bitbang}\index{GPIO}\label{bitbang}
 
 In bitbang mode, the SCL and SDA signals are driven as bidirectional IO signals.
 
