@@ -62,7 +62,7 @@
 
 \pagestyle{fancy}
 \lhead{\includegraphics[width=0.2\textwidth]{img/logo}}
-\chead{\iicdriver{} User Guide}
+\chead{\iicdriver{} and \iicmini{} User Guide}
 \rhead{\thepage}
 \cfoot{\textcopyright \the\year \ \ Excamera Labs}
 \renewcommand{\headrulewidth}{0.5pt}
@@ -106,7 +106,7 @@
 
 \newpage
 \begin{center}
-\includegraphics[width=1.00\textwidth]{img/i2cdriver/hero}
+\includegraphics[width=1.00\textwidth]{img/i2cdriver/i2cdriver-hero}
 Last updated on \today
 \end{center}
 \tableofcontents
@@ -119,7 +119,14 @@ Last updated on \today
 
 \section{Overview}
 
-\iicdriver{} is an easy-to-use, open source tool for controlling \iic{} devices. It works with Windows, Mac, and Linux, and has a built-in color screen that shows a live “dashboard” of all the \iic{} activity. It uses a standard FTDI USB serial chip to talk to the PC, so no special drivers need to be installed. The board includes a separate 3.3 V supply with voltage and current monitoring.
+\iicdriver{} is an easy-to-use, open source tool for controlling \iic{} devices.
+It works with Windows, Mac, and Linux, and has a built-in color screen that shows a live “dashboard” of all the \iic{} activity.
+It uses a standard FTDI USB serial chip to talk to the PC, so no special drivers need to be installed.
+The board includes a separate 3.3 V supply with voltage and current monitoring.
+
+\iicmini{} is a reduced-size version of \iicdriver{} suitable for use in embedded devices.
+It is 100\% compatible with \iicdriver{} but lacks a display, current or voltage monitoring.
+In every other respect it behaves identically to \iicdriver{}.
 
 \subsection{Features}
 \begin{itemize}
@@ -147,23 +154,39 @@ When you first connect \iicdriver{} to the USB port, the display blinks white fo
 Connect the three sets of colored hookup wires as shown,
 following the same sequence as on the colored label:
 
+\definecolor{ccGND}{gray}{0.0}
+\definecolor{ccVCC}{RGB}{191, 13, 45}
+\definecolor{ccSDA}{RGB}{  0, 32, 91}
+\definecolor{ccSCL}{RGB}{255,215,  0}
+\definecolor{white}{RGB}{255,255,255}
+
+\rowcolor{Gray}
+
 \gap
 \begin{center}
-\begin{tabular}{ll}
+\begin{tabular}{ccl}
 \hline
-\mach{GND}  & black \\
-\mach{VCC}  & red \\
-\mach{SDA}  & blue \\
-\mach{SCL}  & yellow \\
+\cellcolor{ccGND}
+\textcolor{white}{\textbf{GND}}  & black & signal ground \\
+\cellcolor{ccVCC}
+\textcolor{white}{\textbf{VCC}}  & red & 3.3 V supply \\
+\cellcolor{ccSDA}
+\textcolor{white}{\textbf{SDA}}  & blue & \iic{} data \\
+\cellcolor{ccSCL}
+\textbf{SCL}  & yellow & \iic{} clock \\
 \hline
 \end{tabular}
 \end{center}
 \gap
 
-The top two signals carry power, the VCC line supplies 3.3 volts.
-
 Across the top of the display \iicdriver{} continuously measures the USB bus voltage
 and the current output.
+
+\png{img/i2cdriver/i2c_mini_topdown_wired_white_bg}
+
+\iicmini{} also has a micro USB connector.
+Its Qwiic connector is polarized; attach it as shown.
+The color coding for the signals is the same as for \iicdriver{}.
 
 \newpage
 \section{Software installation}
@@ -1084,7 +1107,7 @@ send command 'i'.
 \newpage
 \subsection{Specifications}\label{electrical-characteristics}
 
-\subsubsection*{DC characteristics}
+\subsubsection*{\iicdriver{} DC characteristics}
 \vspace{10 pt}
 {\renewcommand{\arraystretch}{1.2}% for the vertical padding
 
@@ -1100,6 +1123,24 @@ SDA,SCL & & & & \\
 \hspace{10pt}high voltage & 2.7 &   & 5.8 & V \\ \hline
 Output current        & & & 470 & mA                  \\ \hline
 Current consumption   & & 25 & & mA                   \\ \hline
+
+\end{tabularx}}
+\vspace{10 pt}
+
+\subsubsection*{\iicmini{} DC characteristics}
+\vspace{10 pt}
+{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+
+\begin{tabularx}{\linewidth}{XC{40pt}C{40pt}C{40pt}C{40pt}}
+\heavyline
+& min & typ & max & units \\ \heavyline
+
+Temperature accuracy          && $\pm$ 2 && \degc            \\ \hline
+SDA,SCL & & & & \\
+\hspace{10pt}low voltage & & & 0.6 & V \\
+\hspace{10pt}high voltage & 2.7 &   & 5.8 & V \\ \hline
+Output current        & & & 270 & mA                  \\ \hline
+Current consumption   & & 5 & & mA                   \\ \hline
 
 \end{tabularx}}
 \vspace{10 pt}
