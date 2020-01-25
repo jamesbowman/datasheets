@@ -1108,6 +1108,107 @@ To exit bitbang mode and re-enter \iic{} mode,
 send command 'i'.
 
 \newpage
+\subsection{Capture mode}\index{capture}\label{capture}
+
+In capture mode \iicdriver{} monitors the \iic{} bus and
+reports all events back to the USB host,
+encoded in a byte stream.
+
+Each byte contains two 4-bit event symbols packed so that the
+first event symbol is in the 4 more significant bits,
+and the second event is in the 4 less significant bits.
+
+\gap
+\byteseq{
+  \bitbox{4}{event$_i$}
+  \bitbox{4}{event$_{i+1}$}
+}
+
+\gap
+The following 4-bit event symbols are defined:
+
+\gap
+\begin{center}\begin{tabular}{cl}
+\hline
+code & meaning \\
+\hline
+  \mach{0x0}         & bus is idle \\
+  \mach{0x1}         & START \\
+  \mach{0x2}         & STOP \\
+  \mach{0x8}         & bit triple $0,0,0$ \\
+  \mach{0x9}         & bit triple $0,0,1$ \\
+  \mach{0xa}         & bit triple $0,1,0$ \\
+  \mach{0xb}         & bit triple $0,1,1$ \\
+  \mach{0xc}         & bit triple $1,0,0$ \\
+  \mach{0xd}         & bit triple $1,0,1$ \\
+  \mach{0xe}         & bit triple $1,1,0$ \\
+  \mach{0xf}         & bit triple $1,1,1$ \\
+\hline
+\end{tabular}\end{center}\gap
+
+\iicdriver{} sends the "bus is idle" token after the bus has been idle
+for approximately 30 ms. Hence 
+when there is no bus activity
+"bus is idle" tokens arrive at about 30 Hz.
+
+\iic{} is a byte-oriented protocol, and each byte is followed by an ACK/NAK bit,
+so each byte actually appears as 9 bits on the wire, with the final bit as the ACK/NAK.
+Hence each \iic{} byte results in three triples being sent.
+The first 8 bits are the big-endian \iic{} byte.
+The final bit is the ACK/NAK.
+Note that \iic{} represents ACK as 0, and NAK as 1.
+
+\newpage
+As an example, the following wire sequence
+
+\png{img/i2cdriver/hero3}
+
+would appear on the capture interface as the following event symbols:
+
+% : o dup 6 rshift 7 and 8 + hex. 3 lshift ;
+% $45 2* 2* o o o drop
+
+\gap
+\begin{center}\begin{tabular}{cll}
+\hline
+code & meaning & interpretation \\
+\hline
+  \mach{0x1}         & START \\
+  \mach{0xc}         & bit triple $1,0,0$ \\
+  \mach{0xa}         & bit triple $0,1,0$ \\
+  \mach{0xc}         & bit triple $1,0,0$ & \iic{} address 0x45, write, ACK \\
+  \mach{0xb}         & bit triple $0,1,1$ \\
+  \mach{0xe}         & bit triple $1,1,0$ \\
+  \mach{0xc}         & bit triple $1,0,0$ & write byte 0x7a, ACK \\
+  \mach{0x1}         & START \\
+  \mach{0xc}         & bit triple $1,0,0$ \\
+  \mach{0xa}         & bit triple $0,1,0$ \\
+  \mach{0xe}         & bit triple $1,1,0$ & \iic{} address 0x45, read, ACK \\
+  \mach{0x8}         & bit triple $0,0,0$ \\
+  \mach{0x8}         & bit triple $0,0,0$ \\
+  \mach{0x8}         & bit triple $0,0,0$ & read byte 0x00, ACK \\
+  \mach{0xd}         & bit triple $1,0,1$ \\
+  \mach{0x8}         & bit triple $0,0,0$ \\
+  \mach{0xd}         & bit triple $1,0,1$ & read byte 0xa2, NAK \\
+  \mach{0x2}         & STOP \\
+\hline
+\end{tabular}\end{center}\gap
+
+Hence the bytes sent from the \iicdriver{} for this sequence are:
+
+\mach{ 0x1c, 0xac, 0xbe, 0xc1, 0xca, 0xe8, 0x88, 0xd8, 0xd2}
+
+% 0x2         & STOP \\
+% 0x8         & bit triple $0,0,0$ \\
+% 0x9         & bit triple $0,0,1$ \\
+% 0xA         & bit triple $0,1,0$ \\
+% 0xB         & bit triple $0,1,1$ \\
+% 0xC         & bit triple $1,0,0$ \\
+% 0xD         & bit triple $1,0,1$ \\
+% 0xE         & bit triple $1,1,0$ \\
+% 0xF         & bit triple $1,1,1$ \\
+
+\newpage
 \subsection{Specifications}\label{electrical-characteristics}
 
 \subsubsection*{\iicdriver{} DC characteristics}
