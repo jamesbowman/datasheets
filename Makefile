@@ -10,7 +10,7 @@ spidriver.pdf: spidriver.tex img/* code/*.inc
 
 i2cdriver.pdf: i2cdriver.tex img/* code/*.inc i2csphinx.tex
 	# pdflatex -interaction=nonstopmode i2cdriver.tex
-	latexmk -pdf -silent i2cdriver.tex
+	latexmk -pdf i2cdriver.tex
 
 i2cdriver-cn.pdf: i2cdriver-cn.tex img/* code/*.inc i2csphinx.tex
 	pdflatex -interaction=nonstopmode i2cdriver-cn.tex

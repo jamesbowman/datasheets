@@ -147,9 +147,10 @@ and sustained \iic{} transfers at 400 and 100 kHz
 \newpage
 \section{Getting Started}
 
-When you first connect \iicdriver{} to the USB port, the display blinks white for a moment then shows something like this:
+When you first connect \iicdriver{} to the USB port, the display blinks white for a moment
+then shows the initial status screen:
 
-\png{img/i2cdriver/DSC_9039}
+\png{img/i2cdriver/i2c_driver_cabled}
 
 Connect the three sets of colored hookup wires as shown,
 following the same sequence as on the colored label:
@@ -159,8 +160,6 @@ following the same sequence as on the colored label:
 \definecolor{ccSDA}{RGB}{  0, 32, 91}
 \definecolor{ccSCL}{RGB}{255,215,  0}
 \definecolor{white}{RGB}{255,255,255}
-
-\rowcolor{Gray}
 
 \gap
 \begin{center}
@@ -179,13 +178,14 @@ following the same sequence as on the colored label:
 \end{center}
 \gap
 
-Across the top of the display \iicdriver{} continuously measures the USB bus voltage
-and the current output.
+Across the top of the display \iicdriver{} continuously shows
+the USB bus voltage and the current output.
 
 \png{img/i2cdriver/i2c_mini_topdown_wired_white_bg}
 
 \iicmini{} also has a micro USB connector.
-Its Qwiic connector is polarized; attach it as shown.
+Its Qwiic connector is polarized; it attaches as shown.
+\index{Qwiic}
 The color coding for the signals is the same as for \iicdriver{}.
 
 \newpage
@@ -383,7 +383,9 @@ Usage follows the Python API and is fairly self-explanatory.
 
 The main display on the screen has three sections.
 \index{heat-map}
-The top section is a heat-map showing all 112 legal \iic{} addresses. Devices that are currently active are white. Inactive devices fade to yellow, purple and finally blue.
+The top section is a heat-map showing all 112 legal \iic{} addresses.
+Addresses that are currently active are white.
+Inactive addresses fade to yellow, purple and finally blue.
 The middle section is a symbolic interpretation of current \iic{} traffic. Details on this are below.
 The bottom two lines show a representation of the SDA (blue) and SCL (yellow) signals.
 
@@ -397,7 +399,8 @@ and
 symbols.
 After a
 \encircle{\textbf{S}}
-symbol the address byte is shown, with a right arrow (write) or left arrow (read). There are gray lines connecting the address byte to its heat-map indicator.
+symbol the address byte is shown, with a right arrow (write) or left arrow (read).
+The gray lines connect the address byte to its heat-map indicator.
 Following this is a series of data bytes.
 Each byte is shown in hex, with either a green dot (ACK) or red dot (NACK).
 
