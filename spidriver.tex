@@ -93,7 +93,7 @@
 
 \newpage
 \begin{center}
-\includegraphics[width=1.00\textwidth]{img/spidriver/spi_driver_topdown_wired_powered_white_bg}
+\includegraphics[width=1.00\textwidth]{img/spidriver/spi_driver_topdown_wired_powered_white_bg_low}
 Last updated on \today
 \end{center}
 \tableofcontents
@@ -128,23 +128,24 @@ It works with Windows, Mac, and Linux, and has a built-in color screen that show
 \newpage
 \section{Getting Started}
 
-When you first connect it to the USB port, the display blinks white for a moment then shows something like this:
+When you first connect it to the USB port, the display blinks white for a moment
+then displays the initial status screen:
 
-\png{img/spidriver/spidriver-close}
+\png{img/spidriver/spi_driver_cold}
 
 Connect the six colored hookup jumpers as shown,\index{hookup}\index{jumpers}
 following the same order as on the screen
 
 \gap
 \begin{center}
-\begin{tabular}{ccl}
+\begin{tabular}{cclc}
 \hline
-\cellcolor{orange} \textcolor{black}{\textbf{SCK}} & orange & SPI clock\\
-\cellcolor{yellow} \textcolor{black}{\textbf{MISO}} & yellow & SPI Master In Slave Out\\
-\cellcolor{green} \textcolor{black}{\textbf{MOSI}} & green  & SPI Master Out Slave In \\
-\cellcolor{blue} \textcolor{white}{\textbf{CS}}   & blue   & SPI Chip Select\\
-\cellcolor{purple} \textcolor{white}{\textbf{A}}    & purple & Auxiliary control A\\
-\cellcolor{gray} \textcolor{white}{\textbf{B}}    & gray   & Auxiliary control B\\
+\cellcolor{orange} \textcolor{black}{\textbf{SCK}}  & orange & SPI clock               & output \\
+\cellcolor{yellow} \textcolor{black}{\textbf{MISO}} & yellow & SPI Master In Slave Out & input  \\
+\cellcolor{green} \textcolor{black}{\textbf{MOSI}}  & green  & SPI Master Out Slave In & output \\
+\cellcolor{blue} \textcolor{white}{\textbf{CS}}     & blue   & SPI Chip Select         & output \\
+\cellcolor{purple} \textcolor{white}{\textbf{A}}    & purple & Auxiliary control A     & output \\
+\cellcolor{gray} \textcolor{white}{\textbf{B}}      & gray   & Auxiliary control B     & output \\
 \hline
 \end{tabular}
 \end{center}
