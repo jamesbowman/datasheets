@@ -8,6 +8,7 @@
 \usepackage{hyperref}
 \usepackage{tabularx}
 \usepackage{xcolor}
+\usepackage{color, colortbl}
 
 \usepackage{listings}
 \usepackage{tikz}
@@ -64,6 +65,8 @@
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
 \usepackage{setspace}
+
+\newcommand{\device}{SPIDriver}
 
 \newcommand{\heavyline}{\specialrule{1pt}{1pt}{1pt}}
 \newcommand{\png}[1]{
@@ -129,19 +132,19 @@ When you first connect it to the USB port, the display blinks white for a moment
 
 \png{img/spidriver/spidriver-close}
 
-Connect the six colored hookup jumpers as shown,
-following the same sequence as on the screen
+Connect the six colored hookup jumpers as shown,\index{hookup}\index{jumpers}
+following the same order as on the screen
 
 \gap
 \begin{center}
-\begin{tabular}{ll}
+\begin{tabular}{ccl}
 \hline
-\mach{SCK}  & orange \\
-\mach{MISO} & yellow \\
-\mach{MOSI} & green  \\
-\mach{CS}   & blue   \\
-\mach{A}    & purple \\
-\mach{B}    & gray   \\
+\cellcolor{orange} \textcolor{black}{\textbf{SCK}} & orange & SPI clock\\
+\cellcolor{yellow} \textcolor{black}{\textbf{MISO}} & yellow & SPI Master In Slave Out\\
+\cellcolor{green} \textcolor{black}{\textbf{MOSI}} & green  & SPI Master Out Slave In \\
+\cellcolor{blue} \textcolor{white}{\textbf{CS}}   & blue   & SPI Chip Select\\
+\cellcolor{purple} \textcolor{white}{\textbf{A}}    & purple & Auxiliary control A\\
+\cellcolor{gray} \textcolor{white}{\textbf{B}}    & gray   & Auxiliary control B\\
 \hline
 \end{tabular}
 \end{center}
@@ -500,39 +503,7 @@ To support these devices, the script's
 \newpage
 \section{Technical notes}
 
-\subsection{Port names}\index{USB ports}\index{port names}
-
-The serial port that SPIDriver appears at depends on your operating system.
-
-On \textbf{Windows}, it appears as COM1, COM2, COM3 etc.
-You can use the Device Manager or the \mach{MODE} command to display the available ports.
-\href{https://plugable.com/2011/07/04/how-to-change-the-com-port-for-a-usb-serial-adapter-on-windows-7/}{This article}
-describes how to set a device to a fixed port.
-
-On \textbf{Linux}, it appears as \mach{/dev/ttyUSB0}, 1, 2 etc.
-The actual number depends on the order that devices were added.
-However it also appears as something like:
-\begin{lstlisting}
-    /dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DO00QS8D-if00-port0
-\end{lstlisting}
-Where \mach{DO00QS8D} is the serial code of the SPIDriver (which is printed on the bottom of each SPIDriver).
-This is longer, of course, but always the same for a given device.
-
-Similarly on \textbf{Mac OS}, the SPIDriver appears as \mach{/dev/cu.usbserial-DO00QS8D}.
-
-\subsection{Decreasing the USB latency timer}
-
-SPIDriver performance can be increased by setting the USB latency timer to its minimum value of 1 ms.
-This can increase the speed of two-way SPI traffic by up to 10X.
-
-On \textbf{Linux} do:
-
-\begin{lstlisting}
-    setserial /dev/ttyUSB0 low_latency
-\end{lstlisting}
-
-On \textbf{Windows} and \textbf{Mac OS} follow
-\href{https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/}{these instructions}.
+\input{ports}
 
 \subsection{Temperature sensor}\index{temperature sensor}
 
@@ -642,13 +613,7 @@ Startup time & & & 200 & ms \\ \hline
 \end{tabularx}}
 \vspace{10 pt}
 
-\section{Support information}
-
-Technical and product support is available at
-\href{mailto:support@spidriver.com}{support@spidriver.com}
-
-SPIDriver is built and maintained by
-\href{https://excamera.com}{Excamera Labs}.
+\input{endmatter}
 
 \newpage
 \raggedright

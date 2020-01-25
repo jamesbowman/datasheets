@@ -56,6 +56,7 @@
 \newcommand{\iicdriver}{I\two{}CDriver}
 \newcommand{\iicmini}{I\two{}CMini}
 \newcommand{\degc}{$^{\circ}$C}
+\newcommand{\device}{\iicdriver{}}
 
 \setlength{\headheight}{40pt}
 \setlength{\headsep}{0.2in}
@@ -152,7 +153,7 @@ then shows the initial status screen:
 
 \png{img/i2cdriver/i2c_driver_cabled}
 
-Connect the three sets of colored hookup wires as shown,
+Connect the three sets of colored hookup wires as shown, \index{hookup}\index{jumpers}
 following the same sequence as on the colored label:
 
 \definecolor{ccGND}{gray}{0.0}
@@ -611,39 +612,7 @@ Pressing '-' turns the number back one.
 \newpage
 \section{Technical notes}
 
-\subsection{Port names}\index{USB!ports}
-
-The serial port that \iicdriver{} appears at depends on your operating system.
-
-On \textbf{Windows}, it appears as COM1, COM2, COM3 etc.
-You can use the Device Manager or the \mach{MODE} command to display the available ports.
-\href{https://plugable.com/2011/07/04/how-to-change-the-com-port-for-a-usb-serial-adapter-on-windows-7/}{This article}
-describes how to set a device to a fixed port.
-
-On \textbf{Linux}, it appears as \mach{/dev/ttyUSB0}, 1, 2 etc.
-The actual number depends on the order that devices were added.
-However it also appears as something like:
-\begin{lstlisting}
-    /dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DO00QS8D-if00-port0
-\end{lstlisting}
-Where \mach{DO00QS8D} is the serial code of the \iicdriver{} (which is printed on the bottom of each \iicdriver{}).
-This is longer, of course, but always the same for a given device.
-
-Similarly on \textbf{Mac OS}, the \iicdriver{} appears as \mach{/dev/cu.usbserial-DO00QS8D}.
-
-\subsection{Decreasing the USB latency timer}\index{USB!latency}
-
-\iicdriver{} performance can be increased by setting the USB latency timer to its minimum value of 1 ms.
-This can increase the speed of two-way \iic{} traffic by up to 10X.
-
-On \textbf{Linux} do:
-
-\begin{lstlisting}
-    setserial /dev/ttyUSB0 low_latency
-\end{lstlisting}
-
-On \textbf{Windows} and \textbf{Mac OS} follow
-\href{https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/}{these instructions}.
+\input{ports}
 
 \subsection{Temperature sensor}\index{temperature sensor}
 

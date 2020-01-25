@@ -1,0 +1,39 @@
+\subsection{Port names}\index{USB!ports}
+
+The serial port that \device{} appears at depends on your operating system.
+
+On \textbf{Windows}, it appears as \mach{COM1}, \mach{COM2}, \mach{COM3} etc.
+You can use the Device Manager or the \mach{MODE} command to display the available ports.
+\href{https://plugable.com/2011/07/04/how-to-change-the-com-port-for-a-usb-serial-adapter-on-windows-7/}{This article}
+describes how to set a device to a fixed port.
+
+On \textbf{Linux}, it appears as \mach{/dev/ttyUSB0}, \mach{1}, \mach{2} etc.
+The actual number depends on the order that devices were added.
+However it also appears as something like:
+\begin{lstlisting}
+    /dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DO00QS8D-if00-port0
+\end{lstlisting}
+Where \mach{DO00QS8D} is the serial code of the \device{} (which is printed on the bottom of each \device{}).
+This is longer, of course, but always the same for a given device.
+You can create a symlink to refer to the device easily from scripts:
+
+\begin{lstlisting}
+ln -s /dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DO00QS8D-if00-port0 ~/ex1
+\end{lstlisting}
+
+Similarly on \textbf{Mac OS}, the \device{} appears as \mach{/dev/cu.usbserial-DO00QS8D}.
+
+\subsection{Decreasing the USB latency timer}\index{USB!latency}
+
+\device{} performance can be increased by setting the USB latency timer to its minimum value of 1 ms.
+This can increase the speed of two-way traffic by up to 10X.
+
+On \textbf{Linux} do:
+
+\begin{lstlisting}
+    setserial /dev/ttyUSB0 low_latency
+\end{lstlisting}
+
+On \textbf{Windows} and \textbf{Mac OS} follow
+\href{https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/}{these instructions}.
+

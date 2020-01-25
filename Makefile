@@ -4,11 +4,13 @@ termdriver.pdf: termdriver.tex img/* code/*.inc
 	# pdflatex -interaction=nonstopmode termdriver.tex
 	latexmk -pdf -silent termdriver.tex
 
-spidriver.pdf: spidriver.tex img/* code/*.inc
-	# pdflatex -interaction=nonstopmode spidriver.tex
-	latexmk -pdf -silent spidriver.tex
+SHARED=endmatter.tex ports.tex
 
-i2cdriver.pdf: i2cdriver.tex img/* code/*.inc i2csphinx.tex
+spidriver.pdf: spidriver.tex img/* code/*.inc $(SHARED)
+	# pdflatex -interaction=nonstopmode spidriver.tex
+	latexmk -pdf spidriver.tex
+
+i2cdriver.pdf: i2cdriver.tex img/* code/*.inc i2csphinx.tex $(SHARED)
 	# pdflatex -interaction=nonstopmode i2cdriver.tex
 	latexmk -pdf i2cdriver.tex
 
