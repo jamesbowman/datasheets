@@ -421,10 +421,48 @@ So for example the above sequence is showing
 The above sequence is very typical for reading registers from an \iic{} Device.
 Note that the final NACK (red dot) is not an error condition, but the standard way of handling the last byte of read transaction.
 
+\newpage
 \subsection{The GUI}\index{GUI}
 
-(TBD: describe how each button in the GUI works)
+The GUI is a straightforward way of interacting with \iic{} devices.
+For example,
+here \iicdriver{} is connected to some
+\iic{} peripherals: a temperature sensor and two 7-segment display modules.
 
+\png{img/i2cdriver/DSC_6031.JPG}
+
+Starting the GUI and connecting to the \iicdriver{} on \mach{COM16}
+shows the temperature sensor at address \mach{48}
+and the two display modules at addresses \mach{14} and \mach{15}.
+
+\pngw{img/i2cdriver/ss-0}{0.65}
+
+\png{img/i2cdriver/ss-1}
+
+Selecting address \mach{48} and clicking on \textbf{read}
+reads a single byte from the temperature sensor.
+The \iicdriver{} display shows the traffic immediately.
+
+\png{img/i2cdriver/DSC_6032.JPG}
+
+This LM75B sensor reports temperature in Celcius, so the hex byte \mach{1A} represents a temperature of 26 \degc.
+
+\newpage
+\png{img/i2cdriver/ss-3}
+
+Selecting address \mach{14} and entering the hex values \mach{01 19}
+then clicking on \textbf{write} update the first LED to the digits \mach{19}.
+
+\png{img/i2cdriver/DSC_6033.JPG}
+
+\png{img/i2cdriver/ss-4}
+
+Similarly selecting address \mach{15} and entering the hex values \mach{01 85}
+then clicking on \textbf{write} update the second LED to the digits \mach{85}.
+
+\png{img/i2cdriver/DSC_6034.JPG}
+
+\newpage
 \subsection{The command-line tool \mach{i2ccl}}
 
 \mach{i2ccl} is the same on all platforms.
