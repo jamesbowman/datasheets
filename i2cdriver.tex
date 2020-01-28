@@ -224,10 +224,12 @@ the \iicdriver{} device should be automatically selected.
 If there is more than one device, select its COM port from the pulldown menu at the top.
 Once connected, you can select a connected \iic{} device and write and read data. 
 
-The command line utility \mach{i2ccl} is also installed. For example to display status information:
+The command line utility \mach{i2ccl} is also installed,
+and added to the Windows \mach{PATH}.
+For example to display status information:
 
 \begin{lstlisting}
-c:\>"c:\Program Files\Excamera Labs\I2CDriver\i2ccl.exe" COM6 i
+c:\>i2ccl COM6 i
 uptime 8991  4.957 V  30 mA  25.8 C SDA=1 SCL=1 speed=100 kHz
 \end{lstlisting}
 
@@ -1271,13 +1273,7 @@ Startup time & & & 200 & ms \\ \hline
 \end{tabularx}}
 \vspace{10 pt}
 
-\section{Support information}
-
-Technical and product support is available at
-\href{mailto:support@i2cdriver.com}{support@i2cdriver.com}
-
-\iicdriver{} is built and maintained by
-\href{https://excamera.com}{Excamera Labs}.
+\input{endmatter}
 
 \newpage
 \raggedright
