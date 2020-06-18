@@ -501,10 +501,10 @@ which indicates a temperature of about 22 \degc.
 
 \iic{} devices usually have multiple registers. To write to a device register,
 use the \mach{w} command.
-Using the same device at address 0x48, writing the two byte value \mach{0x45,0x46} to register \mach{0x02} is:
+Using the same device at address 0x48, writing the two byte value \mach{0x25,0x26} to register 2 is:
 
 \begin{lstlisting}
-  i2ccl /dev/ttyUSB0 w 0x48 0x45,0x46 p
+  i2ccl /dev/ttyUSB0 w 0x48 2,0x25,0x26 p
 \end{lstlisting}
 
 \index{register read}
