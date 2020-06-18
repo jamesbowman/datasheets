@@ -484,7 +484,7 @@ All following parameters are control commands. These are:
 For example the command:
 
 \begin{lstlisting}
-  i2ccl /dev/ttyUSB0 r 0x48 2
+  i2ccl /dev/ttyUSB0 r 0x48 2 p
 \end{lstlisting}
 
 reads two bytes from the \iic{} device at address 0x48.
@@ -499,11 +499,19 @@ connected you might see output like:
 
 which indicates a temperature of about 22 \degc.
 
-\iic{} devices usually have multiple registers. \index{register read}
-To read register 3 of the LM75B, you first write the register address 3, then read two bytes as before:
+\iic{} devices usually have multiple registers. To write to a device register,
+use the \mach{w} command.
+Using the same device at address 0x48, writing the two byte value \mach{0x45,0x46} to register \mach{0x02} is:
 
 \begin{lstlisting}
-  i2ccl /dev/ttyUSB0 w 0x48 3 r 0x48 2
+  i2ccl /dev/ttyUSB0 w 0x48 0x45,0x46 p
+\end{lstlisting}
+
+\index{register read}
+To read register 3 of the LM75B, first write the register address 3, then read two bytes as above:
+
+\begin{lstlisting}
+  i2ccl /dev/ttyUSB0 w 0x48 3 r 0x48 2 p
   0x50,0x00
 \end{lstlisting}
 
