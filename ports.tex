@@ -1,9 +1,13 @@
-\subsection{Port names}\index{USB!ports}
+\subsection{Port names}\index{USB!ports}\label{portnames}
 
 The serial port that \device{} appears at depends on your operating system.
 
 On \textbf{Windows}, it appears as \mach{COM1}, \mach{COM2}, \mach{COM3} etc.
 You can use the Device Manager or the \mach{MODE} command to display the available ports.
+The Windows convention for \mach{COM10} and above is that they must be prefixed by
+\mach{\textbackslash\textbackslash.\textbackslash},
+for example:
+\mach{\textbackslash\textbackslash.\textbackslash{}COM11}.
 \href{https://plugable.com/2011/07/04/how-to-change-the-com-port-for-a-usb-serial-adapter-on-windows-7/}{This article}
 describes how to set a device to a fixed port.
 

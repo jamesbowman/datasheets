@@ -1,1 +1,8 @@
-time rsync -av spidriver.pdf termdriver.pdf excamera.com:files/
+set -e
+cp i2cdriver.pdf ../excamera/i2cdriver.com/i2cdriver.pdf
+cp spidriver.pdf ../excamera/spidriver.com/spidriver.pdf
+cd ../excamera/
+git pull
+git add *driver.com/*driver.pdf
+git commit -m "Update PDF"
+git push
