@@ -484,7 +484,7 @@ All following parameters are control commands. These are:
 For example the command:
 
 \begin{lstlisting}
-  i2ccl /dev/ttyUSB0 r 0x48 2 p
+  i2ccl /dev/ttyUSB0 r 0x48 2
 \end{lstlisting}
 
 reads two bytes from the \iic{} device at address 0x48.
@@ -511,7 +511,7 @@ Using the same device at address 0x48, writing the two byte value \mach{0x25,0x2
 To read register 3 of the LM75B, first write the register address 3, then read two bytes as above:
 
 \begin{lstlisting}
-  i2ccl /dev/ttyUSB0 w 0x48 3 r 0x48 2 p
+  i2ccl /dev/ttyUSB0 w 0x48 3 r 0x48 2
   0x50,0x00
 \end{lstlisting}
 
