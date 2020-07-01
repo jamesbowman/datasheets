@@ -233,6 +233,19 @@ c:\>i2ccl COM6 i
 uptime 8991  4.957 V  30 mA  25.8 C SDA=1 SCL=1 speed=100 kHz
 \end{lstlisting}
 
+The COM port can be found using the \mach{MODE} command to list connected ports.
+You can use the Device Manager or the \mach{MODE} command to display the available ports.
+
+The Windows convention for \mach{COM10} and above is that they must be prefixed by
+\mach{\textbackslash\textbackslash.\textbackslash},
+for example:
+
+\begin{lstlisting}
+c:\>i2ccl \\.\COM11 i
+\end{lstlisting}
+
+See (section \ref{portnames} "\nameref{portnames}") for details on how to fix a device to a port number permanently.
+
 See below for more information on the command-line syntax.
 
 \subsection{Linux}\index{drivers!Linux}
