@@ -4,6 +4,10 @@ termdriver.pdf: termdriver.tex img/* code/*.inc
 	# pdflatex -interaction=nonstopmode termdriver.tex
 	latexmk -pdf -silent termdriver.tex
 
+gameduino-3x-dazzler.pdf: gameduino-3x-dazzler.tex img/* code/*.inc *.tikz
+	# pdflatex -interaction=nonstopmode termdriver.tex
+	latexmk -pdf -silent gameduino-3x-dazzler.tex
+
 SHARED=endmatter.tex ports.tex
 
 spidriver.pdf: spidriver.tex img/* code/*.inc $(SHARED)

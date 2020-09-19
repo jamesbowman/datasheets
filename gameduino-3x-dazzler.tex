@@ -1,0 +1,294 @@
+\documentclass{article}
+
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{helvet}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{color, colortbl}
+
+\usepackage{listings}
+\usepackage{tikz}
+
+\usetikzlibrary{shapes,arrows}
+
+\usepackage{makeidx}         % allows index generation
+\makeindex
+
+\lstset{frame=tblr,
+  rulecolor=\color{lightgray},
+  language=Java,
+  aboveskip=5mm,
+  belowskip=5mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle=\linespread{1.0}\small\ttfamily,
+  numbers=none,
+  % numberstyle=\tiny\color{gray},
+  % keywordstyle=\color{blue},
+  % commentstyle=\color{dkgreen},
+  % stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\usepackage{framed}     % These needed for the code formatter
+\usepackage{color}
+\usepackage{fancyvrb}
+
+% Use helvetica (sans) by default
+\renewcommand{\familydefault}{\sfdefault}
+
+% Greenish links
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!red,
+  urlcolor=blue!50!red
+}
+
+\setlength{\headheight}{40pt}
+\setlength{\headsep}{0.2in}
+
+\pagestyle{fancy}
+\lhead{\includegraphics[width=0.2\textwidth]{img/logo}}
+\chead{Gameduino 3X Dazzler}
+\rhead{\thepage}
+\cfoot{\textcopyright \the\year \ \ Excamera Labs}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\usepackage{setspace}
+
+\newcommand{\device}{Gameduino 3X Dazzler}
+\newcommand{\dev}{Dazzler}
+
+\newcommand{\heavyline}{\specialrule{1pt}{1pt}{1pt}}
+\newcommand{\png}[1]{
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.75\textwidth]{#1}
+\end{center}
+\end{figure}
+}
+\newcommand{\pngw}[2]{
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=#2\textwidth]{#1}
+\end{center}
+\end{figure}
+}
+
+\newcommand{\mach}[1]{\texttt{\textbf{#1}}}
+\newcommand{\gap}{\vspace{10pt}}
+
+\input{pyg.tex}
+
+\begin{document}
+
+\newpage
+\begin{center}
+\includegraphics[width=1.00\textwidth]{img/gameduino-3x-dazzler/gameduino-3x-dazzler-main}
+Last updated on \today
+\end{center}
+\tableofcontents
+
+\newpage
+
+\setlength{\parindent}{0mm}
+\setlength{\parskip}{1mm}
+\setstretch{1.4}
+
+\section{Overview}
+
+\png{img/gameduino-3x-dazzler/module}
+
+The \device{} outputs HD picture and sound to any HDMI display.
+
+It is available as a core module, and as an Arduino-compatible shield.
+
+\subsection{Features}
+
+The core module has the following features:
+
+\begin{itemize}
+\item Powerful BT815 embedded GPU with 24 bit color
+\item HDMI encoding and system management handled by Xilinx Spartan-6 LX9 FPGA
+\item 2 $\times$ 8 Megabyte flash
+\item HDMI video output at 1280x720 @ 60 Hz (720p), audio output at 48 KHz
+\item All features accessible via SPI interface
+\item Single 5V supply; onboard regulation to 3.3V and 1.2V
+\end{itemize}
+
+\noindent
+The shield adds:
+\begin{itemize}
+\item a level shifter so all inputs are 5V tolerant
+\item a microSD card slot
+\item 2 Wii Classic ports, both continuously scanned by the Dazzler
+\item optional headers for standard serial and JTAG connectors
+\end{itemize}
+
+\png{img/gameduino-3x-dazzler/rot-0182}
+
+\newpage
+\section{Getting Started}
+
+On power-up, the \dev{} displays a boot screen like this:
+
+\pngw{img/gameduino-3x-dazzler/boot}{1.0}
+
+The code on the left is the module's serial number. \index{serial number}
+The center code is the firmware version. \index{firmware version}
+On the right is the firmware build date.
+
+\newpage
+\section{Text mode}
+
+\newpage
+\section{Pinouts}
+
+\subsection{Shield}
+The Dazzler Shield follows the standard Arduino Uno pinout.
+
+\gap
+\begin{center}
+\begin{tabular}{ccl}
+\hline
+GND	& power & Signal ground \\
+5V	& power	& Main supply: 5-9V \\
+\\
+13	& in	& SPI SCK \\
+12	& out	& SPI MISO \\
+11	& in	& SPI MOSI \\
+\\
+10	& in	& DAZZLER SEL \\
+9	& in	& SD SEL \\
+8	& in	& GPU SEL \\
+\\
+2	& out	& INTERRUPT \\
+1	& in 	& SERIAL IN \\
+\hline
+\end{tabular}
+\end{center}
+\gap
+
+All other pins are pass-through.
+
+\subsection{Module}
+
+\pngw{img/gameduino-3x-dazzler/pinout}{1.0}
+
+\newpage
+\section{Internals}
+
+
+
+\tikzstyle{block} = [draw, fill=white, rectangle, minimum height=40mm, minimum width=20mm]
+\tikzstyle{sum} = [draw, fill=blue!20, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+
+% The block diagram code is probably more verbose than necessary
+\begin{center}
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % We start by placing the blocks
+    \node [block] (FPGA) {FPGA};
+\end{tikzpicture}
+\end{center}
+
+This is 
+
+\newpage
+\section{Specifications}\label{electrical-characteristics}
+
+\subsubsection*{DC characteristics}
+\vspace{10 pt}
+{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+
+\begin{tabularx}{\linewidth}{XC{40pt}C{40pt}C{40pt}C{40pt}}
+& min & typ & max & units \\ \heavyline
+
+All inputs signals & & & & \\
+\hspace{10pt}low voltage & -0.5 & & 0.8 & V \\
+\hspace{10pt}high voltage & 2.0 &   & 4.1 & V \\ \hline
+Supply voltage        & 4.5 & 5.0 & 9.0 & V                   \\ \hline
+Current consumption   & & 180 & & mA                   \\ \hline
+
+\end{tabularx}}
+\vspace{10 pt}
+
+\subsubsection*{AC characteristics}
+\vspace{10 pt}
+
+{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+\begin{tabularx}{\linewidth}{XC{40pt}C{40pt}C{40pt}C{40pt}}
+& min & typ & max & units \\ \heavyline
+
+SPI speed                     & & & 36 & Mbps   \index{speed!SPI}\\ \hline
+Startup time & & & 270 & ms \\ \hline
+Scanout frequency & & 74.25 $\pm$ 0.002\%  & & MHz  \\ \hline
+Scanout frame rate & & 60.000 & & Hz  \\ \hline
+\end{tabularx}}
+\vspace{10 pt}
+
+\subsubsection*{Physical characteristics}
+\vspace{10 pt}
+
+\begin{center}
+\input{dazzler.tikz}
+\end{center}
+
+{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+\begin{tabularx}{\linewidth}{XC{120pt}C{40pt}}
+& & units \\ \heavyline
+
+Dimensions                    & 83 $\times$ 53 $\times$ 20 & mm   \index{dimensions}\\ \hline
+Weight (module)               & 10 & g   \index{weight}\\ \hline
+Weight (shield)               & 32 & g   \index{weight}\\ \hline
+
+\end{tabularx}}
+\vspace{10 pt}
+
+\newpage
+\section{Troubleshooting}
+
+\gap
+\begin{tabular}{|l|l|}
+\hline
+No monitor output after power-up     & $\bullet$ Check HDMI cable and port \\
+                                     & $\bullet$ Confirm 5V power present \\
+                                     & $\bullet$ Return for replacement \\
+\hline
+No audio output                      & $\bullet$ Confirm the display has audio output \\
+                                     & $\bullet$ Check the display's mute and volume settings \\
+\hline
+\end{tabular}
+\gap
+
+\section{Support information}
+
+Technical and product support is available at
+\href{mailto:jamesb@excamera.com}{jamesb@excamera.com}
+
+\device{} is built and maintained by
+\href{https://excamera.com}{Excamera Labs}.
+
+
+\newpage
+\raggedright
+\addcontentsline{toc}{section}{Index}
+\renewcommand{\indexname}{Index}
+\printindex
+
+\end{document}
