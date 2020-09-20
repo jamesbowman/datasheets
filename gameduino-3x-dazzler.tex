@@ -152,11 +152,25 @@ The code on the left is the module's serial number. \index{serial number}
 The center code is the firmware version. \index{firmware version}
 On the right is the firmware build date.
 
+\pngw{img/gameduino-3x-dazzler/helloworld}{1.0}
+
+\subsection{WII controllers}
+
+XXX
+
 \newpage
 \section{Text mode}
 
+XXX
+
+\section{Dazzler SPI protocol}
+
+XXX
+
 \newpage
 \section{Pinouts}
+
+\newcommand{\activelow}[1]{$\overline{\mbox{#1}}$}
 
 \subsection{Shield}
 The Dazzler Shield follows the standard Arduino Uno pinout.
@@ -189,21 +203,30 @@ All other pins are pass-through.
 
 \pngw{img/gameduino-3x-dazzler/pinout}{1.0}
 
-\newcommand{\activelow}[1]{$\overline{\mbox{#1}}$}
-
 \gap
 \begin{center}
-\begin{tabular}{ccl}
+\begin{tabular}{cccl}
+\textbf{pin} & \textbf{group} & \textbf{direction} & \textbf{function} \\
 \hline
-GND	& power & Signal ground \\
-5V	& power	& Main supply: 5-9 V \\
+GND	& power & in & Signal ground \\
+5V	& power	& in & Main supply: 5-9 V \\
 \\
-3.3	& power	& 3.3 V output (100 mA)\\
+3.3	& power	& out & 3.3 V output (50 mA max)\\
 \\
-22	& out   & SPI MISO \\
-25	& in    & \activelow{GPU SEL} \\
-26	& in    & \activelow{SD SEL} \\
-27	& in    & \activelow{DAZZLER SEL} \\
+1       & console & in    & CONSOLE IN \\
+2       & console & out   & CONSOLE OUT \\
+\\
+17      & microSD & in    & SD MISO \\
+18      & microSD & out   & SD SCK \\
+19      & microSD & out   & SD MOSI \\
+20      & microSD & out   & SD CS \\
+\\
+22	& SPI     & out   & MISO \\
+25	& SPI     & in    & \activelow{GPU SEL} \\
+26	& SPI     & in    & \activelow{SD SEL} \\
+27	& SPI     & in    & \activelow{DAZZLER SEL} \\
+28	& SPI     & in    & MOSI \\
+29	& SPI     & in    & SCK \\
 \hline
 \end{tabular}
 \end{center}
