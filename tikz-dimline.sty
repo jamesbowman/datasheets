@@ -1,0 +1,189 @@
+%% Dimension line for LaTeX/TikZ
+%% Copyright © 2013 Sébastien Gross  <seb•ɑƬ•chezwam•ɖɵʈ•org>
+%%
+%% This file may be distributed and/or modified
+%%
+%% 1. under the LaTeX Project Public License and/or
+%% 2. under the WTF Public License.
+%%
+%%
+%% This simplify the creation drawing of dimension arrows.
+%%
+%%
+%% To install it copy the tango directory to either:
+%%   - $TEXHOME/tex/latex/
+%%   - ~/texmf/tex/latex/
+%%   - ~/Library/texmf/tex/latex
+%%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tikz-dimline}[2013/03/13 v1.0 initial version]
+
+\RequirePackage{tikz}
+\RequirePackage{pgfplots}
+\RequirePackage{ifthen}
+
+\usetikzlibrary{calc,decorations.markings,arrows}
+
+\makeatletter
+
+
+
+\pgfkeys {
+  /dimline/.cd,
+  execute style/.style = {#1},
+  execute macro/.style = {/dimline/execute style/.expand once=#1},
+}
+
+
+\newdimen\dimline@arrow@linewidth
+
+\pgfarrowsdeclare{dimline}{dimline}
+{
+  \arrowsize=1\pgflinewidth
+  \pgfarrowsleftextend{0\arrowsize}
+  \pgfarrowsrightextend{5\arrowsize}
+} {
+  \arrowsize=1\pgflinewidth
+  \pgfsetdash{}{0pt} %  do not dash
+  % |
+  \pgfsetlinewidth{.5\arrowsize}
+  \pgfpathmoveto{\pgfpoint{4.75\arrowsize}{3\arrowsize}}
+  \pgfpathlineto{\pgfpoint{4.75\arrowsize}{-3\arrowsize}}
+  \pgfusepathqstroke
+  % >
+  \pgfsetlinewidth{0.01pt}
+  \pgfpathmoveto{\pgfpoint{4.5\arrowsize}{0pt}}
+  \pgfpathlineto{\pgfpoint{-3\arrowsize}{2\arrowsize}}
+  \pgfpathlineto{\pgfpoint{-3\arrowsize}{-2\arrowsize}}
+  \pgfpathclose
+  \pgfusepathqfillstroke
+}
+
+
+\pgfarrowsdeclare{dimline reverse}{dimline reverse}
+{
+  \arrowsize=1\pgflinewidth
+  \pgfarrowsleftextend{-5\arrowsize}
+  \pgfarrowsrightextend{0\arrowsize}
+} {
+  \arrowsize=1\pgflinewidth
+  \pgfsetdash{}{0pt} %  do not dash
+  % |
+  \pgfsetlinewidth{0.5\arrowsize}
+  \pgfpathmoveto{\pgfpoint{-0.25\arrowsize}{3\arrowsize}}
+  \pgfpathlineto{\pgfpoint{-0.25\arrowsize}{-3\arrowsize}}
+  \pgfusepathqstroke
+  % >
+  \pgfsetlinewidth{0.01pt}
+  \pgfpathmoveto{\pgfpoint{0pt}{0pt}}
+  \pgfpathlineto{\pgfpoint{7.5\arrowsize}{2\arrowsize}}
+  \pgfpathlineto{\pgfpoint{7.5\arrowsize}{-2\arrowsize}}
+  \pgfpathclose
+  \pgfusepathqfillstroke
+}
+
+
+% measure lenght
+% http://tex.stackexchange.com/questions/123913
+
+
+\newcommand{\dimline@do@nothing}[1]{#1}%
+% http://tex.stackexchange.com/questions/58283/tikz-how-to-determine-the-vector-between-two-co-ordinates
+
+
+% #1: optional keys parameters
+% #2: start point
+% #3: end point
+% #4: text
+\newcommand{\dimline}[4][]{%
+
+  \pgfplotsifinaxis{%
+    \let\dimline@internal\pgfplotsextra%
+  }{%
+    \let\dimline@internal\dimline@do@nothing%
+  }%
+
+  \dimline@internal{
+    \pgfkeys{
+      dimline/.is family,
+      dimline,
+      color/.initial = black,
+      extension start length/.initial=1cm,
+      extension end length/.initial=1cm,
+      extension start angle/.initial=-90,
+      extension end angle/.initial=90,
+      line style/.initial = {},
+      label style/.initial = {},
+      extension style/.initial = {},
+      extension start style/.initial = {},
+      extension start path/.initial = {},
+      extension end style/.initial = {},
+      extension end path/.initial = {},
+      #1,
+      line style/.get = \dimline@line@style,
+      label style/.get = \dimline@label@style,
+      extension style/.get = \dimline@extension@style,
+      extension start style/.get = \dimline@extension@start@style,
+      extension start path/.get = \dimline@extension@start@path,
+      extension end style/.get = \dimline@extension@end@style,
+      extension end path/.get = \dimline@extension@end@path,
+    }
+
+    \begin{scope} [
+      line/.style = {
+        color=\pgfkeysvalueof{/dimline/color},
+        arrows=dimline-dimline,
+        /dimline/execute macro = \dimline@line@style,
+      },
+      extension/.style = {
+        color=\pgfkeysvalueof{/dimline/color}!40, line width=0.01,
+        /dimline/execute macro = \dimline@extension@style,
+      },
+      extension start/.style = {
+        extension,
+        /dimline/execute macro = \dimline@extension@start@style
+      },
+      extension end/.style = {
+        extension,
+        /dimline/execute macro = \dimline@extension@end@style,
+      },
+      label/.style = {
+        fill=white, align=center, sloped=true, pos=0.5,
+        /dimline/execute macro = \dimline@label@style
+      },
+      ]
+
+      \coordinate (a) at #2 {};
+      \coordinate (b) at #3 {};
+
+      \ifthenelse{\equal{\dimline@extension@start@path}{}}{
+        \coordinate (a to b) at ($(a)!\pgfkeysvalueof{/dimline/extension start length}!\pgfkeysvalueof{/dimline/extension start angle}:(b)$);
+        \draw [extension start] (a.center) -- (a to b);
+      } {
+        \draw [extension start] plot coordinates {\dimline@extension@start@path};
+      }
+
+      \ifthenelse{\equal{\dimline@extension@end@path}{}}{
+        \coordinate (b to a) at ($(b)!\pgfkeysvalueof{/dimline/extension end length}!\pgfkeysvalueof{/dimline/extension end angle}:(a)$);
+        \draw [extension end] (b.center) -- (b to a);
+      } {
+        \draw [extension end] plot coordinates {\dimline@extension@end@path};
+      }
+
+      \draw[line] (a.center) -- (b.center) node[label] {#4};
+    \end{scope}
+  }
+}
+
+
+
+\@ifclassloaded{beamer}{%
+  \renewcommand<>{\dimline}[4][]{\only#5{\beameroriginal{\dimline}[#1]{#2}{#3}{#4}}}
+}
+\makeatother
+
+
+\endinput
+%% tikz-dimline.sty ends here.
+

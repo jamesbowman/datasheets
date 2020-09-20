@@ -8,12 +8,14 @@
 \usepackage{hyperref}
 \usepackage{tabularx}
 \usepackage{xcolor}
+\usepackage{wasysym}
 \usepackage{color, colortbl}
 
 \usepackage{listings}
 \usepackage{tikz}
+\usepackage{tikz-dimline}
 
-\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{shapes,arrows,positioning}
 
 \usepackage{makeidx}         % allows index generation
 \makeindex
@@ -201,7 +203,7 @@ All other pins are pass-through.
 
 % The block diagram code is probably more verbose than necessary
 \begin{center}
-\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+\begin{tikzpicture}[node distance=2cm,>=latex']
     % We start by placing the blocks
     \node [block] (FPGA) {FPGA};
 \end{tikzpicture}
@@ -212,7 +214,7 @@ This is
 \newpage
 \section{Specifications}\label{electrical-characteristics}
 
-\subsubsection*{DC characteristics}
+\subsection{DC characteristics}
 \vspace{10 pt}
 {\renewcommand{\arraystretch}{1.2}% for the vertical padding
 
@@ -228,7 +230,7 @@ Current consumption   & & 180 & & mA                   \\ \hline
 \end{tabularx}}
 \vspace{10 pt}
 
-\subsubsection*{AC characteristics}
+\subsection{AC characteristics}
 \vspace{10 pt}
 
 {\renewcommand{\arraystretch}{1.2}% for the vertical padding
@@ -242,23 +244,57 @@ Scanout frame rate & & 60.000 & & Hz  \\ \hline
 \end{tabularx}}
 \vspace{10 pt}
 
-\subsubsection*{Physical characteristics}
+\subsection{Physical characteristics}
 \vspace{10 pt}
-
-\begin{center}
-\input{dazzler.tikz}
-\end{center}
 
 {\renewcommand{\arraystretch}{1.2}% for the vertical padding
 \begin{tabularx}{\linewidth}{XC{120pt}C{40pt}}
 & & units \\ \heavyline
 
-Dimensions                    & 83 $\times$ 53 $\times$ 20 & mm   \index{dimensions}\\ \hline
-Weight (module)               & 10 & g   \index{weight}\\ \hline
+Dimensions (shield)           & 83 $\times$ 53 $\times$ 20 & mm   \index{dimensions}\\ \hline
 Weight (shield)               & 32 & g   \index{weight}\\ \hline
+Dimensions (module)           & 50 $\times$ 42 $\times$ 8.5 & mm   \index{dimensions}\\ \hline
+Weight (module)               & 10 & g   \index{weight}\\ \hline
 
 \end{tabularx}}
 \vspace{10 pt}
+
+\subsection{Module mechanical drawing}
+
+All measurements are in mm.
+
+The three mounting holes are designed for M2.5 screws, nuts and standoffs.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.7]
+\input{dazzler.tikz}
+    \coordinate (A) at (0,5);
+    \coordinate (B) at (5,5);
+    \dimline {(A)}{(B)}{50};
+    \coordinate (C) at (5.8,4.2);
+    \coordinate (D) at (5.8,0);
+    \dimline {(C)}{(D)}{42};
+
+    \coordinate (E) at (0,-0.7);
+    \coordinate (F) at (.28,-0.7);
+    \coordinate (G) at (4.72,-0.7);
+    \coordinate (H) at (5,-0.7);
+    \dimline [label style={below=0.5ex,font=\small}] {(F)}{(E)}{2.8};
+    \dimline {(G)}{(F)}{44.4};
+    \dimline [label style={below=0.5ex,font=\small}]{(H)}{(G)}{2.8};
+
+    \coordinate (I) at (-0.7,0);
+    \coordinate (J) at (-0.7,.28);
+    \coordinate (K) at (-0.7,3.92);
+    \coordinate (L) at (-0.7,4.20);
+    \dimline [label style={above=0.5ex,font=\small}] {(I)}{(J)}{2.8};
+    \dimline {(J)}{(K)}{36.4};
+    \dimline [label style={above=0.5ex,font=\small}]{(K)}{(L)}{2.8};
+
+    \dimline  [label style={above=0.5ex,font=\scriptsize},line style={arrows=dimline reverse-dimline reverse}]
+    {(.28-.125,1.3)}{(.28+.125,1.3)}{$\diameter$ 2.5};
+\end{tikzpicture}
+\end{center}
 
 \newpage
 \section{Troubleshooting}
