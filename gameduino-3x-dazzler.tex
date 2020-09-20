@@ -59,7 +59,7 @@
 \lhead{\includegraphics[width=0.2\textwidth]{img/logo}}
 \chead{Gameduino 3X Dazzler}
 \rhead{\thepage}
-\cfoot{\textcopyright \the\year \ \ Excamera Labs}
+\cfoot{\textcopyright \ \the\year \ \ Excamera Labs}
 \renewcommand{\headrulewidth}{0.5pt}
 \renewcommand{\footrulewidth}{0.5pt}
 
@@ -189,9 +189,30 @@ All other pins are pass-through.
 
 \pngw{img/gameduino-3x-dazzler/pinout}{1.0}
 
+\newcommand{\activelow}[1]{$\overline{\mbox{#1}}$}
+
+\gap
+\begin{center}
+\begin{tabular}{ccl}
+\hline
+GND	& power & Signal ground \\
+5V	& power	& Main supply: 5-9 V \\
+\\
+3.3	& power	& 3.3 V output (100 mA)\\
+\\
+22	& out   & SPI MISO \\
+25	& in    & \activelow{GPU SEL} \\
+26	& in    & \activelow{SD SEL} \\
+27	& in    & \activelow{DAZZLER SEL} \\
+\hline
+\end{tabular}
+\end{center}
+\gap
+
 \newpage
 \section{Internals}
 
+\subsection{The onboard CPU}
 
 
 \tikzstyle{block} = [draw, fill=white, rectangle, minimum height=40mm, minimum width=20mm]
@@ -208,8 +229,6 @@ All other pins are pass-through.
     \node [block] (FPGA) {FPGA};
 \end{tikzpicture}
 \end{center}
-
-This is 
 
 \newpage
 \section{Specifications}\label{electrical-characteristics}
