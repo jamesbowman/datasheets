@@ -235,23 +235,15 @@ GND	& power & in & Signal ground \\
 \newpage
 \section{Internals}
 
-\subsection{The onboard CPU}
-
-
-\tikzstyle{block} = [draw, fill=white, rectangle, minimum height=40mm, minimum width=20mm]
-\tikzstyle{sum} = [draw, fill=blue!20, circle, node distance=1cm]
-\tikzstyle{input} = [coordinate]
-\tikzstyle{output} = [coordinate]
-\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
-
-
 % The block diagram code is probably more verbose than necessary
 \begin{center}
-\begin{tikzpicture}[node distance=2cm,>=latex']
+\begin{tikzpicture}[]
     % We start by placing the blocks
-    \node [block] (FPGA) {FPGA};
+    \node [] (FPGA) {FPGA};
 \end{tikzpicture}
 \end{center}
+
+\png{img/gameduino-3x-dazzler/dazarch}
 
 \newpage
 \section{Specifications}\label{electrical-characteristics}
