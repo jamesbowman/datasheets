@@ -15,7 +15,7 @@
 \usepackage{tikz}
 \usepackage{tikz-dimline}
 
-\usetikzlibrary{shapes,arrows,positioning}
+\usetikzlibrary{shapes,arrows,positioning,fit}
 
 \usepackage{makeidx}         % allows index generation
 \makeindex
@@ -237,9 +237,70 @@ GND	& power & in & Signal ground \\
 
 % The block diagram code is probably more verbose than necessary
 \begin{center}
-\begin{tikzpicture}[]
-    % We start by placing the blocks
-    \node [] (FPGA) {FPGA};
+\begin{tikzpicture}[
+    node distance=0.2cm
+  ]
+  \tikzstyle{boxed}=[
+    draw,
+    inner sep=5pt
+  ]
+  \tikzstyle{rightnode}=[
+    text width=2cm
+  ]
+  \tikzstyle{leftnode}=[
+    text width=1.5cm,
+    align=center,
+    anchor=east
+  ]
+
+  % Ordering is important here
+  \node [rightnode, right=of FPGA] (CONSOLE) {CONSOLE};
+  \node [rightnode, below=of CONSOLE] (UART) {UART};
+  \node [rightnode, below=of UART] (WII) {WII};
+  \node [rightnode, below=of WII] (HDMI) {HDMI};
+  \node [rightnode, below=of HDMI] (SD) {SD};
+  \node [
+    boxed,
+    xshift=-4cm,
+    fit={(CONSOLE) (UART) (WII) (HDMI) (SD)},
+    label=center:FPGA
+  ] (FPGA) {};
+
+  \node [
+    above=0.7cm of FPGA
+  ] (JTAG) {JTAG};
+
+  \node [
+    leftnode,
+    left=1.5cm of FPGA
+  ] (SPI) {SPI};
+  \node [
+    leftnode,
+    boxed,
+    above=of SPI
+  ] (OSC 6 MHz) {OSC \\ 6 MHz};
+  \node [
+    leftnode,
+    boxed,
+    below=of SPI
+  ] (BOOT FLASH 8M) {BOOT \\ FLASH 8M};
+
+  \node [
+    boxed,
+    below=1.5cm of FPGA
+  ] (BT815) {BT815};
+  \node [
+    boxed,
+    left=1cm of BT815,
+    align=center,
+    text width=1.5cm
+  ] (FLASH 8M) {FLASH \\ 8M};
+  \node [
+    boxed,
+    right=1cm of BT815,
+    align=center,
+    text width=2cm,
+  ] (CAPACITIVE TOUCH) {CAPACITIVE TOUCH};
 \end{tikzpicture}
 \end{center}
 
