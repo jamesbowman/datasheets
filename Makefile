@@ -23,7 +23,7 @@ i2cdriver-cn.pdf: i2cdriver-cn.tex img/* code/*.inc i2csphinx.tex
 	# latexmk -pdf -silent i2cdriver-cn.tex
 
 code/*.inc: mkcode.py samples/*.ino
-	python3 mkcode.py
+	python mkcode.py
 
 I2CD=$(HOME)/git/i2cdriver/python/_build/latex
 
