@@ -158,14 +158,14 @@ On the right is the firmware build date.
 
 XXX
 
+\section{SPI interfaces}
+
+XXX
 \newpage
 \section{Text mode}
 
 XXX
 
-\section{Dazzler SPI protocol}
-
-XXX
 
 \newpage
 \section{Pinouts}
@@ -254,11 +254,11 @@ GND	& power & in & Signal ground \\
   ]
 
   % Ordering is important here
-  \node [rightnode, right=of FPGA] (CONSOLE) {CONSOLE};
+  \node [rightnode] (CONSOLE) {CONSOLE};
   \node [rightnode, below=of CONSOLE] (UART) {UART};
-  \node [rightnode, below=of UART] (WII) {\textbf{WII}};
+  \node [rightnode, below=of UART] (WII) {WII};
   \node [rightnode, below=of WII] (HDMI) {HDMI};
-  \node [rightnode, below=of HDMI] (SD) {\textbf{SD}};
+  \node [rightnode, below=of HDMI] (SD) {SD};
 
   \node [
     boxed,
@@ -289,6 +289,7 @@ GND	& power & in & Signal ground \\
 
   \node [
     boxed,
+    minimum size=2.6cm,
     below=1.5cm of FPGA
   ] (BT815) {BT815};
   \node [
@@ -298,7 +299,6 @@ GND	& power & in & Signal ground \\
     text width=1.5cm
   ] (FLASH 8M) {FLASH \\ 8M};
   \node [
-    boxed,
     right=1cm of BT815,
     align=center,
     text width=2cm,
@@ -308,9 +308,9 @@ GND	& power & in & Signal ground \\
 
   \draw[<->, thick] (FPGA.east |- CONSOLE.west) -- (CONSOLE.west);
   \draw[<-, thick] (FPGA.east |- UART.west) -- (UART.west);
-  \draw[<->, ultra thick] (FPGA.east |- WII.west) -- (WII.west);
+  \draw[<->, thick, double] (FPGA.east |- WII.west) -- (WII.west);
   \draw[->, thick, double] (FPGA.east |- HDMI.west) -- (HDMI.west);
-  \draw[<->, ultra thick] (FPGA.east |- SD.west) -- (SD.west);
+  \draw[<->, thick, double] (FPGA.east |- SD.west) -- (SD.west);
 
   \draw[<-, thick] (FPGA.west |- OSC 6 MHz.east) -- (OSC 6 MHz.east);
   \draw[<->, thick, double] (FPGA.west |- SPI.east) -- (SPI.east);
