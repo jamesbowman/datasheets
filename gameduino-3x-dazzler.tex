@@ -256,9 +256,10 @@ GND	& power & in & Signal ground \\
   % Ordering is important here
   \node [rightnode, right=of FPGA] (CONSOLE) {CONSOLE};
   \node [rightnode, below=of CONSOLE] (UART) {UART};
-  \node [rightnode, below=of UART] (WII) {WII};
+  \node [rightnode, below=of UART] (WII) {\textbf{WII}};
   \node [rightnode, below=of WII] (HDMI) {HDMI};
-  \node [rightnode, below=of HDMI] (SD) {SD};
+  \node [rightnode, below=of HDMI] (SD) {\textbf{SD}};
+
   \node [
     boxed,
     xshift=-4cm,
@@ -272,7 +273,8 @@ GND	& power & in & Signal ground \\
 
   \node [
     leftnode,
-    left=1.5cm of FPGA
+    left=1.5cm of FPGA,
+    text width=0.7cm,
   ] (SPI) {SPI};
   \node [
     leftnode,
@@ -301,10 +303,25 @@ GND	& power & in & Signal ground \\
     align=center,
     text width=2cm,
   ] (CAPACITIVE TOUCH) {CAPACITIVE TOUCH};
+
+  \draw[<->, thick] (JTAG) -- (FPGA);
+
+  \draw[<->, thick] (FPGA.east |- CONSOLE.west) -- (CONSOLE.west);
+  \draw[<-, thick] (FPGA.east |- UART.west) -- (UART.west);
+  \draw[<->, ultra thick] (FPGA.east |- WII.west) -- (WII.west);
+  \draw[->, thick, double] (FPGA.east |- HDMI.west) -- (HDMI.west);
+  \draw[<->, ultra thick] (FPGA.east |- SD.west) -- (SD.west);
+
+  \draw[<-, thick] (FPGA.west |- OSC 6 MHz.east) -- (OSC 6 MHz.east);
+  \draw[<->, thick, double] (FPGA.west |- SPI.east) -- (SPI.east);
+  \draw[<->, thick] (FPGA.west |- BOOT FLASH 8M.east) -- (BOOT FLASH 8M.east);
+
+  \draw[<->, thick, double] (FPGA) -- (BT815);
+  \draw[<->, thick] (FLASH 8M) -- (BT815);
+  \draw[<->, thick] (CAPACITIVE TOUCH) -- (BT815);
+
 \end{tikzpicture}
 \end{center}
-
-\png{img/gameduino-3x-dazzler/dazarch}
 
 \newpage
 \section{Specifications}\label{electrical-characteristics}
