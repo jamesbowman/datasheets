@@ -308,12 +308,12 @@ GND	& power & in & Signal ground \\
 
   \draw[<->, thick] (FPGA.east |- CONSOLE.west) -- (CONSOLE.west);
   \draw[<-, thick] (FPGA.east |- UART.west) -- (UART.west);
-  \draw[<->, thick, double] (FPGA.east |- WII.west) -- (WII.west);
+  \draw[<->, thick] (FPGA.east |- WII.west) -- (WII.west);
   \draw[->, thick, double] (FPGA.east |- HDMI.west) -- (HDMI.west);
-  \draw[<->, thick, double] (FPGA.east |- SD.west) -- (SD.west);
+  \draw[<->, thick] (FPGA.east |- SD.west) -- (SD.west);
 
   \draw[<-, thick] (FPGA.west |- OSC 6 MHz.east) -- (OSC 6 MHz.east);
-  \draw[<->, thick, double] (FPGA.west |- SPI.east) -- (SPI.east);
+  \draw[<->, thick] (FPGA.west |- SPI.east) -- (SPI.east);
   \draw[<->, thick] (FPGA.west |- BOOT FLASH 8M.east) -- (BOOT FLASH 8M.east);
 
   \draw[<->, thick, double] (FPGA) -- (BT815);
