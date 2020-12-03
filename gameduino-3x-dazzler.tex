@@ -1,5 +1,6 @@
 \documentclass{article}
 
+\usepackage{bytefield}
 \usepackage{booktabs}
 \usepackage{fancyhdr}
 \usepackage{float}
@@ -72,6 +73,12 @@
 
 \newcommand{\device}{Gameduino 3X Dazzler}
 \newcommand{\dev}{Dazzler}
+
+\newcommand{\eg}[1]{
+\begin{framed}
+\input{code/#1.inc}
+\end{framed}
+}
 
 \newcommand{\heavyline}{\specialrule{1pt}{1pt}{1pt}}
 \newcommand{\png}[1]{
@@ -160,9 +167,162 @@ XXX
 
 \section{SPI interfaces}
 
-XXX
+\subsection{Dazzler interface}
+
+The Dazzler has its own SPI interface distinct from the BT815 and microSD SPI interfaces.
+This interface controls the Dazzler at a system level and allows firmware updates.
+
+SPI writes to the Dazzler use the following format. Additional bytes are ignored.
+
+\gap
+\begin{bytefield}[endianness=big,bitwidth=3.2em]{10}
+\bitbox[]{2}{+0}\bitbox{8}{command} \\
+\bitbox[]{2}{+1}\bitbox{8}{N} \\
+\end{bytefield}
+
+SPI reads from the Dazzler use the following format.
+
+\gap
+\begin{bytefield}[endianness=big,bitwidth=3.2em]{10}
+  \bitbox[]{2}{+0} \bitbox{8}{ID byte: \mach{0xDA}} \\
+  \bitbox[]{2}{+1} \bitbox{8}{status byte} \\
+
+  \bitbox[]{2}{+2} \bitbox[lrt]{8}{} \\
+  \bitbox[]{2}{..} \bitbox[lr]{8}{Player 1 joystick} \\
+  \bitbox[]{2}{+7} \bitbox[lrb]{8}{} \\
+
+  \bitbox[]{2}{..} \bitbox[lr]{8}{} \\
+
+  \bitbox[]{2}{+14} \bitbox[lrt]{8}{} \\
+  \bitbox[]{2}{..}  \bitbox[lr]{8}{Player 2 joystick} \\
+  \bitbox[]{2}{+19} \bitbox[lrb]{8}{} \\
+\end{bytefield}
+
+The status byte is \mach{0xff} while the Dazzler is busy processing a command.
+The status byte is \mach{0x00}
+when the Dazzler is ready to accept a command.
+
+The following commands are supported:
+
+\gap
+\begin{tabular}{ll}
+
+\mach{0x40}	& Reset the BT815 \\
+\mach{0x41}	& Boot from slot \textbf{N} \\
+\mach{0x42}	& Load slot \textbf{N} from file \mach{image.dazzler} on microSD \\
+
+\end{tabular}
+\gap
+
+All other byte values are ignored.
+
+The two 6-byte joystick fields follow the Wii Classic controller bit definitions:
+
+\gap
+\begin{bytefield}[endianness=big,bitwidth=3.2em]{10}
+%\bitheader{0-7} \\
+\bitbox[]{2}{+0} \bitbox{2}{RX[4:3]} \bitbox{6}{LX[5:0]}\\
+\bitbox[]{2}{+1} \bitbox{2}{RX[2:1]} \bitbox{6}{LY[5:0]}\\
+\bitbox[]{2}{+2} \bitbox{1}{RX[0]} \bitbox{2}{LT[4:3]} \bitbox{5}{RY[4:0]}\\
+\bitbox[]{2}{+3} \bitbox{3}{LT[2:0]} \bitbox{5}{RT[4:0]}\\
+\bitbox[]{2}{+4}
+\bitbox{1}{BDR}
+\bitbox{1}{BDD}
+\bitbox{1}{BLT}
+\bitbox{1}{B-}
+\bitbox{1}{BH}
+\bitbox{1}{B+}
+\bitbox{1}{BRT}
+\bitbox{1}{1}\\
+\bitbox[]{2}{+5}
+\bitbox{1}{BZL}
+\bitbox{1}{BB}
+\bitbox{1}{BY}
+\bitbox{1}{BA}
+\bitbox{1}{BX}
+\bitbox{1}{BZR}
+\bitbox{1}{BDL}
+\bitbox{1}{BDU}\\
+\end{bytefield}
+
+LX,LY are the left Analog Stick X and Y (0-63), RX and RY are the right Analog Stick X and Y (0-31), and LT and RT are the Left and Right Buttons (0 or 31). The left Analog Stick has twice the precision of the other analog values.
+
+BD{L,R,U,D} are the D-Pad direction buttons. B{ZR,ZL,A,B,X,Y,+,H,-} are the discrete buttons. B{LT,RT} are the digital button click of LT and RT. All buttons are 0 when pressed.
+
+The above table and text are taken from \url{https://wiibrew.org/wiki/Wiimote/Extension_Controllers/Classic_Controller_Pro}.
+
 \newpage
-\section{Text mode}
+\section{Text mode}\label{sec:textmode}
+
+In text mode the Dazzler's onboard hardware directly drives the BT815 GPU 
+to produce a high-quality text display on the HDMI output.
+The input is a single serial line running at 115200-8-N-1, which feeds the terminal emulation engine.
+Text mode can be selected by:
+\begin{itemize}
+\item The gamepad boot menu
+\item The Dazzler serial console
+\item The Dazzler SPI register interface
+\end{itemize}
+All offer an option to start in text mode at boot.
+
+\subsection{ANSI escape codes}
+
+The following standard
+\href{https://en.wikipedia.org/wiki/ANSI_escape_code\#CSI_sequences}{CSI codes}
+are supported:
+
+\gap\noindent
+\begin{tabularx}{\linewidth}{lX}
+\heavyline
+Code & Effect \\ \heavyline
+
+ESC {[} \emph{n} A & Cursor up \\
+
+ESC {[} \emph{n} B & Cursor down \\
+
+ESC {[} \emph{n} C & Cursor forward \\
+
+ESC {[} \emph{n} D & Cursor back \\
+
+ESC {[} \emph{r;c} H & Cursor position \\
+
+ESC {[} \emph{n} J & Erase display \\
+
+ESC {[} \emph{n} m & Select graphic rendition \\
+
+ESC {[} s & Save cursor position \\
+
+ESC {[} u & Restore cursor position \\ \heavyline
+\end{tabularx}
+\gap
+
+In addition the following sequences are specific to TermDriver:
+
+\gap
+\noindent
+\begin{tabularx}{\linewidth}{lX}
+\heavyline
+Code & Effect \\ \heavyline
+
+ESC {[} \emph{n} h & 
+Set display mode.  0 is 80x25, 1 is 128x48, 2 is 96x64 (rotated)
+\\
+
+ESC {[} \emph{n} S & Screen-saver.  0 stops video output, 1 restarts video output
+\\ \heavyline
+\end{tabularx}
+\gap
+
+\noindent
+For example this C program displays all available foreground and background colors.
+
+\eg{dazzler-color1}
+
+\subsection{High-resolution modes}
+
+In addition to standard 80x25 text mode,
+TermDriver supports a higher density 128x48 mode,
+and a portrait orientation 96x64 mode.
 
 XXX
 
@@ -201,7 +361,12 @@ All other pins are pass-through.
 
 \subsection{Module}
 
-\pngw{img/gameduino-3x-dazzler/pinout}{1.0}
+\pngw{img/gameduino-3x-dazzler/pinout}{0.9}
+
+The \device{} has multiple configurations.
+Configurations may be selected using the console.
+All configurations use the same assignments for power and console connections.
+The factory configuration is the one used for the Dazzler shield.
 
 \gap
 \begin{center}
@@ -211,10 +376,27 @@ All other pins are pass-through.
 GND	& power & in & Signal ground \\
 5V	& power	& in & Main supply: 5-9 V \\
 \\
-3.3	& power	& out & 3.3 V output (50 mA max)\\
+3.3	& power	& out & 3.3 V output \\
 \\
 1       & console & in    & CONSOLE IN \\
 2       & console & out   & CONSOLE OUT \\
+\hline
+\end{tabular}
+\end{center}
+\gap
+
+\subsubsection{Gameduino Shield Configuration}
+\gap
+\begin{center}
+\begin{tabular}{cccl}
+\textbf{pin} & \textbf{group} & \textbf{direction} & \textbf{function} \\
+\hline
+8       & Wii     & in/out & P2 SCL \\
+9       & Wii     & in     & P2 DETECT \\
+10      & Wii     & in/out & P2 SDA \\
+11      & Wii     & in/out & P1 SCL \\
+12      & Wii     & in     & P1 DETECT \\
+13      & Wii     & in/out & P1 SDA \\
 \\
 17      & microSD & in    & SD MISO \\
 18      & microSD & out   & SD SCK \\
@@ -231,6 +413,63 @@ GND	& power & in & Signal ground \\
 \end{tabular}
 \end{center}
 \gap
+
+\subsubsection{MC6850 Configuration}
+\gap
+\begin{center}
+\begin{tabular}{ccll}
+\textbf{pin} & \textbf{direction} & \textbf{standard} & \textbf{alternate} \\
+\hline
+3       & in     & Rx Data & \\
+4       & in     & Rx CLK & \\
+5       & in     & Tx CLK & \\
+6       & out    & \activelow{RTS} & \\
+7       & out    & Tx Data & \\
+8       & out    & \activelow{IRQ} & \\
+9       & in     & CS0 & \\
+10      & in     & \activelow{CS2} & \\
+11      & in     & CS1 & \\
+12      & in     & RS & \\
+13      & in     & R/\activelow{W} & \\
+14      & in     & E & \activelow{E}\\
+15      & in/out & D7 & \\
+16      & in/out & D6 & \\
+17      & in/out & D5 & \\
+18      & in/out & D4 & \\
+19      & in/out & D3 & \\
+20      & in/out & D2 & \\
+21      & in/out & D1 & \\
+22      & in/out & D0 & \\
+23      & in     & \activelow{DCD} & CS7 \\
+24      & in     & \activelow{CTS} & CS6 \\
+& \\
+25      & in     & CS5 & \\
+26      & in     & CS4 & \\
+27      & in     & CS3 & \\
+28      & out    & bus direction & \\
+29      & in     & keyboard in & \\
+\hline
+\end{tabular}
+\end{center}
+\gap
+The MC6850 Configuration emulates a Motorola MC6850. At boot, it behaves identically to a MC6850, with the following enhancements:
+\begin{itemize}
+\item Transmitted data is send to a 80x25 ANSI TTY emulator, which is displayed on the HDMI output.
+See \nameref{sec:textmode} for details of the ANSI code support.
+\item \mach{keyboard in} is merged with \mach{Rx Data} and appears to the MC6850 as received data
+\end{itemize}
+
+In addition to the MC6850-compatible signals, this configuration also has:
+
+\begin{itemize}
+
+\item \mach{CS$x$} inputs. \mach{CS3} selects direct EVE mode, where reads and writes are transferred directly to the BT815 GPU's SPI port.
+\mach{CS4, 5, 6, 7} are optional address selector inputs, programmable at configuration time.
+\end{itemize}
+
+There are two functional modes available.
+\textbf{standard} mode is fully compatible with the MC6850.
+\textbf{alternate} mode is intended for use with Z80-style CPU busses.
 
 \newpage
 \section{Internals}
