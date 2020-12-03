@@ -44,9 +44,11 @@ def Clean(src):
 
 sources = """
 termdriver-helloworld
+termdriver-helloworld
 termdriver-counter1
 termdriver-counter2
 termdriver-color1
+dazzler-color1
 """
 
 for fn in sources.split():
