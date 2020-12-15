@@ -10,7 +10,7 @@ Products are:
 
 To build:
 
-  sudo apt-get install -qq texlive texlive-latex-extra
+  sudo apt-get install -qq texlive texlive-latex-extra texlive-science
   pip install pygments
   make
     
