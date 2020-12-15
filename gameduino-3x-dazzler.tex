@@ -159,11 +159,66 @@ The code on the left is the module's serial number. \index{serial number}
 The center code is the firmware version. \index{firmware version}
 On the right is the firmware build date.
 
-\pngw{img/gameduino-3x-dazzler/helloworld}{1.0}
+The Dazzler functions like the other Gameduino 3X family members.
+With an Arduino or Teensy, the Gameduino library supports all Gameduino 3X series devices:
 
-\subsection{WII controllers}
+\gap
+\begin{tabular}{lccc}
 
-XXX
+       & resolution & touch input & Wii-classic input \\
+\hline
+
+Gameduino 3X 4.3"    & 480$\times$272 & $\bullet$ & \\
+Gameduino 3X 7"      & 800$\times$480 & $\bullet$ & \\
+Gameduino 3X Dazzler & 1280$\times$720 & & $\bullet$ \\
+
+\end{tabular}
+\gap
+
+pngw{img/gameduino-3x-dazzler/helloworld}{1.0}
+
+The CircuitPython library also supports the Gameduino 3X devices.
+
+\subsection{Accessing the boot menu}
+
+If you have a Wii-classic controller,
+you can access the Dazzler's built-in boot menu at any time.
+
+Attach the controller to the "PLAYER 1" port, and press
+\textbf{START +},
+\textbf{x},
+\textbf{y} buttons at the same time.
+
+\pngw{img/gameduino-3x-dazzler/wii-bootmenu.png}{1.0}
+
+The display will switch to the boot menu.
+
+\pngw{img/gameduino-3x-dazzler/bootmenu1.png}{1.0}
+
+The three icons on the right display the connection status of the
+microSD, PLAYER 1 and PLAYER 2 slots respectively.
+
+Use the left-direction pad to select one of the eight available flash slots.
+Button \textbf{a} launches a slot.
+
+Slot 0 is the boot slot, and should contain a Dazzler boot image. Other slots can be loaded with alternate firmware images.
+To install an image in a slot:
+
+\begin{enumerate}
+
+\item use a microSD card formatted with FAT32
+
+\item copy the flash image to the microSD card naming it \mach{image.dazzler}
+
+\item insert the card into the Dazzler's microSD slot, and connect the controller
+
+\item activate the boot menu
+
+\item select a blank slot, then press \textbf{x} to start the write process
+
+\item the write process takes a few seconds. After it completes the boot menu shows the new slot contents
+
+\end{enumerate}
 
 \section{SPI interfaces}
 
@@ -259,11 +314,16 @@ to produce a high-quality text display on the HDMI output.
 The input is a single serial line running at 115200-8-N-1, which feeds the terminal emulation engine.
 Text mode can be selected by:
 \begin{itemize}
-\item The gamepad boot menu
-\item The Dazzler serial console
-\item The Dazzler SPI register interface
+
+\item The gamepad boot menu. Select slot 1.
+
+\item The Dazzler serial console. Use command \mach{ 1 run}
+
+\item The Dazzler SPI interface.
+
 \end{itemize}
-All offer an option to start in text mode at boot.
+
+On entering text mode, the default layout is 128x34 landscape. The display is blank except for a blinking cursor.
 
 \subsection{ANSI escape codes}
 
@@ -296,7 +356,7 @@ ESC {[} u & Restore cursor position \\ \heavyline
 \end{tabularx}
 \gap
 
-In addition the following sequences are specific to TermDriver:
+In addition the following sequences are specific to Dazzler's text mode:
 
 \gap
 \noindent
@@ -305,7 +365,7 @@ In addition the following sequences are specific to TermDriver:
 Code & Effect \\ \heavyline
 
 ESC {[} \emph{n} h & 
-Set display mode.  0 is 80x25, 1 is 128x48, 2 is 96x64 (rotated)
+Set display mode.  0 is 128x34 (landscape), 1 is 182x48 (landscape), 2 is 80x64 (portrait), 3 is 102x85 (portrait)
 \\
 
 ESC {[} \emph{n} S & Screen-saver.  0 stops video output, 1 restarts video output
@@ -314,18 +374,9 @@ ESC {[} \emph{n} S & Screen-saver.  0 stops video output, 1 restarts video outpu
 \gap
 
 \noindent
-For example this C program displays all available foreground and background colors.
+For example this C program displays the 16 ANSI foreground and background colors.
 
 \eg{dazzler-color1}
-
-\subsection{High-resolution modes}
-
-In addition to standard 80x25 text mode,
-TermDriver supports a higher density 128x48 mode,
-and a portrait orientation 96x64 mode.
-
-XXX
-
 
 \newpage
 \section{Pinouts}
@@ -363,11 +414,6 @@ All other pins are pass-through.
 
 \pngw{img/gameduino-3x-dazzler/pinout}{0.9}
 
-The \device{} has multiple configurations.
-Configurations may be selected using the console.
-All configurations use the same assignments for power and console connections.
-The factory configuration is the one used for the Dazzler shield.
-
 \gap
 \begin{center}
 \begin{tabular}{cccl}
@@ -385,8 +431,6 @@ GND	& power & in & Signal ground \\
 \end{center}
 \gap
 
-\subsubsection{Gameduino Shield Configuration}
-\gap
 \begin{center}
 \begin{tabular}{cccl}
 \textbf{pin} & \textbf{group} & \textbf{direction} & \textbf{function} \\
@@ -413,63 +457,6 @@ GND	& power & in & Signal ground \\
 \end{tabular}
 \end{center}
 \gap
-
-\subsubsection{MC6850 Configuration}
-\gap
-\begin{center}
-\begin{tabular}{ccll}
-\textbf{pin} & \textbf{direction} & \textbf{standard} & \textbf{alternate} \\
-\hline
-3       & in     & Rx Data & \\
-4       & in     & Rx CLK & \\
-5       & in     & Tx CLK & \\
-6       & out    & \activelow{RTS} & \\
-7       & out    & Tx Data & \\
-8       & out    & \activelow{IRQ} & \\
-9       & in     & CS0 & \\
-10      & in     & \activelow{CS2} & \\
-11      & in     & CS1 & \\
-12      & in     & RS & \\
-13      & in     & R/\activelow{W} & \\
-14      & in     & E & \activelow{E}\\
-15      & in/out & D7 & \\
-16      & in/out & D6 & \\
-17      & in/out & D5 & \\
-18      & in/out & D4 & \\
-19      & in/out & D3 & \\
-20      & in/out & D2 & \\
-21      & in/out & D1 & \\
-22      & in/out & D0 & \\
-23      & in     & \activelow{DCD} & CS7 \\
-24      & in     & \activelow{CTS} & CS6 \\
-& \\
-25      & in     & CS5 & \\
-26      & in     & CS4 & \\
-27      & in     & CS3 & \\
-28      & out    & bus direction & \\
-29      & in     & keyboard in & \\
-\hline
-\end{tabular}
-\end{center}
-\gap
-The MC6850 Configuration emulates a Motorola MC6850. At boot, it behaves identically to a MC6850, with the following enhancements:
-\begin{itemize}
-\item Transmitted data is send to a 80x25 ANSI TTY emulator, which is displayed on the HDMI output.
-See \nameref{sec:textmode} for details of the ANSI code support.
-\item \mach{keyboard in} is merged with \mach{Rx Data} and appears to the MC6850 as received data
-\end{itemize}
-
-In addition to the MC6850-compatible signals, this configuration also has:
-
-\begin{itemize}
-
-\item \mach{CS$x$} inputs. \mach{CS3} selects direct EVE mode, where reads and writes are transferred directly to the BT815 GPU's SPI port.
-\mach{CS4, 5, 6, 7} are optional address selector inputs, programmable at configuration time.
-\end{itemize}
-
-There are two functional modes available.
-\textbf{standard} mode is fully compatible with the MC6850.
-\textbf{alternate} mode is intended for use with Z80-style CPU busses.
 
 \newpage
 \section{Internals}
