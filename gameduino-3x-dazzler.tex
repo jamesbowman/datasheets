@@ -1,5 +1,6 @@
 \documentclass{article}
 
+
 \usepackage{bytefield}
 \usepackage{booktabs}
 \usepackage{fancyhdr}
@@ -96,6 +97,8 @@
 \end{figure}
 }
 
+\newcommand*{\fullref}[1]{\hyperref[{#1}]{\autoref*{#1} \nameref*{#1}}} % One single link
+
 \newcommand{\mach}[1]{\texttt{\textbf{#1}}}
 \newcommand{\gap}{\vspace{10pt}}
 
@@ -151,7 +154,13 @@ The shield adds:
 \newpage
 \section{Getting Started}
 
-On power-up, the \dev{} displays a boot screen like this:
+On power-up, the \dev{}
+initializes the BT815 and starts HDMI output,
+and enables the SPI interface.
+
+If no SPI commands are sent by the MCU,
+the \dev{}
+displays a boot screen like this:
 
 \pngw{img/gameduino-3x-dazzler/boot}{1.0}
 
@@ -175,13 +184,21 @@ Gameduino 3X Dazzler & 1280$\times$720 & & $\bullet$ \\
 \end{tabular}
 \gap
 
-pngw{img/gameduino-3x-dazzler/helloworld}{1.0}
+\pngw{img/gameduino-3x-dazzler/helloworld}{1.0}
+
+The standard Gameduino library is available at:
+
+\url{https://gameduino.com/code}
 
 The CircuitPython library also supports the Gameduino 3X devices.
+It is available at:
 
-\subsection{Accessing the boot menu}
+\url{https://github.com/jamesbowman/py-bteve}
 
-If you have a Wii-classic controller,
+\newpage
+\subsection{Accessing the boot menu}\label{sec:bootmenu}
+
+If you have a Wii-classic compatible controller,
 you can access the Dazzler's built-in boot menu at any time.
 
 Attach the controller to the "PLAYER 1" port, and press
@@ -189,13 +206,13 @@ Attach the controller to the "PLAYER 1" port, and press
 \textbf{x},
 \textbf{y} buttons at the same time.
 
-\pngw{img/gameduino-3x-dazzler/wii-bootmenu.png}{1.0}
+\pngw{img/gameduino-3x-dazzler/wii-bootmenu.png}{0.5}
 
 The display will switch to the boot menu.
 
-\pngw{img/gameduino-3x-dazzler/bootmenu1.png}{1.0}
+\pngw{img/gameduino-3x-dazzler/bootmenu1.png}{0.7}
 
-The three icons on the right display the connection status of the
+The three icons on the right indicate presence on the
 microSD, PLAYER 1 and PLAYER 2 slots respectively.
 
 Use the left-direction pad to select one of the eight available flash slots.
@@ -220,9 +237,10 @@ To install an image in a slot:
 
 \end{enumerate}
 
+\newpage
 \section{SPI interfaces}
 
-\subsection{Dazzler interface}
+\subsection{Dazzler interface}\label{sec:dazspi}
 
 The Dazzler has its own SPI interface distinct from the BT815 and microSD SPI interfaces.
 This interface controls the Dazzler at a system level and allows firmware updates.
@@ -304,24 +322,49 @@ LX,LY are the left Analog Stick X and Y (0-63), RX and RY are the right Analog S
 
 BD{L,R,U,D} are the D-Pad direction buttons. B{ZR,ZL,A,B,X,Y,+,H,-} are the discrete buttons. B{LT,RT} are the digital button click of LT and RT. All buttons are 0 when pressed.
 
-The above table and text are taken from \url{https://wiibrew.org/wiki/Wiimote/Extension_Controllers/Classic_Controller_Pro}.
+The above table and text are taken from
+
+\url{https://wiibrew.org/wiki/Wiimote/Extension_Controllers/Classic_Controller_Pro}.
 
 \newpage
 \section{Text mode}\label{sec:textmode}
 
 In text mode the Dazzler's onboard hardware directly drives the BT815 GPU 
 to produce a high-quality text display on the HDMI output.
-The input is a single serial line running at 115200-8-N-1, which feeds the terminal emulation engine.
-Text mode can be selected by:
+The input is a single serial line running at 115200-8-N-1.
+
+The terminal emulation supports standard ANSI escape codes, including 256-color support.
+Multiple screen modes are available:
+
+\begin{tabular}{cll}
+0 & 128$\times$34 & landscape \\
+1 & 182$\times$48 & landscape \\
+2 & 80$\times$64  & portrait  \\
+3 & 102$\times$85 & portrait  \\
+\end{tabular}
+
+On entry, text mode displays a blank screen with a blinking cursor. 
+Any data received on the serial line is immediately drawn on the screen.
+
+\subsection{Entering text mode}
+
+Text mode is installed in slot 1 of the Dazzler's boot flash.
+It can be selected by:
+
 \begin{itemize}
 
-\item The gamepad boot menu. Select slot 1.
+\item selecting slot 1 from the boot menu. See \fullref{sec:bootmenu}
 
 \item The Dazzler serial console. Use command \mach{ 1 run}
 
-\item The Dazzler SPI interface.
+\item The Dazzler SPI interface. See \fullref{sec:dazspi} and the sample code below.
 
 \end{itemize}
+
+On Arduino and compatible microcontrollers, an SPI command to boot the \dev{} from slot 1 is:
+
+\newpage
+\eg{textmode}
 
 On entering text mode, the default layout is 128x34 landscape. The display is blank except for a blinking cursor.
 
@@ -348,13 +391,17 @@ ESC {[} \emph{r;c} H & Cursor position \\
 
 ESC {[} \emph{n} J & Erase display \\
 
-ESC {[} \emph{n} m & Select graphic rendition \\
+ESC {[} \emph{n} m & Select graphic rendition (SGR)\\
 
 ESC {[} s & Save cursor position \\
 
 ESC {[} u & Restore cursor position \\ \heavyline
 \end{tabularx}
 \gap
+
+The SGR command supports ANSI standard 256 color mode.
+
+\pngw{img/gameduino-3x-dazzler/textmode256}{1.0}
 
 In addition the following sequences are specific to Dazzler's text mode:
 
@@ -373,10 +420,13 @@ ESC {[} \emph{n} S & Screen-saver.  0 stops video output, 1 restarts video outpu
 \end{tabularx}
 \gap
 
+\newpage
 \noindent
 For example this C program displays the 16 ANSI foreground and background colors.
 
 \eg{dazzler-color1}
+
+\pngw{img/gameduino-3x-dazzler/textmode-arduino}{0.8}
 
 \newpage
 \section{Pinouts}

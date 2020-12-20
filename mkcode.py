@@ -49,6 +49,7 @@ termdriver-counter1
 termdriver-counter2
 termdriver-color1
 dazzler-color1
+textmode
 """
 
 for fn in sources.split():
