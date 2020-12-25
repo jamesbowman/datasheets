@@ -157,6 +157,7 @@ The shield adds:
 On power-up, the \dev{}
 initializes the BT815 and starts HDMI output,
 and enables the SPI interface.
+Note that many monitors take several seconds to detect and sync to an HDMI signal.
 
 If no SPI commands are sent by the MCU,
 the \dev{}
@@ -180,6 +181,7 @@ With an Arduino or Teensy, the Gameduino library supports all Gameduino 3X serie
 Gameduino 3X 4.3"    & 480$\times$272 & $\bullet$ & \\
 Gameduino 3X 7"      & 800$\times$480 & $\bullet$ & \\
 Gameduino 3X Dazzler & 1280$\times$720 & & $\bullet$ \\
+\hline
 
 \end{tabular}
 \gap
@@ -200,6 +202,7 @@ It is available at:
 
 If you have a Wii-classic compatible controller,
 you can access the Dazzler's built-in boot menu at any time.
+\index{Wii}
 
 Attach the controller to the "PLAYER 1" port, and press
 \textbf{START +},
@@ -208,7 +211,7 @@ Attach the controller to the "PLAYER 1" port, and press
 
 \pngw{img/gameduino-3x-dazzler/wii-bootmenu.png}{0.5}
 
-The display will switch to the boot menu.
+The display will switch to the boot menu.\index{boot menu}\index{slots}
 
 \pngw{img/gameduino-3x-dazzler/bootmenu1.png}{0.7}
 
@@ -240,7 +243,12 @@ To install an image in a slot:
 \newpage
 \section{SPI interfaces}
 
-\subsection{Dazzler interface}\label{sec:dazspi}
+\subsection{Gameduino 3X and microSD}
+
+Like other Gameduino 3X family members, \dev{} has BT815 and microSD SPI interfaces.
+See \fullref{sec:pinouts} for details. These function the same way as all Gameduino SPI pins, with a direct connection to the BT815 and to a microSD card in SPI mode.
+
+\subsection{Dazzler SPI interface}\label{sec:dazspi}
 
 The Dazzler has its own SPI interface distinct from the BT815 and microSD SPI interfaces.
 This interface controls the Dazzler at a system level and allows firmware updates.
@@ -335,6 +343,7 @@ The input is a single serial line running at 115200-8-N-1.
 
 The terminal emulation supports standard ANSI escape codes, including 256-color support.
 Multiple screen modes are available:
+\index{landscape}\index{portrait}\index{ANSI}
 
 \begin{tabular}{cll}
 0 & 128$\times$34 & landscape \\
@@ -355,7 +364,7 @@ It can be selected by:
 
 \item selecting slot 1 from the boot menu. See \fullref{sec:bootmenu}
 
-\item The Dazzler serial console. Use command \mach{ 1 run}
+\item The Dazzler serial console. Use command \mach{1 run}. See \fullref{sec:console}
 
 \item The Dazzler SPI interface. See \fullref{sec:dazspi} and the sample code below.
 
@@ -365,10 +374,12 @@ On Arduino and compatible microcontrollers, an SPI command to boot the \dev{} fr
 
 \newpage
 \eg{textmode}
+\index{Arduino example!enter text mode}
 
 On entering text mode, the default layout is 128x34 landscape. The display is blank except for a blinking cursor.
 
 \subsection{ANSI escape codes}
+\index{escape codes!ANSI}
 
 The following standard
 \href{https://en.wikipedia.org/wiki/ANSI_escape_code\#CSI_sequences}{CSI codes}
@@ -404,6 +415,7 @@ The SGR command supports ANSI standard 256 color mode.
 \pngw{img/gameduino-3x-dazzler/textmode256}{1.0}
 
 In addition the following sequences are specific to Dazzler's text mode:
+\index{escape codes!extended}
 
 \gap
 \noindent
@@ -425,16 +437,52 @@ ESC {[} \emph{n} S & Screen-saver.  0 stops video output, 1 restarts video outpu
 For example this C program displays the 16 ANSI foreground and background colors.
 
 \eg{dazzler-color1}
+\index{Arduino example!ANSI colors}
 
 \pngw{img/gameduino-3x-dazzler/textmode-arduino}{0.8}
 
 \newpage
-\section{Pinouts}
+\section{Console}\label{sec:console}
+
+The serial console uses pins 1 and 2 on the \dev{} module.
+
+Both the Arduino Shield and the Module Breakout have connectors for
+6-pin FTDI USB connectors. All signals are 3.3V.
+Connecting to the Arduino shield requires a 6-pin
+header soldered to the bottom of the shield.
+See \fullref{sec:shield}
+and \fullref{sec:modulebreakout}.
+
+\pngw{img/gameduino-3x-dazzler/pinout-ftdi.png}{1.0}
+
+\index{FTDI}\index{console}\index{breakout}
+
+The console is always running, and the connection speed is 1000000 8-N-1.
+
+To access it, connect to the port and type ctrl-C.
+Some useful console commands are listed below.
+Command parameters always precede the command. \index{slots}
+
+\gap
+\begin{tabular}{ll}
+\mach{slots} & list the current slot contents \\
+$s$ \mach{run} & boot from slot $s$ \\
+$s$ \mach{zslot} & erase slot $s$ \\
+$s$ \mach{loadsd} & load slot $s$ from microSD file \mach{image.dazzler} \\
+\end{tabular}
+\gap
+
+List the contents of the eight flash boot slots.
+
+\newpage
+\section{Pinouts}\label{sec:pinouts}
 
 \newcommand{\activelow}[1]{$\overline{\mbox{#1}}$}
 
-\subsection{Shield}
+\subsection{Shield}\label{sec:shield}
 The Dazzler Shield follows the standard Arduino Uno pinout.
+
+\pngw{img/gameduino-3x-dazzler/pinout-shield}{0.9}
 
 \gap
 \begin{center}
@@ -507,6 +555,24 @@ GND	& power & in & Signal ground \\
 \end{tabular}
 \end{center}
 \gap
+
+\subsection{Module Breakout}\label{sec:modulebreakout}\index{breakout}
+
+\pngw{img/gameduino-3x-dazzler/pinout-breakout}{0.9}
+
+The module breakout board has the same pin numbering as the module,
+but uses 0.1" headers for convenience.
+
+The left-hand side has:
+
+\begin{itemize}
+\item a 6-pin header for standard FTDI USB-UART boards
+\item a 7-pin JTAG header
+\item 5V power header
+\end{itemize}
+
+Note that 3.3V (VCC) is available on the JTAG header.
+
 
 \newpage
 \section{Internals}
@@ -599,6 +665,16 @@ GND	& power & in & Signal ground \\
 \end{tikzpicture}
 \end{center}
 
+The FPGA used in the \dev{} is a Xilinx Spartan 6 XC6SLX9-FTG256.
+It has a high-bandwidth connection to the GPU, a BridgeTek BT815.
+
+Both FPGA and GPU have 8 Mbyte boot flashes.
+
+The FPGA UCF file for the board, and all Verilog, firmware and build files are
+provided at:
+
+\url{https://github.com/jamesbowman/gd3x-dazzler}
+
 \newpage
 \section{Specifications}\label{electrical-characteristics}
 
@@ -615,7 +691,7 @@ All inputs signals & & & & \\
 Supply voltage        & 4.5 & 5.0 & 9.0 & V                   \\ \hline
 Current consumption   & & 180 & & mA                   \\ \hline
 
-\end{tabularx}}
+\end{tabularx}}\index{current}
 \vspace{10 pt}
 
 \subsection{AC characteristics}
