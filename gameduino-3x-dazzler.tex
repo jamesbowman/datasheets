@@ -143,10 +143,10 @@ The core module has the following features:
 \noindent
 The shield adds:
 \begin{itemize}
-\item a level shifter so all inputs are 5V tolerant
-\item a microSD card slot
-\item 2 Wii Classic ports, both continuously scanned by the Dazzler
-\item optional headers for standard serial and JTAG connectors
+\item a level shifter so all inputs are 5V tolerant \index{level shifter}
+\item a microSD card slot \index{microSD}
+\item 2 Wii Classic ports, both continuously scanned by the Dazzler \index{Wii}
+\item optional headers for standard serial and JTAG connectors \index{JTAG port}
 \end{itemize}
 
 \png{img/gameduino-3x-dazzler/rot-0182}
@@ -155,8 +155,8 @@ The shield adds:
 \section{Getting Started}
 
 On power-up, the \dev{}
-initializes the BT815 and starts HDMI output,
-and enables the SPI interface.
+initializes the BT815 and starts HDMI output, \index{HDMI output}
+and enables the SPI interface. \index{SPI interface}
 Note that many monitors take several seconds to detect and sync to an HDMI signal.
 
 If no SPI commands are sent by the MCU,
@@ -171,6 +171,7 @@ On the right is the firmware build date.
 
 The Dazzler functions like the other Gameduino 3X family members.
 With an Arduino or Teensy, the Gameduino library supports all Gameduino 3X series devices:
+\index{Teensy}
 
 \gap
 \begin{tabular}{lccc}
@@ -222,7 +223,7 @@ Use the left-direction pad to select one of the eight available flash slots.
 Button \textbf{a} launches a slot.
 
 Slot 0 is the boot slot, and should contain a Dazzler boot image. Other slots can be loaded with alternate firmware images.
-To install an image in a slot:
+To install an image in a slot: \index{installing firmware}
 
 \begin{enumerate}
 
@@ -236,7 +237,8 @@ To install an image in a slot:
 
 \item select a blank slot, then press \textbf{x} to start the write process
 
-\item the write process takes a few seconds. After it completes the boot menu shows the new slot contents
+\item the write process takes a few seconds.
+After it completes the boot menu shows the new slot contents
 
 \end{enumerate}
 
@@ -340,6 +342,7 @@ The above table and text are taken from
 In text mode the Dazzler's onboard hardware directly drives the BT815 GPU 
 to produce a high-quality text display on the HDMI output.
 The input is a single serial line running at 115200-8-N-1.
+\index{speed!text mode}
 
 The terminal emulation supports standard ANSI escape codes, including 256-color support.
 Multiple screen modes are available:
@@ -458,6 +461,7 @@ and \fullref{sec:modulebreakout}.
 \index{FTDI}\index{console}\index{breakout}
 
 The console is always running, and the connection speed is 1000000 8-N-1.
+\index{speed!console}
 
 To access it, connect to the port and type ctrl-C.
 Some useful console commands are listed below.
@@ -472,14 +476,15 @@ $s$ \mach{loadsd} & load slot $s$ from microSD file \mach{image.dazzler} \\
 \end{tabular}
 \gap
 
-List the contents of the eight flash boot slots.
+The system runs SwapForth on a 50 MHz 16-bit J1 soft-core CPU.
+\index{SwapForth}\index{J1}\index{Forth}
 
 \newpage
 \section{Pinouts}\label{sec:pinouts}
 
 \newcommand{\activelow}[1]{$\overline{\mbox{#1}}$}
 
-\subsection{Shield}\label{sec:shield}
+\subsection{Shield}\label{sec:shield}\index{pinout!Arduino shield}
 The Dazzler Shield follows the standard Arduino Uno pinout.
 
 \pngw{img/gameduino-3x-dazzler/pinout-shield}{0.9}
@@ -508,7 +513,7 @@ GND	& power & Signal ground \\
 
 All other pins are pass-through.
 
-\subsection{Module}
+\subsection{Module}\index{pinout!module}
 
 \pngw{img/gameduino-3x-dazzler/pinout}{0.9}
 
@@ -556,7 +561,7 @@ GND	& power & in & Signal ground \\
 \end{center}
 \gap
 
-\subsection{Module Breakout}\label{sec:modulebreakout}\index{breakout}
+\subsection{Module Breakout}\label{sec:modulebreakout}\index{breakout}\index{pinout!module breakout}
 
 \pngw{img/gameduino-3x-dazzler/pinout-breakout}{0.9}
 
