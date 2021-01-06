@@ -158,6 +158,7 @@ On power-up, the \dev{}
 initializes the BT815 and starts HDMI output, \index{HDMI output}
 and enables the SPI interface. \index{SPI interface}
 Note that many monitors take several seconds to detect and sync to an HDMI signal.
+\index{HDMI}
 
 If no SPI commands are sent by the MCU,
 the \dev{}
@@ -166,7 +167,7 @@ displays a boot screen like this:
 \pngw{img/gameduino-3x-dazzler/boot}{1.0}
 
 The code on the left is the module's serial number. \index{serial number}
-The center code is the firmware version. \index{firmware version}
+The center code is the firmware version. \index{firmware!version}
 On the right is the firmware build date.
 
 The Dazzler functions like the other Gameduino 3X family members.
@@ -185,7 +186,10 @@ Gameduino 3X Dazzler & 1280$\times$720 & & $\bullet$ \\
 \hline
 
 \end{tabular}
-\gap
+
+\newpage
+Connect Wii-classic compatible game controllers as shown.\index{Wii!connecting}
+\png{img/gameduino-3x-dazzler/wii-plug}
 
 \pngw{img/gameduino-3x-dazzler/helloworld}{1.0}
 
@@ -218,13 +222,14 @@ The display will switch to the boot menu.\index{boot menu}\index{slots}
 
 The three icons on the right indicate presence on the
 microSD, PLAYER 1 and PLAYER 2 slots respectively.
+\index{microSD}
 
 Use the left-direction pad to select one of the eight available flash slots.
 Button \textbf{a} launches a slot.
 
 Slot 0 is the boot slot, and should contain a Dazzler boot image. Other slots can be loaded with alternate firmware images.
 To install an image in a slot: \index{installing firmware}
-
+\index{firmware!upgrade}
 \begin{enumerate}
 
 \item use a microSD card formatted with FAT32
@@ -300,7 +305,7 @@ The following commands are supported:
 All other byte values are ignored.
 
 The two 6-byte joystick fields follow the Wii Classic controller bit definitions:
-
+\index{Wii!bit fields}
 \gap
 \begin{bytefield}[endianness=big,bitwidth=3.2em]{10}
 %\bitheader{0-7} \\
@@ -470,6 +475,7 @@ Command parameters always precede the command. \index{slots}
 \gap
 \begin{tabular}{ll}
 \mach{slots} & list the current slot contents \\
+\mach{reboot} & boot from slot 0 \\
 $s$ \mach{run} & boot from slot $s$ \\
 $s$ \mach{zslot} & erase slot $s$ \\
 $s$ \mach{loadsd} & load slot $s$ from microSD file \mach{image.dazzler} \\
@@ -477,7 +483,7 @@ $s$ \mach{loadsd} & load slot $s$ from microSD file \mach{image.dazzler} \\
 \gap
 
 The system runs SwapForth on a 50 MHz 16-bit J1 soft-core CPU.
-\index{SwapForth}\index{J1}\index{Forth}
+\index{SwapForth}\index{J1 CPU}\index{Forth}
 
 \newpage
 \section{Pinouts}\label{sec:pinouts}
@@ -766,31 +772,32 @@ The three mounting holes are designed for M2.5 screws, nuts and standoffs.
 \end{center}
 
 \newpage
-\section{Troubleshooting}
+\section{Troubleshooting}\index{Troubleshooting}\index{debugging}
 
 \gap
 \begin{tabular}{|l|l|}
 \hline
 No monitor output after power-up     & $\bullet$ Check HDMI cable and port \\
                                      & $\bullet$ Confirm 5V power present \\
-                                     & $\bullet$ Return for replacement \\
+                                     & $\bullet$ Contact support \\
 \hline
 No audio output                      & $\bullet$ Confirm the display has audio output \\
                                      & $\bullet$ Check the display's mute and volume settings \\
 \hline
-Corrupted video signal               & $\bullet$ Use a 2 m (6 foot) HDMI cable \\
+Corrupted video signal               & $\bullet$ Use a 2 m (6 foot) HDMI cable
+\index{HDMI!cable length} \\
 \hline
 Wii controller unresponsive          & $\bullet$ Check the plug orientation \\
 \hline
 \end{tabular}
 \gap
 
-\section{Support information}
+\section{Support information}\index{Support!email}
 
 Technical and product support is available at
 \href{mailto:jamesb@excamera.com}{jamesb@excamera.com}
 
-\device{} is built and maintained by
+\device{} is built and supported by
 \href{https://excamera.com}{Excamera Labs}.
 
 
