@@ -541,6 +541,7 @@ Commands are:
 \mach{u}        & unselect        \\
 \mach{a} $byte$ & set A output to 0/1       \\
 \mach{b} $byte$ & set B output to 0/1       \\
+\mach{m} $byte$ & set SPI mode (spidriver2 only) \index{mode!SPI}\\
 \mach{x}        & disconnect from SPI bus       \\
 \mach{0x80-bf}  & write and read 1-64 bytes       \\
 \mach{0xc0-ff}  & write 1-64 bytes        \\ \hline
@@ -572,7 +573,7 @@ The fields are space-delimited:
 
 \gap\begin{tabular}{ll}
 \hline
-spidriver1      & fixed identifier \\
+product         & either \mach{spidriver1} or \mach{spidriver2} \\
 serial          & serial code identifier \\
 uptime          & SPIDriver uptime 0-999999999, in seconds \\
 voltage         & USB bus voltage, in volts \\
@@ -582,6 +583,7 @@ CS              & CS line state \\
 A               & A line state \\
 B               & B line state \\
 crc             & 16-bit CRC of all input and output bytes (CRC-16-CCITT)  \index{CRC}\\
+mode            & current SPI mode (spidriver2 only) \index{mode!SPI}\\
 \hline
 \end{tabular}\gap
 
