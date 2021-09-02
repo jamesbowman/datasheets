@@ -322,8 +322,8 @@ All following parameters are control commands. These are:
 \gap\begin{tabular}{ll}
 \hline \\
   \mach{i}     & print status information (uptime, voltage, current, temperature) \\
-  \mach{s}     & SPI select \\
-  \mach{u}     & SPI unselect \\
+  \mach{s}     & SPI select (set CS low) \\
+  \mach{u}     & SPI unselect (set CS high) \\
   \mach{w} $byte$\mach{,}...     & write bytes to SPI \\
   \mach{r N}   & read N bytes from SPI \\
   \mach{a 0/1} & Set A line \\
@@ -537,8 +537,8 @@ Commands are:
 \hline
 \mach{?}        & transmit status information (see below)        \\
 \mach{e} $byte$ & echo $byte$       \\
-\mach{s}        & select        \\
-\mach{u}        & unselect        \\
+\mach{s}        & select (set CS low) \\
+\mach{u}        & unselect (set CS high)        \\
 \mach{a} $byte$ & set A output to 0/1       \\
 \mach{b} $byte$ & set B output to 0/1       \\
 \mach{m} $byte$ & set SPI mode (spidriver2 only) \index{mode!SPI}\\
@@ -579,7 +579,7 @@ uptime          & SPIDriver uptime 0-999999999, in seconds \\
 voltage         & USB bus voltage, in volts \\
 current         & attached device current, in mA \\
 temperature     & junction temperature, in C \\
-CS              & CS line state \\
+CS              & CS line state (active low) \\
 A               & A line state \\
 B               & B line state \\
 crc             & 16-bit CRC of all input and output bytes (CRC-16-CCITT)  \index{CRC}\\
