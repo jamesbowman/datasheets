@@ -587,6 +587,40 @@ mode            & current SPI mode (spidriver2 only) \index{mode!SPI}\\
 \hline
 \end{tabular}\gap
 
+\subsubsection{SPI mode}\index{mode!SPI} 
+The SPIDriver2 (updated January 2021) allows the SPI mode to be set.
+
+SPI mode is a number 0-3
+with the following meanings.
+
+\gap\begin{tabular}{lll}
+\hline
+mode & CPOL & CPHA \\
+\hline
+0 & 0 & 0 \\
+1 & 0 & 1 \\
+2 & 1 & 0 \\
+3 & 1 & 1 \\
+\hline
+\end{tabular}\gap
+
+\index{CPOL}
+\index{polarity}
+CPOL is clock polarity.
+
+CPOL=0 means that SCK's leading edge is a rising edge, and its trailing edge is a falling edge.
+CPOL=1 means that SCK's leading edge is a falling edge, and the trailing edge is a rising edge.
+
+\index{phase}
+\index{CPHA}
+CPHA is clock phase.
+
+For CPHA=0, each sender changes the data on the trailing edge of a clock cycle, while the receiver captures the data on the leading edge of the clock cycle.
+
+For CPHA=1, each sender changes the data on the leading edge of a clock cycle, while the receiver captures the data on the trailing edge of the clock cycle.
+
+The default mode is 0.
+
 \newpage
 \subsection{Specifications}\label{electrical-characteristics}
 
