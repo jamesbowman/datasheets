@@ -1,4 +1,8 @@
-all: termdriver.pdf spidriver.pdf i2cdriver.pdf i2cdriver-cn.pdf
+all: termdriver2.pdf termdriver.pdf spidriver.pdf i2cdriver.pdf i2cdriver-cn.pdf
+
+termdriver2.pdf: termdriver2.tex img/* code/*.inc
+	# pdflatex -interaction=nonstopmode termdriver.tex
+	latexmk -pdf -silent termdriver2.tex
 
 termdriver.pdf: termdriver.tex img/* code/*.inc
 	# pdflatex -interaction=nonstopmode termdriver.tex
@@ -25,7 +29,7 @@ i2cdriver-cn.pdf: i2cdriver-cn.tex img/* code/*.inc i2csphinx.tex
 code/*.inc: mkcode.py samples/*.ino
 	python mkcode.py
 
-I2CD=$(HOME)/git/i2cdriver/python/_build/latex
+I2CD=$(HOME)/git/i2cdriver/python/docs/_build/latex
 
 i2csphinx.tex: $(I2CD)/i2cdriver.tex
 	sed -n '/AAAAAAAA/,/BBBBBBB/p' $(I2CD)/i2cdriver.tex | grep -v AAAAAAAA | grep -v BBBBBBBB > i2csphinx.tex

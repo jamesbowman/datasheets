@@ -40,7 +40,7 @@
 
 \pagestyle{fancy}
 \lhead{\includegraphics[width=0.2\textwidth]{img/logo}}
-\chead{TermDriver2 Datasheet}
+\chead{TermDriver2 User Guide}
 \rhead{\thepage}
 \cfoot{\textcopyright \the\year \ \ Excamera Labs}
 \renewcommand{\headrulewidth}{0.5pt}
@@ -94,15 +94,15 @@ with line protocol information.
 \section{Installation}
 
 \begin{enumerate}
-\item Connect a micro USB cable to the TermDriver2
+\item Connect a micro USB cable to the TermDriver 2
 \item You should see the screen power up with the TermDriver logo and serial number
 \item Confirm that the serial device is present on your host PC
-\item Find the relevant port on your host PC
+\item Find the relevant port \index{port} on your host PC
 \item Connect the serial outputs to your target device
 \item Use the TermDriver as a USB to serial adapter
 \end{enumerate}
 
-\section{ANSI escape codes}
+\section{ANSI escape codes}\index{ANSI}
 
 TermDriver2 implements the ANSI terminal
 \href{https://en.wikipedia.org/wiki/ANSI_escape_code\#CSI_sequences}{control codes}.
@@ -153,7 +153,7 @@ Code & Effect \\ \heavyline
 38 & Set foreground color. Next arguments are \mach{5;n} or \mach{2;r;g;b} \\
 39 & Default foreground color \\
 40..47 & Set background color \\
-48 & Set foreground color. Next arguments are \mach{5;n} or \mach{2;r;g;b} \\
+48 & Set foreground color. Next arguments are \mach{5;n} or \mach{2;r;g;b} \index{color!RGB}\\
 49 & Default background color \\
 
 \end{tabularx}
@@ -212,7 +212,7 @@ TermDriver2 has 6 output pins, on a standard 2.54 mm (0.1") female header.
 Pin & Signal & Function & Notes \\ \heavyline \\
 
 1 & GND  & power  & Ground \\
-2 & RTS  & output & Request to send \\
+2 & RTS  & output & Request to send \index{CTS} \\
 3 & 3.3V & power  & Up to 300 mA available \\
 4 & TX   & output & Data transmit \\
 5 & RX   & input  & Data receive \\
@@ -256,6 +256,8 @@ Signal & GPIO & \\
 \mach{PIN\_DC}       & 10 &  panel command/data     \\
 \hline \\
 \end{tabular}
+
+\section{Specifications}
 
 \subsection{DC characteristics}
 \vspace{10 pt}
